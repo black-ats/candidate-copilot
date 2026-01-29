@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Button, Card } from '@ui/components'
-import { Sparkles, LogOut, ArrowRight } from 'lucide-react'
+import { Button, Card, Badge } from '@ui/components'
+import { Sparkles, LogOut, ArrowRight, Mic } from 'lucide-react'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -65,6 +65,27 @@ export default async function DashboardPage() {
             <p className="text-navy/50 text-sm">
               Seus insights salvos aparecerao aqui. Comece gerando seu primeiro insight!
             </p>
+          </Card>
+
+          {/* Interview Pro Teaser */}
+          <Card className="p-6 border-amber/30 bg-amber/5">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Mic className="w-5 h-5 text-amber" />
+              </div>
+              <div className="flex-1">
+                <Badge className="mb-2 bg-amber/20 text-amber">Em breve</Badge>
+                <h3 className="text-lg font-semibold text-navy mb-1">
+                  Interview Pro
+                </h3>
+                <p className="text-navy/70 text-sm mb-3">
+                  Mock interviews com IA. Pratique e receba feedback instantaneo.
+                </p>
+                <Link href="/interview-pro" className="text-sm font-medium text-amber hover:text-amber/80 transition-colors">
+                  Entrar na lista →
+                </Link>
+              </div>
+            </div>
           </Card>
         </div>
       </main>
