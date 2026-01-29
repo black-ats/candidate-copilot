@@ -1,0 +1,174 @@
+import Link from 'next/link'
+import { Button, Card } from '@ui/components'
+import { Sparkles, Target, Clock, ArrowRight } from 'lucide-react'
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="border-b border-stone/30 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container-wide py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-amber rounded-lg flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-navy" />
+            </div>
+            <span className="font-semibold text-lg text-navy">GoHire Copilot</span>
+          </Link>
+          <Link href="/auth">
+            <Button variant="ghost" size="sm">
+              Entrar
+            </Button>
+          </Link>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1">
+        <section className="py-16 sm:py-24 lg:py-32">
+          <div className="container-narrow text-center">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-navy leading-tight tracking-tight">
+              Decisoes de carreira com clareza, nao com ansiedade.
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-navy/70 max-w-2xl mx-auto">
+              Responda algumas perguntas e receba um primeiro direcionamento baseado no seu contexto. Sem cadastro, sem enrolacao.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/comecar">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Ver meu primeiro insight
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
+            <p className="mt-4 text-sm text-navy/50 flex items-center justify-center gap-1">
+              <Clock className="w-4 h-4" />
+              Leva menos de 2 minutos
+            </p>
+          </div>
+        </section>
+
+        {/* Value Props */}
+        <section className="py-16 bg-white">
+          <div className="container-wide">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-navy text-center mb-12">
+              Como funciona
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+              <Card className="text-center p-8">
+                <div className="w-12 h-12 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-teal">1</span>
+                </div>
+                <h3 className="text-lg font-semibold text-navy mb-2">
+                  Conte seu contexto
+                </h3>
+                <p className="text-navy/70">
+                  Responda 3 perguntas simples sobre sua situacao profissional atual e o que voce quer resolver.
+                </p>
+              </Card>
+
+              <Card className="text-center p-8">
+                <div className="w-12 h-12 bg-amber/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-amber">2</span>
+                </div>
+                <h3 className="text-lg font-semibold text-navy mb-2">
+                  Receba um insight
+                </h3>
+                <p className="text-navy/70">
+                  Com base no que voce informou, receba um direcionamento claro com recomendacoes e proximos passos.
+                </p>
+              </Card>
+
+              <Card className="text-center p-8">
+                <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-navy">3</span>
+                </div>
+                <h3 className="text-lg font-semibold text-navy mb-2">
+                  Tome decisoes melhores
+                </h3>
+                <p className="text-navy/70">
+                  Use os insights para tomar decisoes de carreira com mais confianca e menos ansiedade.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Benefits */}
+        <section className="py-16">
+          <div className="container-wide">
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-semibold text-navy mb-6">
+                  Para quem esta pensando em...
+                </h2>
+                <ul className="space-y-4">
+                  {[
+                    'Avaliar uma proposta de emprego',
+                    'Conseguir mais entrevistas',
+                    'Mudar de area ou carreira',
+                    'Negociar salario atual',
+                    'Entender o mercado atual',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3">
+                      <Target className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
+                      <span className="text-navy/80">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Card variant="elevated" className="p-8">
+                <blockquote className="text-lg text-navy/80 italic">
+                  "Em vez de ficar dias remoendo uma decisao, tive clareza em minutos sobre o que fazia sentido pra mim."
+                </blockquote>
+                <div className="mt-4 text-sm text-navy/60">
+                  — Profissional de tecnologia
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-16 bg-navy text-sand">
+          <div className="container-narrow text-center">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
+              Pronto para ter mais clareza?
+            </h2>
+            <p className="text-sand/70 mb-8 max-w-xl mx-auto">
+              Comece agora e receba seu primeiro insight de carreira em menos de 2 minutos. Sem precisar criar conta.
+            </p>
+            <Link href="/comecar">
+              <Button size="lg" className="bg-amber hover:bg-amber/90 text-navy">
+                Comecar agora
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-stone/30 py-8">
+        <div className="container-wide flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-amber rounded flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-navy" />
+            </div>
+            <span className="text-sm text-navy/70">GoHire Copilot</span>
+          </div>
+          <nav className="flex items-center gap-6 text-sm text-navy/60">
+            <Link href="#" className="hover:text-navy transition-colors">
+              Privacidade
+            </Link>
+            <Link href="#" className="hover:text-navy transition-colors">
+              Termos
+            </Link>
+            <Link href="#" className="hover:text-navy transition-colors">
+              Contato
+            </Link>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  )
+}
