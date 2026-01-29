@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button, Card, Badge } from '@ui/components'
-import { Sparkles, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, User } from 'lucide-react'
+import { Sparkles, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, User, Mic } from 'lucide-react'
 import {
   generateInsight,
   senioridadeLabels,
@@ -182,6 +182,27 @@ export default function InsightPage() {
               <RefreshCw className="mr-2 w-5 h-5" />
               Comecar de novo
             </Button>
+          </div>
+        </Card>
+
+        {/* Interview Pro Teaser */}
+        <Card className="p-6 border-amber/30 bg-amber/5">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Mic className="w-5 h-5 text-amber" />
+            </div>
+            <div className="flex-1">
+              <Badge className="mb-2 bg-amber/20 text-amber">Pro</Badge>
+              <h3 className="text-lg font-semibold text-navy mb-1">
+                Prepare-se para a proxima entrevista
+              </h3>
+              <p className="text-navy/70 text-sm mb-3">
+                Pratique com IA e receba feedback instantaneo sobre suas respostas.
+              </p>
+              <Link href="/interview-pro" className="text-sm font-medium text-amber hover:text-amber/80 transition-colors">
+                Ver mais →
+              </Link>
+            </div>
           </div>
         </Card>
 

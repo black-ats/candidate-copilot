@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Button, Card } from '@ui/components'
-import { Sparkles, Target, Clock, ArrowRight } from 'lucide-react'
+import { Button, Card, Badge } from '@ui/components'
+import { Sparkles, Target, Clock, ArrowRight, Mic } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -125,6 +125,25 @@ export default function HomePage() {
                 </div>
               </Card>
             </div>
+          </div>
+        </section>
+
+        {/* Interview Pro Teaser */}
+        <section className="py-16 bg-white">
+          <div className="container-narrow text-center">
+            <Badge className="mb-4 bg-amber/20 text-amber">Em breve</Badge>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-navy mb-3">
+              Treine para entrevistas com IA
+            </h2>
+            <p className="text-navy/70 mb-6 max-w-xl mx-auto">
+              Mock interviews personalizadas com feedback instantaneo. Pratique sem julgamento e evolua a cada sessao.
+            </p>
+            <Link href="/interview-pro">
+              <Button variant="secondary">
+                <Mic className="mr-2 w-5 h-5" />
+                Saber mais
+              </Button>
+            </Link>
           </div>
         </section>
 
