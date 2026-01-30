@@ -38,12 +38,15 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       {/* Avatar */}
       <div className={`
         w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
-        ${isUser ? 'bg-navy' : 'bg-amber'}
+        ${isUser 
+          ? 'bg-navy' 
+          : 'bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500'
+        }
       `}>
         {isUser ? (
           <User className="w-4 h-4 text-sand" />
         ) : (
-          <Sparkles className="w-4 h-4 text-navy" />
+          <Sparkles className="w-4 h-4 text-white" />
         )}
       </div>
       
@@ -72,16 +75,33 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 function LoadingBubble() {
   return (
     <div className="flex gap-3">
-      <div className="w-8 h-8 rounded-lg bg-amber flex items-center justify-center flex-shrink-0">
-        <Sparkles className="w-4 h-4 text-navy" />
+      {/* Avatar com gradiente AI */}
+      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 flex items-center justify-center flex-shrink-0">
+        <Sparkles className="w-4 h-4 text-white" />
       </div>
-      <div className="bg-stone/10 rounded-xl px-4 py-3">
-        <div className="flex gap-1.5">
-          <span className="w-2 h-2 bg-navy/30 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <span className="w-2 h-2 bg-navy/30 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <span className="w-2 h-2 bg-navy/30 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-        </div>
+      
+      {/* Shimmer skeleton */}
+      <div className="bg-stone/10 rounded-xl px-4 py-3 space-y-2.5 min-w-[220px]">
+        <ShimmerBar width="100%" />
+        <ShimmerBar width="80%" />
+        <ShimmerBar width="60%" />
       </div>
+    </div>
+  )
+}
+
+function ShimmerBar({ width }: { width: string }) {
+  return (
+    <div 
+      className="h-3 rounded relative overflow-hidden bg-stone/40"
+      style={{ width }}
+    >
+      <div 
+        className="absolute inset-0 shimmer-effect"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)',
+        }}
+      />
     </div>
   )
 }

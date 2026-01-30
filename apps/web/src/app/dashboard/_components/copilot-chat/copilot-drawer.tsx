@@ -328,17 +328,23 @@ export function CopilotDrawer({ isOpen, onClose, insightContext: propContext }: 
                 className="
                   flex-1 h-11 px-4 rounded-lg border border-stone
                   text-navy placeholder:text-navy/40
-                  focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2
+                  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
                   disabled:opacity-50 disabled:cursor-not-allowed
                 "
               />
-              <Button 
+              <button 
                 type="submit" 
                 disabled={isLoading || !input.trim()}
-                className="h-11 w-11 p-0"
+                className="
+                  h-11 w-11 rounded-lg flex items-center justify-center
+                  bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500
+                  hover:from-violet-400 hover:via-purple-400 hover:to-fuchsia-400
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  transition-all duration-200
+                "
               >
-                <Send className="w-4 h-4" />
-              </Button>
+                <Send className="w-4 h-4 text-white" />
+              </button>
             </form>
           )}
         </div>
