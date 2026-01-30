@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { Button, Input } from '@ui/components'
 import { CheckCircle, Loader2, Mail } from 'lucide-react'
 import { joinWaitlist } from './actions'
+import { track } from '@/lib/analytics/track'
 
 interface WaitlistFormProps {
   source?: string
@@ -23,6 +24,10 @@ export function WaitlistForm({ source = 'direct' }: WaitlistFormProps) {
 
       if (result.success) {
         setStatus('success')
+        // Track waitlist join
+        track('interview_waitlist_joined', {
+          source: source,
+        })
       } else {
         setStatus('error')
         setErrorMessage(result.error || 'Erro ao salvar. Tente novamente.')

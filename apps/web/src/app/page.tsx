@@ -1,8 +1,12 @@
 import Link from 'next/link'
 import { Button, Card, Badge } from '@ui/components'
 import { Sparkles, Target, Clock, ArrowRight, Mic } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
+import { CopilotShowcase } from './_components/copilot-showcase'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -14,11 +18,24 @@ export default function HomePage() {
             </div>
             <span className="font-semibold text-lg text-navy">GoHire Copilot</span>
           </Link>
-          <Link href="/auth">
-            <Button variant="ghost" size="sm">
-              Entrar
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/pricing" className="text-sm text-navy/70 hover:text-navy transition-colors hidden sm:block">
+              Precos
+            </Link>
+            {user ? (
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/auth">
+                <Button variant="ghost" size="sm">
+                  Entrar
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
@@ -128,10 +145,13 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Copilot Showcase */}
+        <CopilotShowcase />
+
         {/* Interview Pro Teaser */}
         <section className="py-16 bg-white">
           <div className="container-narrow text-center">
-            <Badge className="mb-4 bg-amber/20 text-amber">Em breve</Badge>
+            <Badge className="mb-4 bg-amber/20 text-amber">Pro</Badge>
             <h2 className="text-2xl sm:text-3xl font-semibold text-navy mb-3">
               Treine para entrevistas com IA
             </h2>
@@ -144,6 +164,56 @@ export default function HomePage() {
                 Saber mais
               </Button>
             </Link>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section className="py-16">
+          <div className="container-wide">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-navy mb-3">
+                Planos simples
+              </h2>
+              <p className="text-navy/70">
+                Comece gratis. Faca upgrade quando precisar.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold text-navy mb-2">Free</h3>
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-3xl font-bold text-navy">R$ 0</span>
+                  <span className="text-navy/60">/mes</span>
+                </div>
+                <ul className="space-y-2 text-sm text-navy/70 mb-6">
+                  <li>✓ 3 insights por mes</li>
+                  <li>✓ 5 vagas para acompanhar</li>
+                  <li>✓ 5 perguntas/dia no Copilot</li>
+                  <li>✓ 1 entrevista simulada gratis</li>
+                </ul>
+                <Link href="/comecar">
+                  <Button variant="secondary" className="w-full">Comecar gratis</Button>
+                </Link>
+              </Card>
+              <Card className="p-6 border-amber border-2 relative">
+                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber text-navy">
+                  Recomendado
+                </Badge>
+                <h3 className="text-lg font-semibold text-navy mb-2">Pro</h3>
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-3xl font-bold text-navy">R$ 19</span>
+                  <span className="text-navy/60">/mes</span>
+                </div>
+                <ul className="space-y-2 text-sm text-navy/70 mb-6">
+                  <li>✓ Tudo ilimitado</li>
+                  <li>✓ Entrevistas ilimitadas com IA</li>
+                  <li>✓ Career Coach IA</li>
+                </ul>
+                <Link href="/pricing">
+                  <Button className="w-full">Ver detalhes</Button>
+                </Link>
+              </Card>
+            </div>
           </div>
         </section>
 
@@ -176,14 +246,14 @@ export default function HomePage() {
             <span className="text-sm text-navy/70">GoHire Copilot</span>
           </div>
           <nav className="flex items-center gap-6 text-sm text-navy/60">
+            <Link href="/pricing" className="hover:text-navy transition-colors">
+              Precos
+            </Link>
             <Link href="#" className="hover:text-navy transition-colors">
               Privacidade
             </Link>
             <Link href="#" className="hover:text-navy transition-colors">
               Termos
-            </Link>
-            <Link href="#" className="hover:text-navy transition-colors">
-              Contato
             </Link>
           </nav>
         </div>
