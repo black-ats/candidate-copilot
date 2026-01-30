@@ -52,7 +52,7 @@ export default function InsightPage() {
   useEffect(() => {
     // Get data from sessionStorage
     const storedData = sessionStorage.getItem('entryFlowData')
-    
+
     if (!storedData) {
       // Redirect to start if no data
       router.push('/comecar')
@@ -62,13 +62,13 @@ export default function InsightPage() {
     try {
       const parsedData = JSON.parse(storedData) as EntryFlowData
       setData(parsedData)
-      
+
       // Simulate processing time for better UX
       setTimeout(() => {
         const generatedInsight = generateInsight(parsedData)
         setInsight(generatedInsight)
         setIsLoading(false)
-        
+
         // Track insight generation
         track('insight_generated', {
           cargo: parsedData.cargo,
@@ -112,7 +112,7 @@ export default function InsightPage() {
         setSaved(true)
         return
       }
-      
+
       saveInsight({
         cargo: data.cargo,
         senioridade: data.senioridade,
@@ -180,9 +180,9 @@ export default function InsightPage() {
           </div>
         </header>
         <main className="container-narrow py-8 sm:py-12">
-          <UpgradePrompt 
-            remaining={accessCheck.remaining || 0} 
-            limit={accessCheck.limit || 3} 
+          <UpgradePrompt
+            remaining={accessCheck.remaining || 0}
+            limit={accessCheck.limit || 3}
           />
         </main>
       </div>
@@ -333,7 +333,7 @@ export default function InsightPage() {
               <p className="text-navy/70 mb-6 max-w-md mx-auto">
                 Veja o que o Copilot pode te ajudar a responder:
               </p>
-              
+
               {/* Chat Preview */}
               <div className="bg-sand rounded-lg p-4 mb-6 max-w-md mx-auto text-left">
                 {/* User message */}
@@ -344,15 +344,21 @@ export default function InsightPage() {
                   <div className="bg-white rounded-lg rounded-tl-none p-3 shadow-sm">
                     <p className="text-navy text-sm">
                       {data.objetivo === 'avaliar_proposta' && 'Qual salario devo pedir na negociacao?'}
-                      {data.objetivo === 'conseguir_entrevistas' && 'Como posso melhorar meu curriculo para essa vaga?'}
+                      {data.objetivo === 'mais_entrevistas' && 'Como posso melhorar meu curriculo para essa vaga?'}
                       {data.objetivo === 'mudar_area' && 'Quais skills preciso desenvolver primeiro?'}
                       {data.objetivo === 'negociar_salario' && 'Como devo abordar a conversa de aumento?'}
                       {data.objetivo === 'entender_mercado' && 'Qual a faixa salarial para meu perfil?'}
-                      {!['avaliar_proposta', 'conseguir_entrevistas', 'mudar_area', 'negociar_salario', 'entender_mercado'].includes(data.objetivo) && 'O que voce recomenda como proximo passo?'}
+                      ![
+                      'avaliar_proposta',
+                      'mais_entrevistas',
+                      'mudar_area',
+                      'negociar_salario',
+                      'entender_mercado',
+                      ].includes(data.objetivo)
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Copilot response */}
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
@@ -376,12 +382,12 @@ export default function InsightPage() {
                     Criar conta e continuar conversa
                   </Button>
                 </Link>
-                
+
                 <p className="text-sm text-navy/50 flex items-center gap-1">
                   <Clock className="w-4 h-4" />
                   Leva menos de 1 minuto
                 </p>
-                
+
                 <Button variant="ghost" size="sm" onClick={handleStartOver}>
                   <RefreshCw className="mr-2 w-4 h-4" />
                   Comecar de novo

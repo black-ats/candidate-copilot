@@ -24,7 +24,7 @@ export const step2Schema = z.object({
 
 // Step 3: Objetivo
 export const step3Schema = z.object({
-  objetivo: z.enum(['avaliar_proposta', 'mais_entrevistas', 'mudar_area', 'negociar_salario', 'outro'], {
+  objetivo: z.enum(['avaliar_proposta', 'mais_entrevistas', 'mudar_area', 'negociar_salario', 'entender_mercado', 'outro'], {
     required_error: 'Selecione seu objetivo principal',
   }),
   objetivoOutro: z.string().optional(),

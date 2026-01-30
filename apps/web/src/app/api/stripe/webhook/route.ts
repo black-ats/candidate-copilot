@@ -11,6 +11,22 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+/**
+ * In your Stripe API shape, Subscription no longer has current_period_end at top-level.
+ * Derive it from Subscription Items (works for 1+ items).
+ */
+function getCurrentPeriodEnd(subscription: Stripe.Subscription): number | null {
+  const items = subscription.items?.data ?? []
+  if (items.length === 0) return null
+
+  // Use the earliest period end among items (closest upcoming end).
+  return items.reduce<number | null>((min, it) => {
+    const end = it.current_period_end ?? null
+    if (end == null) return min
+    return min == null ? end : Math.min(min, end)
+  }, null)
+}
+
 export async function POST(req: Request) {
   const body = await req.text()
   const headersList = await headers()
@@ -94,8 +110,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   const subscriptionId = session.subscription as string
 
-  // Get subscription details
+  // Stripe v20 returns Stripe.Response<Stripe.Subscription>
   const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+
+  const periodEnd = getCurrentPeriodEnd(subscription)
+  const currentPeriodEndIso = periodEnd
+    ? new Date(periodEnd * 1000).toISOString()
+    : null
 
   await supabaseAdmin
     .from('user_profiles')
@@ -103,7 +124,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       plan: 'pro',
       subscription_id: subscriptionId,
       subscription_status: subscription.status,
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      current_period_end: currentPeriodEndIso,
       upgrade_source: 'stripe',
       updated_at: new Date().toISOString(),
     })
@@ -112,7 +133,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
-  
+
   // Get user by customer ID
   const { data: profile } = await supabaseAdmin
     .from('user_profiles')
@@ -127,12 +148,17 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   const isActive = ['active', 'trialing'].includes(subscription.status)
 
+  const periodEnd = getCurrentPeriodEnd(subscription)
+  const currentPeriodEndIso = periodEnd
+    ? new Date(periodEnd * 1000).toISOString()
+    : null
+
   await supabaseAdmin
     .from('user_profiles')
     .update({
       plan: isActive ? 'pro' : 'free',
       subscription_status: subscription.status,
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      current_period_end: currentPeriodEndIso,
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', profile.user_id)
@@ -140,7 +166,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
-  
+
   const { data: profile } = await supabaseAdmin
     .from('user_profiles')
     .select('user_id')
@@ -172,7 +198,7 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   const customerId = invoice.customer as string
-  
+
   const { data: profile } = await supabaseAdmin
     .from('user_profiles')
     .select('user_id')
