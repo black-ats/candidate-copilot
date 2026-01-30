@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card } from '@ui/components'
-import { Lightbulb, Sparkles, ChevronRight } from 'lucide-react'
+import { Lightbulb, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { InsightChatButton } from './chat-button'
 import { objetivoLabels } from '@/lib/insight-engine'
@@ -58,10 +58,7 @@ export default async function InsightsPage() {
                       <p className="text-xs text-navy/40">
                         {formatDate(insight.created_at)}
                       </p>
-                      <div className="flex items-center gap-2">
-                        <InsightChatButton insight={insight} />
-                        <ChevronRight className="w-4 h-4 text-navy/30" />
-                      </div>
+                      <InsightChatButton insight={insight} />
                     </div>
                   </div>
                 </div>

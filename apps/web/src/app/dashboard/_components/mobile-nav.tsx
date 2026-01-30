@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
   Home, ClipboardList, Lightbulb, Mic, 
-  Settings, Sparkles, Menu, X, LogOut, MessageCircle, Crown
+  Settings, Sparkles, Menu, X, LogOut, Crown
 } from 'lucide-react'
 import { Badge } from '@ui/components'
 import { CopilotDrawer } from './copilot-chat'
@@ -54,10 +54,10 @@ export function MobileNav({ email, plan = 'free' }: MobileNavProps) {
           {/* Copilot quick access button */}
           <button
             onClick={() => setIsCopilotOpen(true)}
-            className="p-2 rounded-lg text-navy/70 hover:bg-amber/10 hover:text-amber transition-colors"
+            className="p-2 rounded-lg bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white hover:from-violet-400 hover:via-purple-400 hover:to-fuchsia-400 transition-colors"
             aria-label="Abrir Copilot"
           >
-            <MessageCircle className="w-5 h-5" />
+            <Sparkles className="w-5 h-5" />
           </button>
           
           <button

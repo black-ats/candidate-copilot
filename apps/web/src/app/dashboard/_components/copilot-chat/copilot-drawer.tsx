@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { X, Sparkles, Send, RotateCcw, Crown } from 'lucide-react'
 import { Button, Badge } from '@ui/components'
 import { ChatMessages } from './chat-messages'
@@ -31,6 +31,35 @@ export function CopilotDrawer({ isOpen, onClose, insightContext: propContext }: 
   const [limitReached, setLimitReached] = useState(false)
   const [hasShownInitialMessage, setHasShownInitialMessage] = useState(false)
   const [hasInterviewHistory, setHasInterviewHistory] = useState(false)
+
+  // Track previous context to detect changes
+  const prevInsightContextId = useRef<string | null>(null)
+  const prevHeroContextKey = useRef<string | null>(null)
+  const prevInterviewContextId = useRef<string | null>(null)
+
+  // Reset chat when context changes
+  useEffect(() => {
+    const currentInsightId = insightContext?.id || null
+    const currentHeroKey = heroContext ? `${heroContext.context}-${heroContext.company}-${heroContext.title}` : null
+    const currentInterviewId = interviewContext?.sessionId || null
+
+    const contextChanged = 
+      (currentInsightId && currentInsightId !== prevInsightContextId.current) ||
+      (currentHeroKey && currentHeroKey !== prevHeroContextKey.current) ||
+      (currentInterviewId && currentInterviewId !== prevInterviewContextId.current)
+
+    if (contextChanged && isOpen) {
+      // Reset chat for new context
+      setMessages([])
+      setInput('')
+      setHasShownInitialMessage(false)
+    }
+
+    // Update refs
+    prevInsightContextId.current = currentInsightId
+    prevHeroContextKey.current = currentHeroKey
+    prevInterviewContextId.current = currentInterviewId
+  }, [insightContext, heroContext, interviewContext, isOpen])
 
   // Fechar com Escape
   useEffect(() => {

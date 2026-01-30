@@ -1,10 +1,9 @@
 'use client'
 
-import { Button } from '@ui/components'
-import { MessageSquare } from 'lucide-react'
+import { CopilotButton } from '@/components/copilot-button'
 import { useCopilotDrawer, type InterviewContext } from '@/hooks/use-copilot-drawer'
 
-interface CopilotButtonProps {
+interface InterviewCopilotButtonProps {
   session: {
     id: string
     cargo: string
@@ -21,7 +20,7 @@ interface CopilotButtonProps {
   }
 }
 
-export function CopilotButton({ session }: CopilotButtonProps) {
+export function InterviewCopilotButton({ session }: InterviewCopilotButtonProps) {
   const { openWithInterviewContext } = useCopilotDrawer()
 
   const handleClick = () => {
@@ -51,9 +50,8 @@ export function CopilotButton({ session }: CopilotButtonProps) {
   }
 
   return (
-    <Button variant="secondary" onClick={handleClick}>
-      <MessageSquare className="w-5 h-5 mr-2" />
+    <CopilotButton onClick={handleClick}>
       Explorar com Copilot
-    </Button>
+    </CopilotButton>
   )
 }

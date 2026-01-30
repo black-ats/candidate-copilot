@@ -1,7 +1,6 @@
 'use client'
 
-import { Button } from '@ui/components'
-import { MessageCircle } from 'lucide-react'
+import { CopilotButton } from '@/components/copilot-button'
 import { useCopilotDrawer, type InsightContext } from '@/hooks/use-copilot-drawer'
 import { mapObjetivoToTipo } from '../_components/copilot-chat/insight-messages'
 
@@ -33,14 +32,8 @@ export function InsightChatButton({ insight }: { insight: InsightData }) {
   }
 
   return (
-    <Button 
-      variant="ghost" 
-      size="sm" 
-      onClick={handleClick}
-      className="text-teal hover:text-teal/80"
-    >
-      <MessageCircle className="w-4 h-4 mr-1" />
+    <CopilotButton variant="text" size="sm" onClick={handleClick}>
       Conversar
-    </Button>
+    </CopilotButton>
   )
 }

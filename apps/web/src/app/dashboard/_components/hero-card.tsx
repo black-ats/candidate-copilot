@@ -3,7 +3,8 @@
 import Link from 'next/link'
 import { useState, useCallback } from 'react'
 import { Card, Button } from '@ui/components'
-import { X, Sparkles, MessageCircle } from 'lucide-react'
+import { X, Sparkles } from 'lucide-react'
+import { CopilotButton } from '@/components/copilot-button'
 import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
 import type { HeroData } from '@/lib/hero'
 
@@ -42,21 +43,15 @@ export function HeroCard({ data }: HeroCardProps) {
   const renderCta = (cta: { label: string; href: string }, isPrimary: boolean) => {
     if (isChatCta(cta.href)) {
       return (
-        <Button 
-          size="sm" 
-          variant={isPrimary ? 'default' : 'ghost'}
-          onClick={handleOpenChat}
-        >
-          {!isPrimary && <MessageCircle className="w-4 h-4 mr-2" />}
+        <CopilotButton size="sm" onClick={handleOpenChat}>
           {cta.label}
-        </Button>
+        </CopilotButton>
       )
     }
     
     return (
       <Link href={cta.href}>
-        <Button size="sm" variant={isPrimary ? 'default' : 'ghost'}>
-          {!isPrimary && <MessageCircle className="w-4 h-4 mr-2" />}
+        <Button size="sm" variant="secondary">
           {cta.label}
         </Button>
       </Link>

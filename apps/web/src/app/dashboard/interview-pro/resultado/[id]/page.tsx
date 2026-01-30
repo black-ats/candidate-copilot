@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { Button, Card, Badge, Progress } from '@ui/components'
 import { ArrowLeft, RotateCcw, History, CheckCircle, AlertTriangle, Lightbulb, MessageSquare } from 'lucide-react'
 import { getSession, type InterviewFeedback } from '../../actions'
-import { CopilotButton } from './copilot-button'
+import { InterviewCopilotButton } from './copilot-button'
 
 type Props = {
   params: Promise<{ id: string }>
@@ -206,7 +206,7 @@ export default async function ResultadoPage({ params }: Props) {
             <p className="text-navy/70 text-sm mb-4">
               Converse com o Copilot sobre como melhorar suas respostas e se preparar para proximas entrevistas.
             </p>
-            <CopilotButton session={session} />
+            <InterviewCopilotButton session={session} />
           </div>
         </div>
       </Card>
