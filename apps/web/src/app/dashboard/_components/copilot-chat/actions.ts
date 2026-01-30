@@ -66,8 +66,8 @@ export async function getUserContext(): Promise<UserContext> {
           cargo: session.cargo,
           score: session.overall_score || 0,
           completedAt: session.completed_at ? new Date(session.completed_at).toLocaleDateString('pt-BR') : '',
-          mainStrengths: [...new Set(allStrengths)].slice(0, 2),
-          mainImprovements: [...new Set(allImprovements)].slice(0, 2),
+          mainStrengths: Array.from(new Set(allStrengths)).slice(0, 2),
+          mainImprovements: Array.from(new Set(allImprovements)).slice(0, 2),
         }
       })
     }
