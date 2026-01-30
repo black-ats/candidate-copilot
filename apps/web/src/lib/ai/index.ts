@@ -9,6 +9,7 @@ export { getAIProvider } from './provider'
 export { ContextBuilder } from './context/base'
 export { ChatContextBuilder } from './context/chat'
 export { CoachContextBuilder } from './context/coach'
+export { InterviewContextBuilder, FeedbackContextBuilder } from './context/interview'
 
 // Security
 export { validateInput, checkTopic, runSecurityChecks } from './security'

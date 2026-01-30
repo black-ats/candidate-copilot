@@ -9,18 +9,26 @@ import { SuggestedQuestions } from './suggested-questions'
 import { sendChatMessage, checkCopilotAccess, type CopilotAccessInfo } from './actions'
 import type { ChatMessage } from '@/lib/copilot/types'
 import Link from 'next/link'
+import { useCopilotDrawer, type InsightContext, type HeroContext } from '@/hooks/use-copilot-drawer'
+import { insightInitialMessages, heroInitialMessages } from './insight-messages'
 
 interface CopilotDrawerProps {
   isOpen: boolean
   onClose: () => void
+  insightContext?: InsightContext | null
 }
 
-export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
+export function CopilotDrawer({ isOpen, onClose, insightContext: propContext }: CopilotDrawerProps) {
+  const { insightContext: storeContext, heroContext: storeHeroContext, clearContext } = useCopilotDrawer()
+  const insightContext = propContext || storeContext
+  const heroContext = storeHeroContext
+  
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [accessInfo, setAccessInfo] = useState<CopilotAccessInfo | null>(null)
   const [limitReached, setLimitReached] = useState(false)
+  const [hasShownInitialMessage, setHasShownInitialMessage] = useState(false)
 
   // Fechar com Escape
   useEffect(() => {
@@ -58,6 +66,36 @@ export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
     }
   }, [isOpen])
 
+  // Show initial message when opening with insight or hero context
+  useEffect(() => {
+    if (isOpen && !hasShownInitialMessage && messages.length === 0) {
+      let initialMessage: string | null = null
+      
+      if (insightContext) {
+        initialMessage = insightInitialMessages[insightContext.tipo] || insightInitialMessages.default
+      } else if (heroContext) {
+        const heroMsg = heroInitialMessages[heroContext.context]
+        if (typeof heroMsg === 'function') {
+          initialMessage = heroMsg(heroContext.company, heroContext.title)
+        } else {
+          initialMessage = heroMsg || heroInitialMessages.active_summary as string
+        }
+      }
+      
+      if (initialMessage) {
+        const assistantMessage: ChatMessage = {
+          id: `assistant-initial-${Date.now()}`,
+          role: 'assistant',
+          content: initialMessage,
+          timestamp: new Date(),
+        }
+        
+        setMessages([assistantMessage])
+        setHasShownInitialMessage(true)
+      }
+    }
+  }, [isOpen, insightContext, heroContext, hasShownInitialMessage, messages.length])
+
   const handleSubmit = useCallback(async (question: string) => {
     if (!question.trim() || isLoading || limitReached) return
     
@@ -74,7 +112,25 @@ export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
     setIsLoading(true)
     
     try {
-      const response = await sendChatMessage(question, messages)
+      // Convert InsightContext to InsightContextData for the server action
+      const contextData = insightContext ? {
+        id: insightContext.id,
+        tipo: insightContext.tipo,
+        cargo: insightContext.cargo,
+        area: insightContext.area,
+        recommendation: insightContext.recommendation,
+        next_steps: insightContext.next_steps,
+      } : null
+      
+      // Convert HeroContext to HeroContextData for the server action
+      const heroContextData = heroContext ? {
+        context: heroContext.context,
+        message: heroContext.message,
+        company: heroContext.company,
+        title: heroContext.title,
+      } : null
+      
+      const response = await sendChatMessage(question, messages, contextData, heroContextData)
       
       // Check if limit was reached
       if (response.limitReached) {
@@ -118,7 +174,7 @@ export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, messages, limitReached, accessInfo])
+  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -132,6 +188,8 @@ export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
   const handleReset = () => {
     setMessages([])
     setInput('')
+    setHasShownInitialMessage(false)
+    clearContext()
   }
 
   return (
@@ -207,7 +265,9 @@ export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
                   <p className="text-xs text-navy/50 mb-3">Perguntar mais:</p>
                   <SuggestedQuestions 
                     onSelect={handleQuestionSelect} 
-                    compact 
+                    compact
+                    insightContext={insightContext}
+                    heroContext={heroContext}
                   />
                 </div>
               )}

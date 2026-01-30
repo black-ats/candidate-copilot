@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { 
@@ -10,12 +9,13 @@ import {
 import { Badge } from '@ui/components'
 import { UserMenu } from './user-menu'
 import { CopilotDrawer } from './copilot-chat'
+import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
 
 const navItems = [
   { icon: Home, label: 'Inicio', href: '/dashboard' },
   { icon: ClipboardList, label: 'Minhas Vagas', href: '/dashboard/aplicacoes' },
   { icon: Lightbulb, label: 'Insights', href: '/dashboard/insights' },
-  { icon: Mic, label: 'Interview Pro', href: '/interview-pro', badge: 'Em breve' },
+  { icon: Mic, label: 'Interview Pro', href: '/dashboard/interview-pro', badge: 'Pro' },
 ]
 
 interface SidebarProps {
@@ -25,7 +25,7 @@ interface SidebarProps {
 
 export function Sidebar({ email, plan = 'free' }: SidebarProps) {
   const pathname = usePathname()
-  const [isCopilotOpen, setIsCopilotOpen] = useState(false)
+  const { isOpen: isCopilotOpen, open: openCopilot, close: closeCopilot } = useCopilotDrawer()
 
   return (
     <>
@@ -87,7 +87,7 @@ export function Sidebar({ email, plan = 'free' }: SidebarProps) {
           
           {/* Copilot Button */}
           <button
-            onClick={() => setIsCopilotOpen(true)}
+            onClick={openCopilot}
             className="
               flex items-center h-11 px-4 mx-2 rounded-lg w-[calc(100%-1rem)]
               text-navy/70 hover:bg-amber/10 hover:text-amber transition-colors duration-150
@@ -157,7 +157,7 @@ export function Sidebar({ email, plan = 'free' }: SidebarProps) {
       {/* Copilot Drawer */}
       <CopilotDrawer 
         isOpen={isCopilotOpen} 
-        onClose={() => setIsCopilotOpen(false)} 
+        onClose={closeCopilot} 
       />
     </>
   )

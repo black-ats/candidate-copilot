@@ -11,18 +11,20 @@ interface UpgradePromptProps {
 }
 
 export function UpgradePrompt({ remaining, limit, feature = 'insights' }: UpgradePromptProps) {
+  const used = limit - remaining
+  
   const messages = {
     insights: {
       title: 'Voce atingiu o limite de insights',
-      subtitle: `${remaining} de ${limit} insights usados este mes`
+      subtitle: `${used} de ${limit} insights usados este mes`
     },
     applications: {
       title: 'Voce atingiu o limite de vagas',
-      subtitle: `${remaining} de ${limit} vagas usadas`
+      subtitle: `${used} de ${limit} vagas usadas`
     },
     copilot: {
       title: 'Voce atingiu o limite diario do Copilot',
-      subtitle: `${remaining} de ${limit} perguntas usadas hoje`
+      subtitle: `${used} de ${limit} perguntas usadas hoje`
     },
     interview_pro: {
       title: 'Interview Pro e exclusivo do plano Pro',

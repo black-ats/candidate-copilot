@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button, Card, Badge } from '@ui/components'
-import { Sparkles, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, User, Mic } from 'lucide-react'
+import { Sparkles, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, User, MessageSquare, Clock } from 'lucide-react'
 import {
   generateInsight,
   senioridadeLabels,
@@ -81,10 +81,10 @@ export default function InsightPage() {
     }
   }, [router])
 
-  // Salvar no sessionStorage para caso de signup posterior
+  // Salvar no localStorage para caso de signup posterior (localStorage persiste entre tabs)
   useEffect(() => {
     if (data && insight) {
-      sessionStorage.setItem('pendingInsight', JSON.stringify({
+      localStorage.setItem('pendingInsight', JSON.stringify({
         cargo: data.cargo,
         senioridade: data.senioridade,
         area: data.area,
@@ -104,6 +104,15 @@ export default function InsightPage() {
   // Se ja logado, salvar no DB imediatamente
   useEffect(() => {
     if (isLoggedIn && data && insight && !saved && !authLoading && !limitReached) {
+      // Check if localStorage still has the pending insight
+      // If not, another tab (PendingInsightSaver) already saved it
+      const pendingInsight = localStorage.getItem('pendingInsight')
+      if (!pendingInsight) {
+        console.log('[InsightPage] pendingInsight already removed, skipping save (likely saved by another tab)')
+        setSaved(true)
+        return
+      }
+      
       saveInsight({
         cargo: data.cargo,
         senioridade: data.senioridade,
@@ -120,8 +129,8 @@ export default function InsightPage() {
       }).then((result) => {
         if (result.success) {
           setSaved(true)
-          // Limpar sessionStorage ja que salvou no DB
-          sessionStorage.removeItem('pendingInsight')
+          // Limpar localStorage/sessionStorage ja que salvou no DB
+          localStorage.removeItem('pendingInsight')
           sessionStorage.removeItem('entryFlowData')
           // Update remaining count after save
           if (accessCheck && accessCheck.remaining !== null) {
@@ -319,47 +328,67 @@ export default function InsightPage() {
           ) : (
             <>
               <h2 className="text-xl font-semibold text-navy mb-2">
-                Quer salvar e acompanhar?
+                Quer continuar essa conversa?
               </h2>
               <p className="text-navy/70 mb-6 max-w-md mx-auto">
-                Crie uma conta gratuita para salvar seus insights e receber 
-                direcionamentos personalizados.
+                Veja o que o Copilot pode te ajudar a responder:
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              
+              {/* Chat Preview */}
+              <div className="bg-sand rounded-lg p-4 mb-6 max-w-md mx-auto text-left">
+                {/* User message */}
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-8 h-8 bg-navy/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="w-4 h-4 text-navy" />
+                  </div>
+                  <div className="bg-white rounded-lg rounded-tl-none p-3 shadow-sm">
+                    <p className="text-navy text-sm">
+                      {data.objetivo === 'avaliar_proposta' && 'Qual salario devo pedir na negociacao?'}
+                      {data.objetivo === 'conseguir_entrevistas' && 'Como posso melhorar meu curriculo para essa vaga?'}
+                      {data.objetivo === 'mudar_area' && 'Quais skills preciso desenvolver primeiro?'}
+                      {data.objetivo === 'negociar_salario' && 'Como devo abordar a conversa de aumento?'}
+                      {data.objetivo === 'entender_mercado' && 'Qual a faixa salarial para meu perfil?'}
+                      {!['avaliar_proposta', 'conseguir_entrevistas', 'mudar_area', 'negociar_salario', 'entender_mercado'].includes(data.objetivo) && 'O que voce recomenda como proximo passo?'}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Copilot response */}
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-teal" />
+                  </div>
+                  <div className="bg-teal/10 rounded-lg rounded-tl-none p-3 flex-1">
+                    <p className="text-navy text-sm">
+                      Baseado no seu perfil de <span className="font-medium">{data.cargo}</span> com experiencia em <span className="font-medium">{areaLabels[data.area]}</span>, posso te ajudar a...
+                    </p>
+                    <p className="text-teal text-xs mt-2 font-medium">
+                      Crie uma conta para ver a resposta completa →
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-4">
                 <Link href="/auth">
                   <Button size="lg">
-                    <User className="mr-2 w-5 h-5" />
-                    Criar conta gratuita
+                    <MessageSquare className="mr-2 w-5 h-5" />
+                    Criar conta e continuar conversa
                   </Button>
                 </Link>
-                <Button variant="ghost" onClick={handleStartOver}>
-                  <RefreshCw className="mr-2 w-5 h-5" />
+                
+                <p className="text-sm text-navy/50 flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  Leva menos de 1 minuto
+                </p>
+                
+                <Button variant="ghost" size="sm" onClick={handleStartOver}>
+                  <RefreshCw className="mr-2 w-4 h-4" />
                   Comecar de novo
                 </Button>
               </div>
             </>
           )}
-        </Card>
-
-        {/* Interview Pro Teaser */}
-        <Card className="p-6 border-amber/30 bg-amber/5">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Mic className="w-5 h-5 text-amber" />
-            </div>
-            <div className="flex-1">
-              <Badge className="mb-2 bg-amber/20 text-amber">Pro</Badge>
-              <h3 className="text-lg font-semibold text-navy mb-1">
-                Prepare-se para a proxima entrevista
-              </h3>
-              <p className="text-navy/70 text-sm mb-3">
-                Pratique com IA e receba feedback instantaneo sobre suas respostas.
-              </p>
-              <Link href="/interview-pro" className="text-sm font-medium text-amber hover:text-amber/80 transition-colors">
-                Ver mais →
-              </Link>
-            </div>
-          </div>
         </Card>
 
         {/* Disclaimer */}

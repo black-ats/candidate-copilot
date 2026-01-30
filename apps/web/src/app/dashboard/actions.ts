@@ -1,6 +1,8 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { detectContext, buildMessage, type HeroData, type UserDataForHero } from '@/lib/hero'
+import type { Application } from '@/lib/types/application'
 
 export interface DashboardMetrics {
   total: number
@@ -132,4 +134,40 @@ export async function getBenchmarkMetrics(
     totalUsuariosAtivos: userStats.size,
     percentilUsuario,
   }
+}
+
+export async function getHeroData(hasPendingInsight: boolean = false): Promise<HeroData | null> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    return null
+  }
+
+  // Buscar aplicacoes do usuario
+  const { data: applications } = await supabase
+    .from('applications')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('updated_at', { ascending: false })
+
+  // Buscar insights do usuario
+  const { data: insights } = await supabase
+    .from('insights')
+    .select('id, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  const userData: UserDataForHero = {
+    applications: (applications || []) as Application[],
+    insights: insights || [],
+    hasPendingInsight,
+  }
+
+  // Detectar contexto e construir mensagem
+  const contextResult = detectContext(userData)
+  const heroData = await buildMessage(contextResult)
+
+  return heroData
 }

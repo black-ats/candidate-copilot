@@ -64,3 +64,19 @@ export interface SuggestedQuestion {
   label: string
   category: 'metricas' | 'proximos_passos' | 'insights' | 'analise'
 }
+
+export interface InsightContextData {
+  id: string
+  tipo: string
+  cargo: string
+  area?: string
+  recommendation: string
+  next_steps: string[]
+}
+
+export interface HeroContextData {
+  context: string // pending_insight, proposal_received, interview_soon, etc.
+  message: string // A dica/mensagem exibida no Hero Card
+  company?: string
+  title?: string
+}

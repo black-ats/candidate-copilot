@@ -10,6 +10,9 @@ type EventName =
   | 'upgrade_initiated'
   | 'upgrade_completed'
   | 'interview_waitlist_joined'
+  | 'interview_started'
+  | 'interview_completed'
+  | 'interview_abandoned'
 
 type EventProperties = Record<string, string | number | boolean | undefined>
 

@@ -1,7 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card } from '@ui/components'
-import { Lightbulb, Sparkles } from 'lucide-react'
+import { Lightbulb, Sparkles, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+import { InsightChatButton } from './chat-button'
+import { objetivoLabels } from '@/lib/insight-engine'
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
@@ -17,7 +19,7 @@ export default async function InsightsPage() {
   
   const { data: insights } = await supabase
     .from('insights')
-    .select('id, recommendation, objetivo, created_at')
+    .select('id, recommendation, objetivo, cargo, area, next_steps, created_at')
     .order('created_at', { ascending: false })
 
   return (
@@ -39,24 +41,32 @@ export default async function InsightsPage() {
       {insights && insights.length > 0 ? (
         <div className="space-y-4">
           {insights.map((insight) => (
-            <Card key={insight.id} className="p-6">
-              <div className="flex items-start gap-4">
-                <Sparkles className="w-5 h-5 text-amber flex-shrink-0 mt-1" />
-                <div className="flex-1">
-                  <p className="text-navy font-medium mb-2">
-                    {insight.recommendation}
-                  </p>
-                  {insight.objetivo && (
-                    <p className="text-sm text-navy/60 mb-2">
-                      Objetivo: {insight.objetivo}
+            <Link key={insight.id} href={`/dashboard/insights/${insight.id}`}>
+              <Card className="p-6 hover:bg-stone/5 transition-colors cursor-pointer">
+                <div className="flex items-start gap-4">
+                  <Sparkles className="w-5 h-5 text-amber flex-shrink-0 mt-1" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-navy font-medium mb-2">
+                      {insight.recommendation}
                     </p>
-                  )}
-                  <p className="text-xs text-navy/40">
-                    {formatDate(insight.created_at)}
-                  </p>
+                    {insight.objetivo && (
+                      <p className="text-sm text-navy/60 mb-2">
+                        Objetivo: {objetivoLabels[insight.objetivo] || insight.objetivo}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-navy/40">
+                        {formatDate(insight.created_at)}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <InsightChatButton insight={insight} />
+                        <ChevronRight className="w-4 h-4 text-navy/30" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       ) : (

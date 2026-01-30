@@ -48,12 +48,35 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
   // Check coupon expiration first
   await checkCouponExpiration(userId)
   
-  const { data } = await supabase
+  let { data } = await supabase
     .from('user_profiles')
     .select('plan, insights_used_this_month, applications_used_this_month, insights_reset_at')
     .eq('user_id', userId)
     .single()
   
+  // If profile doesn't exist, create it (fallback for when trigger didn't fire)
+  if (!data) {
+    const nextReset = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+    const { data: newProfile, error } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: userId,
+        plan: 'free',
+        insights_used_this_month: 0,
+        applications_used_this_month: 0,
+        insights_reset_at: nextReset.toISOString()
+      })
+      .select('plan, insights_used_this_month, applications_used_this_month, insights_reset_at')
+      .single()
+    
+    if (error) {
+      console.error('Error creating user profile:', error)
+      return null
+    }
+    
+    data = newProfile
+  }
+
   if (!data) return null
 
   // Reset counters if month changed

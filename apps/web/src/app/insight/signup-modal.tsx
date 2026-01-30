@@ -1,0 +1,79 @@
+'use client'
+
+import Link from 'next/link'
+import { Card, Button } from '@ui/components'
+import { MessageSquare, X, Check, User } from 'lucide-react'
+
+interface SignupModalProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function SignupModal({ isOpen, onClose }: SignupModalProps) {
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Overlay */}
+      <div 
+        className="absolute inset-0 bg-navy/50" 
+        onClick={onClose} 
+      />
+      
+      {/* Modal */}
+      <Card className="relative z-10 w-full max-w-md p-6">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-navy/40 hover:text-navy transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="text-center">
+          <div className="w-12 h-12 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MessageSquare className="w-6 h-6 text-teal" />
+          </div>
+          
+          <h2 className="text-xl font-semibold text-navy mb-2">
+            Quer conversar sobre este insight?
+          </h2>
+          
+          <p className="text-navy/70 mb-6">
+            Crie uma conta gratuita para:
+          </p>
+
+          <ul className="text-left space-y-3 mb-6">
+            <li className="flex items-center gap-3">
+              <Check className="w-5 h-5 text-teal flex-shrink-0" />
+              <span className="text-navy">Salvar este insight</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Check className="w-5 h-5 text-teal flex-shrink-0" />
+              <span className="text-navy">Conversar com o Copilot sobre sua situacao</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Check className="w-5 h-5 text-teal flex-shrink-0" />
+              <span className="text-navy">Acompanhar suas aplicacoes</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <Check className="w-5 h-5 text-teal flex-shrink-0" />
+              <span className="text-navy">Receber mais insights personalizados</span>
+            </li>
+          </ul>
+
+          <div className="flex flex-col gap-3">
+            <Link href="/auth">
+              <Button size="lg" className="w-full">
+                <User className="mr-2 w-5 h-5" />
+                Criar conta gratuita
+              </Button>
+            </Link>
+            <Button variant="ghost" onClick={onClose}>
+              Agora nao
+            </Button>
+          </div>
+        </div>
+      </Card>
+    </div>
+  )
+}

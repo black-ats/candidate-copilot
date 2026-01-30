@@ -3,9 +3,10 @@ import { createClient } from '@/lib/supabase/server'
 import { Button, Card, Badge } from '@ui/components'
 import { Sparkles, ArrowRight, Mic, Briefcase, TrendingUp, Trophy, BarChart3 } from 'lucide-react'
 import { getApplicationStats } from './aplicacoes/actions'
-import { getDashboardMetrics } from './actions'
+import { getDashboardMetrics, getHeroData } from './actions'
 import { PendingInsightSaver } from './_components/pending-insight-saver'
 import { MetricsCards } from './_components/metrics-cards'
+import { HeroCard } from './_components/hero-card'
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
 
   const stats = await getApplicationStats()
   const metrics = await getDashboardMetrics()
+  const heroData = await getHeroData()
 
   // Buscar insights do usuario
   const { data: insights } = await supabase
@@ -45,7 +47,10 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6">
-        {/* Applications Card */}
+        {/* 1. Hero Card - Acao mais importante do momento */}
+        {heroData && <HeroCard data={heroData} />}
+
+        {/* 2. Aplicacoes - Core do produto */}
         <Card variant="elevated" className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -105,8 +110,78 @@ export default async function DashboardPage() {
           )}
         </Card>
 
-        {/* Metrics Cards */}
+        {/* 3. Insights - Combinado com CTA de novo insight */}
         <Card variant="elevated" className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-amber" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-navy">
+                  Seus Insights
+                </h2>
+                <p className="text-sm text-navy/60">
+                  Recomendacoes personalizadas
+                </p>
+              </div>
+            </div>
+            <Link href="/comecar">
+              <Button size="sm">
+                Novo insight
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+          
+          {insights && insights.length > 0 ? (
+            <>
+              <ul className="space-y-2">
+                {insights.slice(0, 3).map((insight) => (
+                  <li key={insight.id}>
+                    <Link 
+                      href={`/dashboard/insights/${insight.id}`}
+                      className="flex items-start gap-3 p-3 -mx-3 rounded-lg hover:bg-stone/5 transition-colors"
+                    >
+                      <Sparkles className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-navy font-medium line-clamp-1">{insight.recommendation}</p>
+                        <p className="text-sm text-navy/60">
+                          {formatDate(insight.created_at)}
+                        </p>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-navy/30 flex-shrink-0 mt-1" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              {insights.length > 3 && (
+                <div className="mt-3 pt-3 border-t border-stone/20 text-center">
+                  <Link href="/dashboard/insights">
+                    <Button variant="ghost" size="sm">
+                      Ver todos os {insights.length} insights
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-navy/60 text-sm mb-3">
+                Responda algumas perguntas e receba recomendacoes personalizadas para sua carreira.
+              </p>
+              <Link href="/comecar">
+                <Button variant="secondary" size="sm">
+                  Gerar primeiro insight
+                </Button>
+              </Link>
+            </div>
+          )}
+        </Card>
+
+        {/* 4. Metricas - Contexto sobre a busca */}
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-navy">Sua busca</h2>
             <Link href="/dashboard/metricas">
@@ -124,62 +199,22 @@ export default async function DashboardPage() {
           )}
         </Card>
 
-        <Card variant="elevated" className="p-6">
-          <h2 className="text-xl font-semibold text-navy mb-2">
-            Comece sua jornada
-          </h2>
-          <p className="text-navy/70 mb-4">
-            Responda algumas perguntas para receber insights personalizados sobre sua carreira.
-          </p>
-          <Link href="/comecar">
-            <Button>
-              Novo insight
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold text-navy mb-4">
-            Seus insights
-          </h2>
-          {insights && insights.length > 0 ? (
-            <ul className="space-y-3">
-              {insights.map((insight) => (
-                <li key={insight.id} className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-navy font-medium">{insight.recommendation}</p>
-                    <p className="text-sm text-navy/60">
-                      {formatDate(insight.created_at)}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-navy/50 text-sm">
-              Seus insights salvos aparecerao aqui. Comece gerando seu primeiro insight!
-            </p>
-          )}
-        </Card>
-
-        {/* Interview Pro Teaser */}
-        <Card className="p-6 border-amber/30 bg-amber/5">
+        {/* 5. Interview Pro - Upsell */}
+        <Card className="p-6 border-teal/30 bg-teal/5">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Mic className="w-5 h-5 text-amber" />
+            <div className="w-10 h-10 bg-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Mic className="w-5 h-5 text-teal" />
             </div>
             <div className="flex-1">
-              <Badge className="mb-2 bg-amber/20 text-amber">Em breve</Badge>
+              <Badge className="mb-2 bg-teal/20 text-teal">Pro</Badge>
               <h3 className="text-lg font-semibold text-navy mb-1">
                 Interview Pro
               </h3>
               <p className="text-navy/70 text-sm mb-3">
                 Mock interviews com IA. Pratique e receba feedback instantaneo.
               </p>
-              <Link href="/interview-pro" className="text-sm font-medium text-amber hover:text-amber/80 transition-colors">
-                Entrar na lista →
+              <Link href="/dashboard/interview-pro" className="text-sm font-medium text-teal hover:text-teal/80 transition-colors">
+                Treinar entrevistas →
               </Link>
             </div>
           </div>

@@ -6,6 +6,8 @@ import {
 } from 'lucide-react'
 import type { SuggestedQuestion } from '@/lib/copilot/types'
 import type { LucideIcon } from 'lucide-react'
+import type { InsightContext, HeroContext } from '@/hooks/use-copilot-drawer'
+import { insightSuggestedQuestions, heroSuggestedQuestions } from './insight-messages'
 
 interface ExtendedQuestion extends SuggestedQuestion {
   icon: LucideIcon
@@ -83,13 +85,67 @@ interface SuggestedQuestionsProps {
   onSelect: (question: string) => void
   compact?: boolean
   categories?: string[]
+  insightContext?: InsightContext | null
+  heroContext?: HeroContext | null
 }
 
 export function SuggestedQuestions({ 
   onSelect, 
   compact = false,
-  categories 
+  categories,
+  insightContext,
+  heroContext
 }: SuggestedQuestionsProps) {
+  // If there's insight or hero context, show context-specific questions
+  const contextQuestions = insightContext 
+    ? insightSuggestedQuestions[insightContext.tipo] || insightSuggestedQuestions.default
+    : heroContext
+    ? heroSuggestedQuestions[heroContext.context] || heroSuggestedQuestions.active_summary
+    : null
+    
+  if (contextQuestions) {
+    if (compact) {
+      const compactQuestions = contextQuestions.slice(0, 4)
+      
+      return (
+        <div className="flex flex-wrap gap-2">
+          {compactQuestions.map((q, i) => (
+            <button
+              key={i}
+              onClick={() => onSelect(q)}
+              className="
+                flex items-center gap-2 px-3 py-1.5 rounded-full
+                bg-stone/10 hover:bg-stone/20 transition-colors
+                text-xs text-navy/80 hover:text-navy
+              "
+            >
+              <HelpCircle className="w-3 h-3" />
+              <span>{q}</span>
+            </button>
+          ))}
+        </div>
+      )
+    }
+    
+    return (
+      <div className="space-y-1.5">
+        {contextQuestions.map((q, i) => (
+          <button
+            key={i}
+            onClick={() => onSelect(q)}
+            className="
+              w-full flex items-center gap-3 p-3 rounded-lg
+              bg-stone/5 hover:bg-stone/10 transition-colors text-left
+            "
+          >
+            <HelpCircle className="w-4 h-4 text-teal flex-shrink-0" />
+            <span className="text-sm text-navy">{q}</span>
+          </button>
+        ))}
+      </div>
+    )
+  }
+  
   // Filtrar por categorias se especificado
   const questions = categories 
     ? defaultQuestions.filter(q => categories.includes(q.category))

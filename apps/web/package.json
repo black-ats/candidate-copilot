@@ -23,7 +23,8 @@
     "react-hook-form": "^7.49.3",
     "stripe": "^20.3.0",
     "tailwind-merge": "^2.2.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",

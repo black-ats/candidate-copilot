@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 import { canGenerateInsight } from '@/lib/subscription/check-access'
@@ -57,7 +58,7 @@ export async function saveInsight(data: InsightData) {
     return { error: 'Dados invalidos' }
   }
   
-  const { error } = await supabase
+  const { data: insertedInsight, error } = await supabase
     .from('insights')
     .insert({
       user_id: user.id,
@@ -74,6 +75,8 @@ export async function saveInsight(data: InsightData) {
       risks: validated.data.risks,
       next_steps: validated.data.nextSteps,
     })
+    .select('id')
+    .single()
   
   if (error) {
     console.error('Error saving insight:', error)
@@ -83,5 +86,9 @@ export async function saveInsight(data: InsightData) {
   // Increment usage counter after successful save
   await incrementInsightUsage()
   
-  return { success: true }
+  // Revalidate dashboard pages to show new insight
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/insights')
+  
+  return { success: true, insightId: insertedInsight?.id }
 }

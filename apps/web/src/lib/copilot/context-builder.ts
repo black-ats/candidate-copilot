@@ -1,4 +1,4 @@
-import type { UserContext } from './types'
+import type { UserContext, InsightContextData, HeroContextData } from './types'
 import type { Application } from '@/lib/types/application'
 
 interface InsightFromDB {
@@ -124,14 +124,56 @@ export function buildUserContext(
   }
 }
 
-export function buildSystemPrompt(context: UserContext): string {
+export function buildSystemPrompt(
+  context: UserContext, 
+  insightContext?: InsightContextData | null,
+  heroContext?: HeroContextData | null
+): string {
   const contextStr = formatContextForPrompt(context)
   
-  return `Voce e o GoHire Copilot, um assistente de carreira que ajuda 
+  let prompt = `Voce e o GoHire Copilot, um assistente de carreira que ajuda 
 usuarios a tomar decisoes sobre sua busca de emprego.
 
 CONTEXTO DO USUARIO:
-${contextStr}
+${contextStr}`
+
+  // Add insight context if available
+  if (insightContext) {
+    prompt += `
+
+CONTEXTO DO INSIGHT ATUAL:
+O usuario gerou um insight sobre "${insightContext.cargo}" com a recomendacao: "${insightContext.recommendation}".
+${insightContext.next_steps.length > 0 ? `Proximos passos sugeridos: ${insightContext.next_steps.join(', ')}.` : ''}
+
+Ajude o usuario a aprofundar este tema e tomar uma decisao.`
+  }
+
+  // Add hero context if available (dica do dia ou contexto especifico)
+  if (heroContext) {
+    const heroContextLabels: Record<string, string> = {
+      pending_insight: 'O usuario tem um insight pendente para revisar',
+      proposal_received: `O usuario recebeu uma proposta${heroContext.company ? ` da ${heroContext.company}` : ''}${heroContext.title ? ` para ${heroContext.title}` : ''}`,
+      interview_soon: `O usuario tem uma entrevista${heroContext.company ? ` na ${heroContext.company}` : ''}${heroContext.title ? ` para ${heroContext.title}` : ''}`,
+      needs_followup: `A aplicacao${heroContext.company ? ` na ${heroContext.company}` : ''}${heroContext.title ? ` para ${heroContext.title}` : ''} precisa de follow-up`,
+      stale_apps: 'O usuario tem varias aplicacoes sem atualizacao',
+      low_activity: 'O usuario esta com baixa atividade de aplicacoes',
+      new_user: 'O usuario e novo na plataforma',
+      active_summary: 'O usuario esta vendo a dica do dia',
+    }
+    
+    prompt += `
+
+CONTEXTO DA CONVERSA:
+${heroContextLabels[heroContext.context] || 'O usuario iniciou uma conversa a partir do dashboard'}
+
+A DICA QUE O USUARIO ESTA VENDO E:
+"${heroContext.message}"
+
+IMPORTANTE: O usuario clicou em "Conversar" a partir desta dica. Quando ele perguntar sobre "a dica", "essa dica", "isso", etc., 
+ele esta se referindo EXATAMENTE a esta mensagem acima. Ajude-o a aprofundar este tema especifico.`
+  }
+
+  prompt += `
 
 DIRETRIZES:
 1. Sempre baseie suas respostas nos dados reais do usuario
@@ -146,6 +188,8 @@ FORMATO DE RESPOSTA:
 - Destaque numeros e metricas importantes com **negrito**
 - Inclua proximos passos quando relevante
 - Evite listas muito longas`
+
+  return prompt
 }
 
 function formatContextForPrompt(ctx: UserContext): string {

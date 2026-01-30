@@ -7,7 +7,7 @@ import { getAIProvider } from '@/lib/ai'
 import { validateInput, checkTopic } from '@/lib/ai/security'
 import { canUseCopilot } from '@/lib/subscription/check-access'
 import { incrementCopilotUsage } from '@/lib/subscription/actions'
-import type { UserContext, ChatMessage } from '@/lib/copilot/types'
+import type { UserContext, ChatMessage, InsightContextData, HeroContextData } from '@/lib/copilot/types'
 
 export async function getUserContext(): Promise<UserContext> {
   const supabase = await createClient()
@@ -58,7 +58,9 @@ export async function checkCopilotAccess(): Promise<CopilotAccessInfo | null> {
 
 export async function sendChatMessage(
   question: string,
-  _history: ChatMessage[]
+  _history: ChatMessage[],
+  insightContext?: InsightContextData | null,
+  heroContext?: HeroContextData | null
 ): Promise<ChatResponse> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -119,7 +121,7 @@ export async function sendChatMessage(
   
   // Query complexa - usar AI provider
   const provider = getAIProvider()
-  const systemPrompt = buildSystemPrompt(context)
+  const systemPrompt = buildSystemPrompt(context, insightContext, heroContext)
   
   const aiResponse = await provider.complete([
     { role: 'system', content: systemPrompt },
