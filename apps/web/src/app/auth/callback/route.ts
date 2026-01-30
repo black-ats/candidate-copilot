@@ -8,10 +8,25 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code)
     
-    if (!error) {
-      return NextResponse.redirect(`${origin}${redirect}`)
+    if (!error && data.user) {
+      const user = data.user
+      // Check if user is new by comparing created_at (within last 30 seconds)
+      const createdAt = new Date(user.created_at).getTime()
+      const now = Date.now()
+      const isNewUser = (now - createdAt) < 30000 // 30 seconds
+      
+      // Determine auth provider
+      const provider = user.app_metadata.provider || 'email'
+      
+      // Pass tracking info via query params for client-side tracking
+      const redirectUrl = new URL(redirect, origin)
+      redirectUrl.searchParams.set('auth_event', isNewUser ? 'signup' : 'login')
+      redirectUrl.searchParams.set('auth_method', provider)
+      redirectUrl.searchParams.set('auth_user_id', user.id)
+      
+      return NextResponse.redirect(redirectUrl.toString())
     }
   }
 

@@ -13,9 +13,18 @@ import {
   objetivoLabels,
   type Insight,
 } from '@/lib/insight-engine'
+import { track } from '@/lib/analytics/track'
 import type { EntryFlowData } from '@/lib/schemas/entry-flow'
 import { useUser } from '@/hooks/use-user'
-import { saveInsight } from './actions'
+import { saveInsight, checkInsightAccess } from './actions'
+import { UpgradePrompt } from '@/components/upgrade-prompt'
+
+type AccessCheck = {
+  allowed: boolean
+  remaining: number | null
+  limit: number | null
+  plan: 'free' | 'pro' | null
+}
 
 export default function InsightPage() {
   const router = useRouter()
@@ -24,6 +33,21 @@ export default function InsightPage() {
   const [insight, setInsight] = useState<Insight | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [saved, setSaved] = useState(false)
+  const [accessCheck, setAccessCheck] = useState<AccessCheck | null>(null)
+  const [limitReached, setLimitReached] = useState(false)
+
+  // Check access when auth state changes
+  useEffect(() => {
+    if (!authLoading && isLoggedIn) {
+      checkInsightAccess().then((access) => {
+        setAccessCheck(access)
+        if (!access.allowed) {
+          setLimitReached(true)
+          setIsLoading(false)
+        }
+      })
+    }
+  }, [authLoading, isLoggedIn])
 
   useEffect(() => {
     // Get data from sessionStorage
@@ -44,6 +68,13 @@ export default function InsightPage() {
         const generatedInsight = generateInsight(parsedData)
         setInsight(generatedInsight)
         setIsLoading(false)
+        
+        // Track insight generation
+        track('insight_generated', {
+          cargo: parsedData.cargo,
+          area: parsedData.area,
+          senioridade: parsedData.senioridade,
+        })
       }, 1500)
     } catch {
       router.push('/comecar')
@@ -72,7 +103,7 @@ export default function InsightPage() {
 
   // Se ja logado, salvar no DB imediatamente
   useEffect(() => {
-    if (isLoggedIn && data && insight && !saved && !authLoading) {
+    if (isLoggedIn && data && insight && !saved && !authLoading && !limitReached) {
       saveInsight({
         cargo: data.cargo,
         senioridade: data.senioridade,
@@ -92,17 +123,26 @@ export default function InsightPage() {
           // Limpar sessionStorage ja que salvou no DB
           sessionStorage.removeItem('pendingInsight')
           sessionStorage.removeItem('entryFlowData')
+          // Update remaining count after save
+          if (accessCheck && accessCheck.remaining !== null) {
+            setAccessCheck({
+              ...accessCheck,
+              remaining: Math.max(0, accessCheck.remaining - 1)
+            })
+          }
+        } else if ('limitReached' in result && result.limitReached) {
+          setLimitReached(true)
         }
       })
     }
-  }, [isLoggedIn, data, insight, saved, authLoading])
+  }, [isLoggedIn, data, insight, saved, authLoading, limitReached, accessCheck])
 
   const handleStartOver = () => {
     sessionStorage.removeItem('entryFlowData')
     router.push('/comecar')
   }
 
-  if (isLoading) {
+  if (isLoading && !limitReached) {
     return (
       <div className="min-h-screen bg-sand flex items-center justify-center">
         <div className="text-center">
@@ -112,6 +152,30 @@ export default function InsightPage() {
           <h2 className="text-xl font-semibold text-navy mb-2">Analisando seu contexto...</h2>
           <p className="text-navy/70">Preparando seu insight personalizado</p>
         </div>
+      </div>
+    )
+  }
+
+  // Show upgrade prompt if limit reached
+  if (limitReached && accessCheck) {
+    return (
+      <div className="min-h-screen bg-sand">
+        <header className="border-b border-stone/30 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container-wide py-4 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-amber rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-navy" />
+              </div>
+              <span className="font-semibold text-lg text-navy">GoHire Copilot</span>
+            </Link>
+          </div>
+        </header>
+        <main className="container-narrow py-8 sm:py-12">
+          <UpgradePrompt 
+            remaining={accessCheck.remaining || 0} 
+            limit={accessCheck.limit || 3} 
+          />
+        </main>
       </div>
     )
   }
@@ -135,6 +199,18 @@ export default function InsightPage() {
       </header>
 
       <main className="container-narrow py-8 sm:py-12">
+        {/* Remaining insights counter for Free users */}
+        {isLoggedIn && accessCheck && accessCheck.plan === 'free' && accessCheck.remaining !== null && (
+          <div className="mb-6 p-3 bg-amber/10 rounded-lg flex items-center justify-between">
+            <p className="text-sm text-navy/70">
+              <span className="font-medium text-navy">{accessCheck.remaining}</span> de {accessCheck.limit} insights restantes este mes
+            </p>
+            <Link href="/dashboard/plano" className="text-sm font-medium text-amber hover:text-amber/80">
+              Upgrade →
+            </Link>
+          </div>
+        )}
+
         {/* Context Summary */}
         <div className="mb-6">
           <p className="text-sm text-navy/60 mb-2">Baseado no que voce informou:</p>

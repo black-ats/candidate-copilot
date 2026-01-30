@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { PostHogProvider } from '@/components/providers/posthog-provider'
+import { GoogleAnalytics } from '@/components/providers/google-analytics'
 
 export const metadata: Metadata = {
   title: 'GoHire Copilot | Decisões de carreira com clareza',
@@ -14,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        {children}
+        <GoogleAnalytics />
+        <PostHogProvider>
+          {children}
+        </PostHogProvider>
       </body>
     </html>
   )

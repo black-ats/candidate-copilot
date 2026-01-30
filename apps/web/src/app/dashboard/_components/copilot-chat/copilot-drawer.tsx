@@ -1,0 +1,260 @@
+'use client'
+
+import { useState, useCallback, useEffect } from 'react'
+import { X, Sparkles, Send, RotateCcw, Crown } from 'lucide-react'
+import { Button, Badge } from '@ui/components'
+import { ChatMessages } from './chat-messages'
+import { WelcomeState } from './welcome-state'
+import { SuggestedQuestions } from './suggested-questions'
+import { sendChatMessage, checkCopilotAccess, type CopilotAccessInfo } from './actions'
+import type { ChatMessage } from '@/lib/copilot/types'
+import Link from 'next/link'
+
+interface CopilotDrawerProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export function CopilotDrawer({ isOpen, onClose }: CopilotDrawerProps) {
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [accessInfo, setAccessInfo] = useState<CopilotAccessInfo | null>(null)
+  const [limitReached, setLimitReached] = useState(false)
+
+  // Fechar com Escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+    
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen, onClose])
+  
+  // Travar scroll do body quando aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  // Check copilot access when drawer opens
+  useEffect(() => {
+    if (isOpen) {
+      checkCopilotAccess().then((info) => {
+        if (info) {
+          setAccessInfo(info)
+          setLimitReached(!info.allowed)
+        }
+      })
+    }
+  }, [isOpen])
+
+  const handleSubmit = useCallback(async (question: string) => {
+    if (!question.trim() || isLoading || limitReached) return
+    
+    // Adicionar mensagem do usuario
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: question.trim(),
+      timestamp: new Date(),
+    }
+    
+    setMessages(prev => [...prev, userMessage])
+    setInput('')
+    setIsLoading(true)
+    
+    try {
+      const response = await sendChatMessage(question, messages)
+      
+      // Check if limit was reached
+      if (response.limitReached) {
+        setLimitReached(true)
+      }
+      
+      // Adicionar resposta do assistente
+      const assistantMessage: ChatMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: response.message,
+        timestamp: new Date(),
+      }
+      
+      setMessages(prev => [...prev, assistantMessage])
+      
+      // Update access info after message
+      if (accessInfo && accessInfo.plan === 'free') {
+        const newUsed = accessInfo.used + 1
+        setAccessInfo({
+          ...accessInfo,
+          used: newUsed,
+          allowed: newUsed < accessInfo.limit
+        })
+        if (newUsed >= accessInfo.limit) {
+          setLimitReached(true)
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error)
+      
+      // Mensagem de erro
+      const errorMessage: ChatMessage = {
+        id: `error-${Date.now()}`,
+        role: 'assistant',
+        content: 'Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.',
+        timestamp: new Date(),
+      }
+      
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [isLoading, messages, limitReached, accessInfo])
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    handleSubmit(input)
+  }
+
+  const handleQuestionSelect = (question: string) => {
+    handleSubmit(question)
+  }
+
+  const handleReset = () => {
+    setMessages([])
+    setInput('')
+  }
+
+  return (
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 z-40 transition-opacity"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+      
+      {/* Drawer */}
+      <div 
+        className={`
+          fixed right-0 top-0 h-screen w-full sm:w-96 bg-white 
+          border-l border-stone/30 z-50 flex flex-col
+          transform transition-transform duration-300 ease-out
+          ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+        `}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Copilot Chat"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-stone/30">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-amber rounded-lg flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-navy" />
+            </div>
+            <span className="font-semibold text-navy">Copilot</span>
+            {accessInfo && accessInfo.plan === 'free' && (
+              <Badge className="text-[10px] bg-stone/20 text-navy/60">
+                {accessInfo.limit - accessInfo.used}/{accessInfo.limit}
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            {messages.length > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleReset}
+                className="h-8 w-8 p-0"
+                title="Nova conversa"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </Button>
+            )}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onClose}
+              className="h-8 w-8 p-0"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {messages.length === 0 ? (
+            <WelcomeState onSelectQuestion={handleQuestionSelect} />
+          ) : (
+            <>
+              <ChatMessages messages={messages} isLoading={isLoading} />
+              
+              {/* Perguntas sugeridas apos conversa */}
+              {!isLoading && messages.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-stone/20">
+                  <p className="text-xs text-navy/50 mb-3">Perguntar mais:</p>
+                  <SuggestedQuestions 
+                    onSelect={handleQuestionSelect} 
+                    compact 
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Input */}
+        <div className="p-4 border-t border-stone/30 bg-white">
+          {limitReached && accessInfo?.plan === 'free' ? (
+            <div className="text-center">
+              <p className="text-sm text-navy/70 mb-3">
+                Voce usou suas {accessInfo.limit} perguntas de hoje.
+              </p>
+              <Link href="/dashboard/plano" onClick={onClose}>
+                <Button size="sm">
+                  <Crown className="w-4 h-4 mr-2" />
+                  Upgrade para ilimitado
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <form onSubmit={handleFormSubmit} className="flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Pergunte algo..."
+                disabled={isLoading}
+                className="
+                  flex-1 h-11 px-4 rounded-lg border border-stone
+                  text-navy placeholder:text-navy/40
+                  focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-2
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                "
+              />
+              <Button 
+                type="submit" 
+                disabled={isLoading || !input.trim()}
+                className="h-11 w-11 p-0"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </form>
+          )}
+        </div>
+      </div>
+    </>
+  )
+}

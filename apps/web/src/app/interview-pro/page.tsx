@@ -3,8 +3,40 @@ import { Badge, Card } from '@ui/components'
 import { Sparkles, MessageSquare, BarChart3, TrendingUp, Phone } from 'lucide-react'
 import { WaitlistForm } from './waitlist-form'
 import { InterviewModePreview } from './interview-mode-preview'
+import { createClient } from '@/lib/supabase/server'
+import { canAccessFeature } from '@/lib/subscription/check-access'
+import { UpgradePrompt } from '@/components/upgrade-prompt'
 
-export default function InterviewProPage() {
+export default async function InterviewProPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  // Check Pro access for logged-in users
+  // Note: Feature is "Em breve" so we show teaser to everyone for now
+  // When feature is ready, uncomment this block to gate access:
+  // 
+  // if (user) {
+  //   const hasAccess = await canAccessFeature(user.id, 'interview_pro')
+  //   if (!hasAccess) {
+  //     return (
+  //       <div className="min-h-screen bg-sand">
+  //         <header className="border-b border-stone/30 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+  //           <div className="container-wide py-4 flex items-center justify-between">
+  //             <Link href="/" className="flex items-center gap-2">
+  //               <div className="w-8 h-8 bg-amber rounded-lg flex items-center justify-center">
+  //                 <Sparkles className="w-5 h-5 text-navy" />
+  //               </div>
+  //               <span className="font-semibold text-lg text-navy">GoHire Copilot</span>
+  //             </Link>
+  //           </div>
+  //         </header>
+  //         <main className="container-narrow py-8 sm:py-12">
+  //           <UpgradePrompt remaining={0} limit={0} feature="interview_pro" />
+  //         </main>
+  //       </div>
+  //     )
+  //   }
+  // }
   return (
     <div className="min-h-screen flex flex-col bg-sand">
       {/* Header */}

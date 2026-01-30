@@ -11,6 +11,8 @@ import {
   type UpdateApplicationInput,
   type ChangeStatusInput,
 } from '@/lib/schemas/application'
+import { canAddApplication } from '@/lib/subscription/check-access'
+import { incrementApplicationUsage } from '@/lib/subscription/actions'
 
 export async function createApplication(data: CreateApplicationInput) {
   const validated = createApplicationSchema.safeParse(data)
@@ -23,6 +25,15 @@ export async function createApplication(data: CreateApplicationInput) {
 
   if (!user) {
     return { error: 'Usuario nao autenticado' }
+  }
+
+  // Check application limit for free users
+  const accessCheck = await canAddApplication(user.id)
+  if (!accessCheck.allowed) {
+    return { 
+      error: 'Limite de vagas atingido. Faca upgrade para adicionar mais.', 
+      limitReached: true 
+    }
   }
 
   // Insert application
@@ -60,6 +71,9 @@ export async function createApplication(data: CreateApplicationInput) {
   if (historyError) {
     console.error('Error creating status history:', historyError)
   }
+
+  // Increment monthly usage counter
+  await incrementApplicationUsage()
 
   revalidatePath('/dashboard/aplicacoes')
   return { success: true, id: application.id }
@@ -274,4 +288,15 @@ export async function getApplicationStats() {
   ).length
 
   return { total, em_andamento, propostas }
+}
+
+export async function checkApplicationAccess() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    return null
+  }
+
+  return canAddApplication(user.id)
 }
