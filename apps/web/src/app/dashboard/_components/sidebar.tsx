@@ -116,6 +116,24 @@ export function Sidebar({ email, plan = 'free' }: SidebarProps) {
               <span className="ml-3 text-sm font-medium">Fazer upgrade</span>
             </Link>
           )}
+
+          {/* Plan management for pro users */}
+          {plan === 'pro' && (
+            <Link
+              href="/dashboard/plano"
+              className={`
+                flex items-center h-11 px-4 mx-2 rounded-lg mb-1
+                transition-colors duration-150
+                ${pathname === '/dashboard/plano'
+                  ? 'bg-amber/10 text-amber' 
+                  : 'text-navy/70 hover:bg-stone/10 hover:text-navy'
+                }
+              `}
+            >
+              <Crown className="w-5 h-5 flex-shrink-0" />
+              <span className="ml-3 text-sm font-medium">Meu Plano</span>
+            </Link>
+          )}
           
           <Link
             href="/dashboard/configuracoes"
