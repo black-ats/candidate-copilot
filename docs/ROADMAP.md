@@ -58,6 +58,7 @@
 
 | Ideia | Por Que Importa | Dependencias | Notas |
 |-------|-----------------|--------------|-------|
+| **Blog / SEO** | Trafego organico qualificado; conteudo sobre entrevistas, carreira, negociacao | Decisao: construir no Next.js ou integrar (Ghost, Notion, etc.) | Alimenta entry flow; custo baixo, resultado a medio prazo |
 | **Notificacoes/Alertas** | Follow-up, entrevista, prazo | - | Push ou email |
 | **Metas/Gamificacao** | Engajamento (streaks, badges) | - | Validar se faz sentido pro produto |
 | **Helper/Onboarding** | Tour guiado para novos usuarios | - | - |
@@ -69,6 +70,88 @@
 | **Analytics Avancado** | Metricas mais detalhadas | - | - |
 | **Auto-Apply** | Aplicar automaticamente em vagas | Integracao ATS | Complexo |
 | **CV Builder Completo** | Criar CV dentro do produto | - | Scope grande |
+
+---
+
+## Segundo Produto: Portal de Vagas + Lado Empresa
+
+> Ideia em exploracao: empresas publicam vagas no GoHire; candidatos aplicam pelo nosso portal. Dados nossos permitem Match Score, comparacao com outros candidatos e monetizacao B2B. Requer dashboard e fluxos para o persona "empresa".
+
+### Visao
+
+- **Empresas** criam conta, publicam vagas e gerenciam candidaturas em um dashboard dedicado.
+- **Candidatos** veem vagas no portal GoHire, se candidatam e recebem Match Score (CV vs vaga) e, quando possivel, comparacao com outros candidatos na vaga.
+- **GoHire** monetiza cobrando da empresa (publicacao, destaque, pacotes) e mantem o diferencial em clareza para decisoes (Match Score, Copilot, Career Coach).
+
+### Fases / MVP sugerido
+
+| Fase | Escopo | Notas |
+|------|--------|-------|
+| **0. Discovery** | Validar interesse de empresas (parcerias piloto, entrevistas) | Evitar construir antes de validar demanda |
+| **1. MVP Portal** | Empresas publicam vagas; candidatos listam e se candidatam; empresa ve lista de candidatos | Sem cobranca ainda; foco em fluxo minimo |
+| **2. Match Score** | Score CV x vaga + top 5 motivos + sugestoes | Depende de upload/parse de CV (ver Parking Lot) |
+| **3. Comparacao** | Candidato ve como se posiciona vs outros na vaga (ex.: "top 20%") | Dados nossos; cuidado com privacidade e UX |
+| **4. Monetizacao** | Planos para empresa (vagas incluidas, destaque, etc.) | Definir precificacao e limites free |
+
+### Dependencias
+
+- **Produto**: Dashboard empresa (auth, CRUD vagas, gestao de candidaturas, notificacoes).
+- **Produto**: Upload/parse de CV para Match Score (ver Parking Lot — Match Score CV x Vaga).
+- **Go-to-market**: Estrategia para atrair empresas e candidatos (nicho, parcerias, free tier).
+
+### Riscos / Notas
+
+- **Scope**: Segundo persona = segundo produto; nao e "uma feature".
+- **Ovo e galinha**: Empresas precisam de candidatos; candidatos de vagas. Considerar lancamento por nicho ou com parceiros.
+- **Concorrencia**: Gupy, Vagas.com, LinkedIn; precisamos de razao clara para empresa publicar no GoHire (ex.: candidatos mais preparados, Match Score, Copilot).
+
+### Status
+
+- **Parking Lot** — sem compromisso de data; secao existe para manter a ideia quebrada e alinhada ao north star.
+
+---
+
+## Growth: Aquisicao de Candidatos
+
+> Objetivo: construir base de candidatos qualificados (meta: 10k+) antes de lancar o lado empresa. Com base solida, pitch pra empresas fica forte ("temos X mil candidatos preparados").
+
+### Por Que Candidatos Primeiro
+
+- **Produto standalone**: candidato ja recebe valor (insight, Interview Pro, Copilot) sem precisar de vagas de empresa.
+- **Pitch B2B**: "temos 10k candidatos que praticam entrevistas e recebem insights de carreira" e mais convincente que "temos plataforma nova".
+- **Dados para Match Score**: quanto mais candidatos com perfil/CV, melhor o score e a comparacao.
+
+### Estrategias
+
+| Estrategia | Descricao | Custo | Tempo | Prioridade |
+|------------|-----------|-------|-------|------------|
+| **Entry flow + Share** | Otimizar conversao do entry flow; facilitar compartilhamento de insight | Baixo | Rapido | Alta |
+| **Parcerias (bootcamps, universidades)** | Oferecer acesso a alunos em transicao de carreira; co-marketing | Baixo | Medio | Alta |
+| **Ads (Meta, Google, TikTok)** | Campanhas pagas com funil: ad → entry flow → insight → signup | Medio–alto | Rapido | Media (testar CAC) |
+| **SEO / Blog** | Conteudo sobre entrevistas, carreira, negociacao; trafego organico | Baixo | Lento | Media |
+| **Social organico (TikTok, Reels, LinkedIn)** | Videos curtos com dicas de carreira; posts no LinkedIn | Baixo | Medio | Media |
+| **Referral / Gamificacao** | Candidato convida amigos; recompensas ou badges | Medio | Medio | Baixa (apos validar retencao) |
+| **Comunidades (Reddit, Discord, Telegram)** | Participar de grupos de vagas/tech oferecendo valor | Baixo | Medio | Baixa |
+| **PR / Midia** | Cobertura em blogs de carreira, tech, startups | Baixo | Variavel | Oportunistica |
+
+### Acoes Sugeridas (Curto Prazo)
+
+1. **Garantir share de insight**: resultado bonito (Open Graph), facil de compartilhar.
+2. **Mapear bootcamps/universidades**: listar parceiros potenciais, propor piloto.
+3. **Testar ads com budget pequeno**: validar CAC antes de escalar.
+4. **Criar 2-3 posts de blog**: SEO para termos de alta intencao ("como se preparar para entrevista").
+
+### Metricas a Acompanhar
+
+- **Usuarios cadastrados** (meta: 10k)
+- **Taxa de conversao entry flow → signup**
+- **CAC** (custo de aquisicao por canal)
+- **Retencao** (usuarios que voltam em 7/30 dias)
+- **Shares** (quantos insights compartilhados)
+
+### Status
+
+- **Em exploracao** — definir acoes concretas e metas antes de executar.
 
 ---
 
