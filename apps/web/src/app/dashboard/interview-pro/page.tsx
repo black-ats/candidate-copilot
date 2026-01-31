@@ -27,14 +27,14 @@ export default async function InterviewProPage() {
             Treine para entrevistas com IA e receba feedback instantâneo.
           </p>
         </div>
-        <Card className="p-6 text-center">
+        <Card className="p-4 sm:p-6 text-center">
           <div className="w-12 h-12 bg-amber/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Crown className="w-6 h-6 text-amber" />
           </div>
           <h3 className="text-lg font-semibold text-navy mb-2">
             Você já usou sua entrevista de teste
           </h3>
-          <p className="text-navy/70 mb-6 max-w-md mx-auto">
+          <p className="text-navy/70 mb-4 sm:mb-6 max-w-md mx-auto text-sm sm:text-base">
             Faça upgrade para o plano Pro e tenha entrevistas ilimitadas para praticar quando quiser.
           </p>
           <Link href="/dashboard/plano">
@@ -124,10 +124,10 @@ export default async function InterviewProPage() {
       </div>
 
       {/* Mode Selection */}
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-8">
         {/* Text Mode - Available */}
-        <Card variant="elevated" className="p-6 border-teal/30">
-          <div className="flex items-start gap-4 mb-4">
+        <Card variant="elevated" className="p-4 sm:p-6 border-teal/30">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4">
             <div className="w-12 h-12 bg-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
               <MessageSquare className="w-6 h-6 text-teal" />
             </div>
@@ -138,10 +138,10 @@ export default async function InterviewProPage() {
               </h3>
             </div>
           </div>
-          <p className="text-navy/70 mb-6">
+          <p className="text-navy/70 mb-4 sm:mb-6 text-sm sm:text-base">
             Responda perguntas digitando. Ideal para quem quer pensar com calma e estruturar bem as respostas.
           </p>
-          <ul className="space-y-2 text-sm text-navy/70 mb-6">
+          <ul className="space-y-2 text-sm text-navy/70 mb-4 sm:mb-6">
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-teal rounded-full" />
               3 perguntas por sessão (~5 min)
@@ -164,11 +164,11 @@ export default async function InterviewProPage() {
         </Card>
 
         {/* Audio Mode - Coming Soon */}
-        <Card className="p-6 border-amber/30 bg-amber/5 relative overflow-hidden">
-          <div className="absolute top-4 right-4">
+        <Card className="p-4 sm:p-6 border-amber/30 bg-amber/5 relative overflow-hidden">
+          <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
             <Badge className="bg-amber/20 text-amber">Em breve</Badge>
           </div>
-          <div className="flex items-start gap-4 mb-4">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4">
             <div className="w-12 h-12 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
               <Mic className="w-6 h-6 text-amber" />
             </div>
@@ -178,10 +178,10 @@ export default async function InterviewProPage() {
               </h3>
             </div>
           </div>
-          <p className="text-navy/70 mb-6">
+          <p className="text-navy/70 mb-4 sm:mb-6 text-sm sm:text-base">
             Simule uma ligação real com IA. Treine sua comunicação verbal e tempo de resposta.
           </p>
-          <ul className="space-y-2 text-sm text-navy/70 mb-6">
+          <ul className="space-y-2 text-sm text-navy/70 mb-4 sm:mb-6">
             <li className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-amber rounded-full" />
               Conversa por voz em tempo real
@@ -245,26 +245,26 @@ export default async function InterviewProPage() {
       )}
 
       {/* Features */}
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         <h2 className="text-lg font-semibold text-navy mb-4">
           Como funciona
         </h2>
-        <div className="grid sm:grid-cols-3 gap-4">
-          <div className="text-center p-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center p-3 sm:p-4">
             <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <MessageSquare className="w-5 h-5 text-teal" />
             </div>
             <h3 className="font-medium text-navy mb-1">Perguntas reais</h3>
             <p className="text-sm text-navy/60">Baseadas no mercado brasileiro</p>
           </div>
-          <div className="text-center p-4">
+          <div className="text-center p-3 sm:p-4">
             <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <BarChart3 className="w-5 h-5 text-teal" />
             </div>
             <h3 className="font-medium text-navy mb-1">Feedback detalhado</h3>
             <p className="text-sm text-navy/60">Análise de cada resposta</p>
           </div>
-          <div className="text-center p-4">
+          <div className="text-center p-3 sm:p-4">
             <div className="w-10 h-10 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <TrendingUp className="w-5 h-5 text-teal" />
             </div>

@@ -31,7 +31,7 @@ export function CheckoutButton() {
   }
 
   return (
-    <Button size="lg" onClick={handleCheckout} isLoading={isLoading}>
+    <Button className="w-full sm:w-auto" onClick={handleCheckout} isLoading={isLoading}>
       <CreditCard className="w-4 h-4 mr-2" />
       Fazer upgrade
     </Button>
@@ -64,9 +64,9 @@ export function ManageSubscriptionButton() {
   }
 
   return (
-    <Button variant="secondary" onClick={handleManage} isLoading={isLoading}>
+    <Button variant="secondary" className="w-full sm:w-auto" onClick={handleManage} isLoading={isLoading}>
       <Settings className="w-4 h-4 mr-2" />
-      Gerenciar pagamento
+      <span className="whitespace-nowrap">Gerenciar pagamento</span>
     </Button>
   )
 }
@@ -160,42 +160,43 @@ export function CouponInput() {
   // Show coupon preview after validation
   if (validatedCoupon) {
     return (
-      <div className="mt-6 pt-6 border-t border-stone/20">
-        <div className="bg-teal/10 border border-teal/30 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-teal">Cupom aplicado:</span>
+      <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-stone/20">
+        <div className="bg-teal/10 border border-teal/30 rounded-lg p-3 sm:p-4">
+          {/* Header - Stack on mobile */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs sm:text-sm font-medium text-teal">Cupom aplicado:</span>
               <span className="bg-teal/20 text-teal text-xs font-bold px-2 py-1 rounded">
                 {validatedCoupon.code}
               </span>
             </div>
             <button
               onClick={handleClearCoupon}
-              className="text-navy/50 hover:text-navy text-sm"
+              className="text-navy/50 hover:text-navy text-xs sm:text-sm self-start sm:self-auto"
             >
               Remover
             </button>
           </div>
 
-          <div className="flex items-baseline gap-3 mb-2">
-            <span className="text-navy/50 line-through text-lg">
+          {/* Price display */}
+          <div className="flex flex-wrap items-baseline gap-2 sm:gap-3 mb-2">
+            <span className="text-navy/50 line-through text-base sm:text-lg">
               R$ {validatedCoupon.original_price}
             </span>
-            <span className="text-3xl font-bold text-navy">
+            <span className="text-2xl sm:text-3xl font-bold text-navy">
               {validatedCoupon.discounted_price === 0 
                 ? 'Gratis' 
                 : `R$ ${validatedCoupon.discounted_price.toFixed(0)}`}
             </span>
-            <span className="text-navy/60">/mes</span>
+            <span className="text-navy/60 text-sm">/mes</span>
           </div>
 
-          <p className="text-sm text-navy/60 mb-4">
+          <p className="text-xs sm:text-sm text-navy/60 mb-4">
             {validatedCoupon.discount_percent}% de desconto por {validatedCoupon.duration_months}{' '}
             {validatedCoupon.duration_months === 1 ? 'mês' : 'meses'}
           </p>
 
           <Button 
-            size="lg" 
             className="w-full"
             onClick={handleApplyCoupon}
             isLoading={isApplying}
@@ -206,7 +207,7 @@ export function CouponInput() {
           </Button>
 
           {error && (
-            <p role="alert" className="text-sm text-red-600 mt-2 text-center">{error}</p>
+            <p role="alert" className="text-xs sm:text-sm text-red-600 mt-2 text-center">{error}</p>
           )}
         </div>
       </div>
@@ -215,9 +216,9 @@ export function CouponInput() {
 
   // Default: show coupon input form
   return (
-    <div className="mt-6 pt-6 border-t border-stone/20">
-      <p className="text-sm font-medium text-navy mb-3">Tem um cupom?</p>
-      <form onSubmit={handleValidateCoupon} className="flex gap-2">
+    <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-stone/20">
+      <p className="text-xs sm:text-sm font-medium text-navy mb-2 sm:mb-3">Tem um cupom?</p>
+      <form onSubmit={handleValidateCoupon} className="flex flex-col sm:flex-row gap-2">
         <input
           type="text"
           value={code}
@@ -225,8 +226,8 @@ export function CouponInput() {
           placeholder="CODIGO"
           disabled={isValidating}
           className="
-            flex-1 h-10 px-3 rounded-lg border border-stone
-            text-navy placeholder:text-navy/40 uppercase
+            flex-1 h-11 sm:h-10 px-3 rounded-lg border border-stone
+            text-navy placeholder:text-navy/40 uppercase text-sm
             focus:outline-none focus:ring-2 focus:ring-teal focus:ring-offset-1
             disabled:opacity-50
           "
@@ -234,6 +235,7 @@ export function CouponInput() {
         <Button 
           type="submit" 
           variant="secondary"
+          className="h-11 sm:h-auto w-full sm:w-auto"
           disabled={isValidating || !code.trim()}
           isLoading={isValidating}
         >
@@ -241,7 +243,7 @@ export function CouponInput() {
         </Button>
       </form>
       {error && (
-        <p role="alert" className="text-sm text-red-600 mt-2">{error}</p>
+        <p role="alert" className="text-xs sm:text-sm text-red-600 mt-2">{error}</p>
       )}
     </div>
   )
@@ -285,32 +287,32 @@ export function CancelSubscriptionSection({ hasStripeSubscription, currentPeriod
   if (showConfirm) {
     return (
       <Card className="border-red-200 bg-red-50/50">
-        <div className="p-4">
-          <div className="flex items-start gap-3 mb-4">
+        <div className="p-3 sm:p-4">
+          <div className="flex items-start gap-2 sm:gap-3 mb-4">
             <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-medium text-navy">Cancelar assinatura</h4>
-              <p className="text-sm text-navy/70 mt-1">
+            <div className="flex-1 min-w-0">
+              <h4 className="font-medium text-navy text-sm sm:text-base">Cancelar assinatura</h4>
+              <p className="text-xs sm:text-sm text-navy/70 mt-1">
                 Escolha como deseja cancelar:
               </p>
             </div>
             <button 
               onClick={() => setShowConfirm(false)}
-              className="ml-auto p-1 hover:bg-red-100 rounded"
+              className="p-1 hover:bg-red-100 rounded flex-shrink-0"
             >
               <X className="w-4 h-4 text-navy/50" />
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {hasStripeSubscription && currentPeriodEnd && (
               <button
                 onClick={() => { setCancelType('end'); handleCancel(false); }}
                 disabled={isLoading}
                 className="w-full p-3 text-left border border-stone/30 rounded-lg hover:border-amber hover:bg-amber/5 transition-colors disabled:opacity-50"
               >
-                <p className="font-medium text-navy">Cancelar no fim do periodo</p>
-                <p className="text-sm text-navy/60 mt-1">
+                <p className="font-medium text-navy text-sm sm:text-base">Cancelar no fim do periodo</p>
+                <p className="text-xs sm:text-sm text-navy/60 mt-1">
                   Continue usando o Pro ate {currentPeriodEnd}, depois muda para Free.
                 </p>
               </button>
@@ -321,15 +323,15 @@ export function CancelSubscriptionSection({ hasStripeSubscription, currentPeriod
               disabled={isLoading}
               className="w-full p-3 text-left border border-red-200 rounded-lg hover:border-red-300 hover:bg-red-50 transition-colors disabled:opacity-50"
             >
-              <p className="font-medium text-red-700">Cancelar imediatamente</p>
-              <p className="text-sm text-red-600/70 mt-1">
+              <p className="font-medium text-red-700 text-sm sm:text-base">Cancelar imediatamente</p>
+              <p className="text-xs sm:text-sm text-red-600/70 mt-1">
                 Perder acesso ao Pro agora e mudar para Free.
               </p>
             </button>
           </div>
 
           {isLoading && (
-            <p className="text-sm text-navy/60 mt-3 text-center">
+            <p className="text-xs sm:text-sm text-navy/60 mt-3 text-center">
               {cancelType === 'end' ? 'Agendando cancelamento...' : 'Cancelando...'}
             </p>
           )}

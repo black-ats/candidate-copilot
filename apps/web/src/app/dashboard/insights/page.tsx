@@ -39,11 +39,11 @@ export default async function InsightsPage() {
       </div>
 
       {insights && insights.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {insights.map((insight) => (
             <Link key={insight.id} href={`/dashboard/insights/${insight.id}`}>
-              <Card className="p-6 hover:bg-stone/5 transition-colors cursor-pointer">
-                <div className="flex items-start gap-4">
+              <Card className="p-4 sm:p-6 hover:bg-stone/5 transition-colors cursor-pointer">
+                <div className="flex items-start gap-3 sm:gap-4">
                   <Sparkles className="w-5 h-5 text-amber flex-shrink-0 mt-1" />
                   <div className="flex-1 min-w-0">
                     <p className="text-navy font-medium mb-2">
@@ -67,7 +67,7 @@ export default async function InsightsPage() {
           ))}
         </div>
       ) : (
-        <Card className="p-8 text-center">
+        <Card className="p-6 sm:p-8 text-center">
           <div className="w-12 h-12 bg-stone/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <Lightbulb className="w-6 h-6 text-navy/40" />
           </div>

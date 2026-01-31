@@ -65,10 +65,10 @@ async function StatsAndFunnelSection() {
                     <div key={stage.key} className="flex-1 flex flex-col items-center gap-0.5">
                       <span className="text-xs font-medium text-navy/70">{stage.value}</span>
                       <div 
-                        className={`w-full max-w-12 ${stage.color} rounded-t transition-all duration-500`}
+                        className={`w-full max-w-8 sm:max-w-12 ${stage.color} rounded-t transition-all duration-500`}
                         style={{ height: `${barHeight}px` }}
                       />
-                      <span className="text-[10px] text-navy/50 whitespace-nowrap">{stage.label}</span>
+                      <span className="text-xs text-navy/50 whitespace-nowrap">{stage.label}</span>
                     </div>
                   )
                 })}
@@ -81,7 +81,7 @@ async function StatsAndFunnelSection() {
             
             {/* Taxa de conversão */}
             <div className="flex-shrink-0 sm:w-44 text-center">
-              <div className="text-4xl sm:text-5xl font-bold text-teal">{taxaConversao}%</div>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-teal">{taxaConversao}%</div>
               <div className="text-sm font-medium text-navy/70 mt-1 sm:mt-2">Taxa de conversão</div>
               <div className="text-xs text-navy/50 mt-1 leading-relaxed">
                 % que avançaram para entrevista ou proposta
@@ -160,22 +160,22 @@ function BenchmarkSection({
           </div>
 
           {/* Comparação visual fake */}
-          <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-5">
-            <div className="flex-1 flex items-center justify-center gap-6 sm:gap-10">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4 sm:gap-6 mb-5">
+            <div className="flex-1 flex items-center justify-center gap-4 sm:gap-8 lg:gap-10">
               <div className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-navy">{fakeUserTaxa}%</div>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy">{fakeUserTaxa}%</div>
                 <div className="text-sm text-navy/60 mt-1">Sua taxa</div>
-                <div className="w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
+                <div className="w-20 sm:w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
                   <div className="h-full bg-navy rounded-full" style={{ width: '50%' }} />
                 </div>
               </div>
               
-              <div className="text-2xl font-light text-navy/30">vs</div>
+              <div className="text-xl sm:text-2xl font-light text-navy/30">vs</div>
               
               <div className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-navy/40">{fakeMediaTaxa}%</div>
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy/40">{fakeMediaTaxa}%</div>
                 <div className="text-sm text-navy/60 mt-1">Média</div>
-                <div className="w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
+                <div className="w-20 sm:w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
                   <div className="h-full bg-stone/40 rounded-full" style={{ width: '42%' }} />
                 </div>
               </div>
@@ -185,10 +185,10 @@ function BenchmarkSection({
             <div className="lg:hidden h-px w-full bg-stone/20" />
 
             <div className="flex-shrink-0 lg:w-64">
-              <div className="p-4 rounded-xl bg-teal/10">
+              <div className="p-3 sm:p-4 rounded-xl bg-teal/10">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-5 h-5 text-teal" />
-                  <span className="text-lg font-semibold text-teal">
+                  <span className="text-base sm:text-lg font-semibold text-teal">
                     +{fakeDiff}% acima da média!
                   </span>
                 </div>
@@ -259,15 +259,15 @@ function BenchmarkSection({
       </div>
 
       {/* Comparação visual */}
-      <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-5">
+      <div className="flex flex-col lg:flex-row lg:items-center gap-4 sm:gap-6 mb-5">
         {/* Taxa do usuário vs média */}
-        <div className="flex-1 flex items-center justify-center gap-6 sm:gap-10">
+        <div className="flex-1 flex items-center justify-center gap-4 sm:gap-8 lg:gap-10">
           {/* Sua taxa */}
           <div className="text-center">
-            <div className="text-4xl sm:text-5xl font-bold text-navy">{userMetrics.taxaConversao}%</div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy">{userMetrics.taxaConversao}%</div>
             <div className="text-sm text-navy/60 mt-1">Sua taxa</div>
             {/* Barra visual */}
-            <div className="w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
+            <div className="w-20 sm:w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
               <div 
                 className="h-full bg-navy rounded-full"
                 style={{ width: `${Math.min(userMetrics.taxaConversao * 2, 100)}%` }}
@@ -275,14 +275,14 @@ function BenchmarkSection({
             </div>
           </div>
           
-          <div className="text-2xl font-light text-navy/30">vs</div>
+          <div className="text-xl sm:text-2xl font-light text-navy/30">vs</div>
           
           {/* Média da plataforma */}
           <div className="text-center">
-            <div className="text-4xl sm:text-5xl font-bold text-navy/40">{benchmark.taxaConversaoMedia}%</div>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy/40">{benchmark.taxaConversaoMedia}%</div>
             <div className="text-sm text-navy/60 mt-1">Média</div>
             {/* Barra visual */}
-            <div className="w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
+            <div className="w-20 sm:w-24 h-2 bg-stone/10 rounded-full overflow-hidden mt-2">
               <div 
                 className="h-full bg-stone/40 rounded-full"
                 style={{ width: `${Math.min(benchmark.taxaConversaoMedia * 2, 100)}%` }}
@@ -297,7 +297,7 @@ function BenchmarkSection({
 
         {/* Resultado */}
         <div className="flex-shrink-0 lg:w-64">
-          <div className={`p-4 rounded-xl ${
+          <div className={`p-3 sm:p-4 rounded-xl ${
             isAbove ? 'bg-teal/10' : isEqual ? 'bg-stone/10' : 'bg-amber/10'
           }`}>
             <div className="flex items-center gap-2 mb-2">
@@ -308,7 +308,7 @@ function BenchmarkSection({
               ) : (
                 <TrendingDown className="w-5 h-5 text-amber" />
               )}
-              <span className={`text-lg font-semibold ${
+              <span className={`text-base sm:text-lg font-semibold ${
                 isAbove ? 'text-teal' : isEqual ? 'text-navy/70' : 'text-amber'
               }`}>
                 {isAbove 

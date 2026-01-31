@@ -52,16 +52,16 @@ export default async function HistoricoPage() {
 
       {/* Stats Cards */}
       {sessions.length > 0 && (
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <Card className="p-4 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
+          <Card className="p-3 sm:p-4 text-center">
             <div className="text-2xl font-bold text-navy">{stats.total}</div>
             <div className="text-xs text-navy/60">Entrevistas</div>
           </Card>
-          <Card className="p-4 text-center">
+          <Card className="p-3 sm:p-4 text-center">
             <div className="text-2xl font-bold text-teal">{stats.avgScore}</div>
             <div className="text-xs text-navy/60">Score médio</div>
           </Card>
-          <Card className="p-4 text-center bg-amber/5">
+          <Card className="p-3 sm:p-4 text-center bg-amber/5">
             <div className="flex items-center justify-center gap-1">
               <Trophy className="w-4 h-4 text-amber" />
               <span className="text-2xl font-bold text-amber">{stats.bestScore}</span>

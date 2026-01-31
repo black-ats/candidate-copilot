@@ -43,13 +43,13 @@ export function MetricsCards({ metrics }: MetricsCardsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {cards.map((card) => (
-        <Card key={card.label} className="p-4">
-          <div className={`w-10 h-10 ${card.bgColor} rounded-lg flex items-center justify-center mb-4`}>
+        <Card key={card.label} className="p-3 sm:p-4">
+          <div className={`w-10 h-10 ${card.bgColor} rounded-lg flex items-center justify-center mb-3 sm:mb-4`}>
             <card.icon className={`w-5 h-5 ${card.iconColor}`} />
           </div>
-          <p className="text-3xl font-bold text-navy mb-1">
+          <p className="text-2xl sm:text-3xl font-bold text-navy mb-1">
             {card.value}
           </p>
           <p className="text-sm font-medium text-navy">

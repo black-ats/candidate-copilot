@@ -42,16 +42,16 @@ export function StrategyCard({ insight }: StrategyCardProps) {
   // Empty state
   if (!insight) {
     return (
-      <Card className="p-6 border-amber/30 bg-amber/5">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 bg-amber/20 rounded-xl flex items-center justify-center">
+      <Card className="p-4 sm:p-6 border-amber/30 bg-amber/5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4">
+          <div className="w-12 h-12 bg-amber/20 rounded-xl flex items-center justify-center flex-shrink-0">
             <Target className="w-6 h-6 text-amber" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-navy">
+            <h2 className="text-lg sm:text-xl font-semibold text-navy">
               Defina sua estratégia de carreira
             </h2>
-            <p className="text-navy/60">
+            <p className="text-sm sm:text-base text-navy/60">
               Receba um direcionamento personalizado para sua situação
             </p>
           </div>
@@ -93,14 +93,14 @@ export function StrategyCard({ insight }: StrategyCardProps) {
   const nextSteps = insight.next_steps?.slice(0, 4) || []
 
   return (
-    <Card variant="elevated" className="p-6">
-      <div className="flex items-start justify-between mb-4">
+    <Card variant="elevated" className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
             <Target className="w-5 h-5 text-amber" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-navy">
+            <h2 className="text-lg sm:text-xl font-semibold text-navy">
               Sua Estratégia
             </h2>
             <p className="text-sm text-navy/60">
@@ -108,7 +108,7 @@ export function StrategyCard({ insight }: StrategyCardProps) {
             </p>
           </div>
         </div>
-        <Badge variant={age.isStale ? 'warning' : 'info'}>
+        <Badge variant={age.isStale ? 'warning' : 'info'} className="self-start">
           {age.label}
         </Badge>
       </div>
@@ -138,7 +138,7 @@ export function StrategyCard({ insight }: StrategyCardProps) {
       )}
 
       {/* CTAs */}
-      <div className="flex items-center gap-3 pt-2 border-t border-stone/20">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-2 border-t border-stone/20">
         {age.isStale ? (
           <>
             <Link href="/comecar" className="flex-1">
@@ -147,8 +147,8 @@ export function StrategyCard({ insight }: StrategyCardProps) {
                 Atualizar estrategia
               </Button>
             </Link>
-            <Link href={`/dashboard/insights/${insight.id}`}>
-              <Button variant="ghost" size="sm">
+            <Link href={`/dashboard/insights/${insight.id}`} className="w-full sm:w-auto">
+              <Button variant="ghost" className="w-full sm:w-auto h-11 sm:h-auto">
                 Ver atual
               </Button>
             </Link>
@@ -161,8 +161,8 @@ export function StrategyCard({ insight }: StrategyCardProps) {
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
-            <Link href="/comecar">
-              <Button variant="ghost" size="sm">
+            <Link href="/comecar" className="w-full sm:w-auto">
+              <Button variant="ghost" className="w-full sm:w-auto h-11 sm:h-auto">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refazer
               </Button>

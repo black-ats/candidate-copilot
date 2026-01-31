@@ -18,26 +18,25 @@ export function ApplicationActions({ application }: ApplicationActionsProps) {
 
   return (
     <>
-      <div className="flex flex-wrap gap-3 mb-6">
-        <Link href={`/dashboard/aplicacoes/${application.id}/editar`}>
-          <Button variant="ghost" size="sm">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 mb-6">
+        <Link href={`/dashboard/aplicacoes/${application.id}/editar`} className="w-full sm:w-auto">
+          <Button variant="ghost" className="w-full sm:w-auto h-11 sm:h-auto">
             <Edit className="w-4 h-4 mr-2" />
             Editar
           </Button>
         </Link>
         <Button 
           variant="ghost" 
-          size="sm"
           onClick={() => setIsStatusModalOpen(true)}
+          className="w-full sm:w-auto h-11 sm:h-auto"
         >
           <RefreshCw className="w-4 h-4 mr-2" />
           Mudar Status
         </Button>
         <Button 
           variant="ghost" 
-          size="sm"
           onClick={() => setIsDeleteModalOpen(true)}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="w-full sm:w-auto h-11 sm:h-auto text-red-600 hover:text-red-700 hover:bg-red-50"
         >
           <Trash2 className="w-4 h-4 mr-2" />
           Excluir

@@ -59,31 +59,31 @@ export function HeroCard({ data }: HeroCardProps) {
   }
 
   return (
-    <Card variant="elevated" className="relative p-6 bg-gradient-to-r from-teal/5 to-amber/5 border-teal/20">
+    <Card variant="elevated" className="relative p-4 sm:p-6 bg-gradient-to-r from-teal/5 to-amber/5 border-teal/20">
       {/* Dismiss button */}
       <button
         onClick={handleDismiss}
-        className="absolute top-4 right-4 p-1 text-navy/40 hover:text-navy/60 transition-colors"
+        className="absolute top-3 sm:top-4 right-3 sm:right-4 p-1 text-navy/40 hover:text-navy/60 transition-colors"
         aria-label="Ignorar"
       >
         <X className="w-4 h-4" />
       </button>
 
       {/* Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-8 h-8 bg-teal/20 rounded-full flex items-center justify-center">
+      <div className="flex items-center gap-2 mb-3 pr-6">
+        <div className="w-8 h-8 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
           <Sparkles className="w-4 h-4 text-teal" />
         </div>
-        <h2 className="text-lg font-semibold text-navy">{data.title}</h2>
+        <h2 className="text-base sm:text-lg font-semibold text-navy">{data.title}</h2>
       </div>
 
       {/* Message */}
-      <p className="text-navy/80 mb-5 pr-8 leading-relaxed">
+      <p className="text-navy/80 mb-4 sm:mb-5 pr-4 sm:pr-8 leading-relaxed text-sm sm:text-base">
         {data.message}
       </p>
 
       {/* CTAs */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3">
         {renderCta(data.primaryCta, true)}
         {data.secondaryCta && renderCta(data.secondaryCta, false)}
       </div>

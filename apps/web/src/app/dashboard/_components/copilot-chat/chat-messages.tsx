@@ -92,7 +92,7 @@ function LoadingBubble() {
       </div>
       
       {/* Shimmer skeleton */}
-      <div className="bg-stone/10 rounded-xl px-4 py-3 space-y-2.5 min-w-[220px]">
+      <div className="bg-stone/10 rounded-xl px-4 py-3 space-y-2.5 min-w-[180px] sm:min-w-[220px]">
         <ShimmerBar width="100%" />
         <ShimmerBar width="80%" />
         <ShimmerBar width="60%" />

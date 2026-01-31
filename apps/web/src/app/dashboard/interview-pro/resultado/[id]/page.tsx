@@ -24,9 +24,9 @@ function ScoreCircle({ score }: { score: number }) {
 
   return (
     <div className="text-center">
-      <div className={`text-5xl font-bold ${getColor(score)}`}>
+      <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold ${getColor(score)}`}>
         {score}
-        <span className="text-2xl text-navy/40">/100</span>
+        <span className="text-xl sm:text-2xl text-navy/40">/100</span>
       </div>
       <p className={`text-sm font-medium ${getColor(score)} mt-1`}>
         {getLabel(score)}
@@ -58,8 +58,8 @@ export default async function ResultadoPage({ params }: Props) {
 
       {/* Score Card */}
       <Card variant="elevated" className="mb-6 overflow-hidden">
-        <div className="bg-navy text-sand p-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="bg-navy text-sand p-5 sm:p-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
             <div>
               <Badge className="mb-3 bg-sand/20 text-sand">Resultado</Badge>
               <h1 className="text-2xl font-semibold mb-2">
@@ -79,14 +79,14 @@ export default async function ResultadoPage({ params }: Props) {
 
         {/* Summary */}
         {feedback?.summary && (
-          <div className="p-6 border-b border-stone/30">
-            <p className="text-navy leading-relaxed">{feedback.summary}</p>
+          <div className="p-4 sm:p-6 border-b border-stone/30">
+            <p className="text-navy leading-relaxed text-sm sm:text-base">{feedback.summary}</p>
           </div>
         )}
 
         {/* Progress bar */}
         {feedback && (
-          <div className="p-6 border-b border-stone/30 bg-stone/5">
+          <div className="p-4 sm:p-6 border-b border-stone/30 bg-stone/5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-navy">Score geral</span>
               <span className="text-sm text-navy/70">{feedback.overall_score}/100</span>
@@ -174,7 +174,7 @@ export default async function ResultadoPage({ params }: Props) {
       {/* General Tips */}
       {feedback?.general_tips && feedback.general_tips.length > 0 && (
         <Card className="mb-6 border-teal/30">
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
               <Lightbulb className="w-5 h-5 text-amber" />
               Dicas para melhorar
@@ -194,16 +194,16 @@ export default async function ResultadoPage({ params }: Props) {
       )}
 
       {/* Copilot CTA */}
-      <Card className="mb-6 p-6 bg-teal/5 border-teal/30">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-teal/20 rounded-xl flex items-center justify-center flex-shrink-0">
-            <MessageSquare className="w-6 h-6 text-teal" />
+      <Card className="mb-6 p-4 sm:p-6 bg-teal/5 border-teal/30">
+        <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal/20 rounded-xl flex items-center justify-center flex-shrink-0">
+            <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 text-teal" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-navy mb-1">
+            <h3 className="text-base sm:text-lg font-semibold text-navy mb-1">
               Quer explorar mais esse feedback?
             </h3>
-            <p className="text-navy/70 text-sm mb-4">
+            <p className="text-navy/70 text-sm mb-3 sm:mb-4">
               Converse com o Copilot sobre como melhorar suas respostas e se preparar para próximas entrevistas.
             </p>
             <InterviewCopilotButton session={session} />
@@ -212,8 +212,8 @@ export default async function ResultadoPage({ params }: Props) {
       </Card>
 
       {/* Actions */}
-      <Card className="p-6">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <Card className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <Link href="/dashboard/interview-pro/iniciar">
             <Button>
               <RotateCcw className="w-5 h-5 mr-2" />

@@ -7,6 +7,45 @@ import { CheckoutButton, ManageSubscriptionButton, CancelSubscriptionSection, Co
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
+// Reusable usage item component with better mobile layout
+function UsageItem({ 
+  icon, 
+  iconBg, 
+  title, 
+  description, 
+  remaining 
+}: { 
+  icon: React.ReactNode
+  iconBg: string
+  title: string
+  description: string
+  remaining?: number
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className={`w-9 h-9 sm:w-10 sm:h-10 ${iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+          <div>
+            <p className="font-medium text-navy text-sm sm:text-base">{title}</p>
+            <p className="text-xs sm:text-sm text-navy/60">{description}</p>
+          </div>
+          {remaining !== undefined && (
+            <div className="flex items-baseline gap-1 sm:text-right mt-1 sm:mt-0">
+              <span className="text-xl sm:text-2xl font-bold text-navy">
+                {remaining}
+              </span>
+              <span className="text-xs text-navy/60">restantes</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default async function PlanoPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams
   const supabase = await createClient()
@@ -62,10 +101,10 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
   const isCanceling = subscriptionStatus === 'canceling'
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold text-navy mb-2">Seu plano</h1>
-        <p className="text-navy/70 mb-8">Gerencie sua assinatura e veja seu uso.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-navy mb-1 sm:mb-2">Seu plano</h1>
+        <p className="text-navy/70 mb-6 sm:mb-8 text-sm sm:text-base">Gerencie sua assinatura e veja seu uso.</p>
 
         {/* Success/Cancel Messages */}
         {showSuccess && (
@@ -94,40 +133,41 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
 
         {/* Current Plan Card */}
         <Card className="mb-6 overflow-hidden">
-          <div className={`p-6 ${plan === 'pro' ? 'bg-amber/10' : 'bg-stone/10'}`}>
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <h2 className="text-xl font-semibold text-navy">
+          <div className={`p-4 sm:p-6 ${plan === 'pro' ? 'bg-amber/10' : 'bg-stone/10'}`}>
+            {/* Mobile: Stack vertically, Desktop: Side by side */}
+            <div className="flex flex-col-reverse sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <h2 className="text-lg sm:text-xl font-semibold text-navy">
                     Plano {plan === 'pro' ? 'Pro' : 'Free'}
                   </h2>
                   <Badge className={plan === 'pro' ? 'bg-amber text-navy' : 'bg-stone text-navy/70'}>
                     {plan === 'pro' ? 'Ativo' : 'Gratuito'}
                   </Badge>
                 </div>
-                <p className="text-navy/70">
+                <p className="text-navy/70 text-sm sm:text-base">
                   {plan === 'pro' 
                     ? 'Acesso completo a todos os recursos.'
                     : 'Acesso básico com limite de insights.'
                   }
                 </p>
               </div>
-              <div className="w-12 h-12 bg-amber/20 rounded-full flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-amber" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-amber" />
               </div>
             </div>
           </div>
 
           {/* Subscription Info (Pro users) */}
           {plan === 'pro' && (
-            <div className="p-6 border-t border-stone/30 bg-white">
+            <div className="p-4 sm:p-6 border-t border-stone/30 bg-white">
               {/* Canceling notice */}
               {isCanceling && currentPeriodEnd && (
                 <div className="mb-4 p-3 bg-amber/10 rounded-lg flex items-start gap-3">
                   <Clock className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-navy">Cancelamento agendado</p>
-                    <p className="text-sm text-navy/70">
+                    <p className="font-medium text-navy text-sm sm:text-base">Cancelamento agendado</p>
+                    <p className="text-xs sm:text-sm text-navy/70">
                       Sua assinatura será cancelada em {currentPeriodEnd}. 
                       Você continua com acesso Pro até lá.
                     </p>
@@ -140,20 +180,21 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
                 <div className="mb-4 p-3 bg-teal/10 rounded-lg flex items-start gap-3">
                   <Gift className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-navy">
+                    <p className="font-medium text-navy text-sm sm:text-base">
                       Cupom aplicado{couponCode && `: ${couponCode}`}
                     </p>
-                    <p className="text-sm text-navy/70">
+                    <p className="text-xs sm:text-sm text-navy/70">
                       Acesso Pro gratuito até {couponExpiresAt}.
                     </p>
                   </div>
                 </div>
               )}
               
-              <div className="flex items-center justify-between">
+              {/* Status info - Stack on mobile */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div>
-                  <p className="text-sm text-navy/60">Status da assinatura</p>
-                  <p className="font-medium text-navy">
+                  <p className="text-xs sm:text-sm text-navy/60">Status da assinatura</p>
+                  <p className="font-medium text-navy text-sm sm:text-base">
                     {subscriptionStatus === 'active' && 'Ativa'}
                     {subscriptionStatus === 'trialing' && 'Período de teste'}
                     {subscriptionStatus === 'past_due' && 'Pagamento pendente'}
@@ -163,30 +204,32 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
                   </p>
                 </div>
                 {hasStripeSubscription && currentPeriodEnd && !isCanceling && (
-                  <div className="text-right">
-                    <p className="text-sm text-navy/60">Próxima cobrança</p>
-                    <p className="font-medium text-navy">{currentPeriodEnd}</p>
+                  <div className="sm:text-right">
+                    <p className="text-xs sm:text-sm text-navy/60">Próxima cobrança</p>
+                    <p className="font-medium text-navy text-sm sm:text-base">{currentPeriodEnd}</p>
                   </div>
                 )}
                 {isCouponUpgrade && couponExpiresAt && (
-                  <div className="text-right">
-                    <p className="text-sm text-navy/60">Válido até</p>
-                    <p className="font-medium text-navy">{couponExpiresAt}</p>
+                  <div className="sm:text-right">
+                    <p className="text-xs sm:text-sm text-navy/60">Válido até</p>
+                    <p className="font-medium text-navy text-sm sm:text-base">{couponExpiresAt}</p>
                   </div>
                 )}
               </div>
               
-              {/* Action buttons */}
-              <div className="mt-4 flex items-center justify-between">
-                {hasStripeSubscription && !isCanceling && (
-                  <ManageSubscriptionButton />
-                )}
-                {isWhitelistUpgrade && (
-                  <p className="text-sm text-navy/50">Acesso Pro cortesia</p>
-                )}
-                {isCouponUpgrade && (
-                  <p className="text-sm text-navy/50">Acesso Pro via cupom</p>
-                )}
+              {/* Action buttons - Stack on mobile */}
+              <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  {hasStripeSubscription && !isCanceling && (
+                    <ManageSubscriptionButton />
+                  )}
+                  {isWhitelistUpgrade && (
+                    <p className="text-sm text-navy/50">Acesso Pro cortesia</p>
+                  )}
+                  {isCouponUpgrade && (
+                    <p className="text-sm text-navy/50">Acesso Pro via cupom</p>
+                  )}
+                </div>
                 
                 {!isCanceling && (
                   <CancelSubscriptionSection 
@@ -199,95 +242,44 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
           )}
 
           {/* Usage Stats */}
-          <div className="p-6 border-t border-stone/30">
-            <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-4">
+          <div className="p-4 sm:p-6 border-t border-stone/30">
+            <h3 className="text-xs sm:text-sm font-semibold text-navy/70 uppercase tracking-wide mb-4">
               Uso este mês
             </h3>
             
             <div className="space-y-4">
               {/* Insights Usage */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-teal" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-navy">Insights gerados</p>
-                    <p className="text-sm text-navy/60">
-                      {plan === 'pro' 
-                        ? 'Ilimitado'
-                        : `${insightsUsed} de ${FREE_INSIGHTS_LIMIT} usados`
-                      }
-                    </p>
-                  </div>
-                </div>
-                {plan === 'free' && (
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-navy">
-                      {FREE_INSIGHTS_LIMIT - insightsUsed}
-                    </span>
-                    <p className="text-xs text-navy/60">restantes</p>
-                  </div>
-                )}
-              </div>
+              <UsageItem
+                icon={<TrendingUp className="w-5 h-5 text-teal" />}
+                iconBg="bg-teal/10"
+                title="Insights gerados"
+                description={plan === 'pro' ? 'Ilimitado' : `${insightsUsed} de ${FREE_INSIGHTS_LIMIT} usados`}
+                remaining={plan === 'free' ? FREE_INSIGHTS_LIMIT - insightsUsed : undefined}
+              />
 
               {/* Applications Usage */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-amber/10 rounded-lg flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 text-amber" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-navy">Vagas cadastradas</p>
-                    <p className="text-sm text-navy/60">
-                      {plan === 'pro' 
-                        ? 'Ilimitado'
-                        : `${applicationsUsed} de ${FREE_APPLICATIONS_LIMIT} usadas`
-                      }
-                    </p>
-                  </div>
-                </div>
-                {plan === 'free' && (
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-navy">
-                      {Math.max(0, FREE_APPLICATIONS_LIMIT - applicationsUsed)}
-                    </span>
-                    <p className="text-xs text-navy/60">restantes</p>
-                  </div>
-                )}
-              </div>
+              <UsageItem
+                icon={<Briefcase className="w-5 h-5 text-amber" />}
+                iconBg="bg-amber/10"
+                title="Vagas cadastradas"
+                description={plan === 'pro' ? 'Ilimitado' : `${applicationsUsed} de ${FREE_APPLICATIONS_LIMIT} usadas`}
+                remaining={plan === 'free' ? Math.max(0, FREE_APPLICATIONS_LIMIT - applicationsUsed) : undefined}
+              />
 
               {/* Copilot Usage (daily) */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <MessageCircle className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-navy">Copilot (hoje)</p>
-                    <p className="text-sm text-navy/60">
-                      {plan === 'pro' 
-                        ? 'Ilimitado'
-                        : `${copilotUsed} de ${FREE_COPILOT_DAILY_LIMIT} mensagens`
-                      }
-                    </p>
-                  </div>
-                </div>
-                {plan === 'free' && (
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-navy">
-                      {Math.max(0, FREE_COPILOT_DAILY_LIMIT - copilotUsed)}
-                    </span>
-                    <p className="text-xs text-navy/60">restantes</p>
-                  </div>
-                )}
-              </div>
+              <UsageItem
+                icon={<MessageCircle className="w-5 h-5 text-purple-600" />}
+                iconBg="bg-purple-100"
+                title="Copilot (hoje)"
+                description={plan === 'pro' ? 'Ilimitado' : `${copilotUsed} de ${FREE_COPILOT_DAILY_LIMIT} mensagens`}
+                remaining={plan === 'free' ? Math.max(0, FREE_COPILOT_DAILY_LIMIT - copilotUsed) : undefined}
+              />
 
               {/* Reset Date */}
               {plan === 'free' && resetAt && (
-                <div className="flex items-center gap-3 pt-4 border-t border-stone/20">
-                  <Calendar className="w-5 h-5 text-navy/40" />
-                  <p className="text-sm text-navy/60">
+                <div className="flex items-start sm:items-center gap-3 pt-4 border-t border-stone/20">
+                  <Calendar className="w-5 h-5 text-navy/40 flex-shrink-0" />
+                  <p className="text-xs sm:text-sm text-navy/60">
                     Contadores de insights e vagas reiniciam em {resetAt}
                   </p>
                 </div>
@@ -299,38 +291,42 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
         {/* Pro Benefits (show to free users) */}
         {plan === 'free' && (
           <Card className="border-amber/30">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-navy mb-4">
+            <div className="p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-navy mb-4">
                 Faca upgrade para o Pro
               </h3>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-teal" />
-                  <span className="text-navy">Insights ilimitados</span>
+              <ul className="space-y-2.5 sm:space-y-3 mb-6">
+                <li className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-teal flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="text-navy text-sm sm:text-base">Insights ilimitados</span>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-teal" />
-                  <span className="text-navy">Vagas ilimitadas para acompanhar</span>
+                <li className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-teal flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="text-navy text-sm sm:text-base">Vagas ilimitadas para acompanhar</span>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-teal" />
-                  <span className="text-navy">Copilot ilimitado</span>
+                <li className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-teal flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="text-navy text-sm sm:text-base">Copilot ilimitado</span>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-teal" />
-                  <span className="text-navy">Interview Pro - treino de entrevistas com IA</span>
+                <li className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-teal flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="text-navy text-sm sm:text-base">Interview Pro - treino de entrevistas com IA</span>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-teal" />
-                  <span className="text-navy">Career Coach IA personalizado</span>
+                <li className="flex items-start sm:items-center gap-2.5 sm:gap-3">
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-teal flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span className="text-navy text-sm sm:text-base">Career Coach IA personalizado</span>
                 </li>
               </ul>
-              <div className="flex items-center justify-between">
+              
+              {/* Price + CTA - Stack on mobile */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                  <span className="text-3xl font-bold text-navy">R$ 19</span>
+                  <span className="text-2xl sm:text-3xl font-bold text-navy">R$ 19</span>
                   <span className="text-navy/60">/mês</span>
                 </div>
-                <CheckoutButton />
+                <div className="w-full sm:w-auto">
+                  <CheckoutButton />
+                </div>
               </div>
               
               {/* Coupon Input */}

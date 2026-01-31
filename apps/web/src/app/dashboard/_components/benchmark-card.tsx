@@ -17,7 +17,7 @@ export function BenchmarkCard({ userMetrics, benchmark }: BenchmarkCardProps) {
   const isEqual = diff === 0
   
   return (
-    <Card className="p-6">
+    <Card className="p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <Users className="w-5 h-5 text-teal" />
         <h3 className="font-semibold text-navy">Como você se compara</h3>
@@ -26,16 +26,16 @@ export function BenchmarkCard({ userMetrics, benchmark }: BenchmarkCardProps) {
       
       <div className="space-y-4">
         {/* Taxa de conversão comparativa */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <p className="text-sm text-navy/70">Sua taxa de conversão</p>
-            <p className="text-2xl font-bold text-navy">
+            <p className="text-xl sm:text-2xl font-bold text-navy">
               {userMetrics.taxaConversao}%
             </p>
           </div>
-          <div className="text-right">
+          <div className="sm:text-right">
             <p className="text-sm text-navy/70">Média da plataforma</p>
-            <p className="text-2xl font-bold text-navy/50">
+            <p className="text-xl sm:text-2xl font-bold text-navy/50">
               {benchmark.taxaConversaoMedia}%
             </p>
           </div>
