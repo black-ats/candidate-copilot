@@ -14,6 +14,14 @@ npm run lint         # check linting
 
 ---
 
+## Roadmap e Futuro
+
+Para discussoes de produto, backlog ou futuro:
+- **Ler**: `docs/ROADMAP.md` (fonte unica de verdade)
+- **Executar**: ver `.cursor/plans/` para planos detalhados
+
+---
+
 ## Rules (Leitura Obrigatoria)
 
 Regras detalhadas em `.cursor/rules/`:
@@ -28,6 +36,7 @@ Regras detalhadas em `.cursor/rules/`:
 | `engineering.md` | Stack, Arquitetura, Server Actions |
 | `patterns.md` | Code snippets reutilizaveis |
 | `workflow.md` | DoD, PRs, Commits |
+| `roadmap.md` | Disciplina de leitura/atualizacao do Roadmap |
 
 ---
 
