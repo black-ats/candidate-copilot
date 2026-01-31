@@ -9,20 +9,19 @@ import { SuggestedQuestions } from './suggested-questions'
 import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, type CopilotAccessInfo } from './actions'
 import type { ChatMessage } from '@/lib/copilot/types'
 import Link from 'next/link'
-import { useCopilotDrawer, type InsightContext, type HeroContext, type InterviewContext } from '@/hooks/use-copilot-drawer'
+import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
 import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage } from './insight-messages'
 
-interface CopilotDrawerProps {
-  isOpen: boolean
-  onClose: () => void
-  insightContext?: InsightContext | null
-}
-
-export function CopilotDrawer({ isOpen, onClose, insightContext: propContext }: CopilotDrawerProps) {
-  const { insightContext: storeContext, heroContext: storeHeroContext, interviewContext: storeInterviewContext, clearContext } = useCopilotDrawer()
-  const insightContext = propContext || storeContext
-  const heroContext = storeHeroContext
-  const interviewContext = storeInterviewContext
+export function CopilotDrawer() {
+  // Single source of truth: Zustand store
+  const { 
+    isOpen, 
+    close: onClose, 
+    insightContext, 
+    heroContext, 
+    interviewContext, 
+    clearContext 
+  } = useCopilotDrawer()
   
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')

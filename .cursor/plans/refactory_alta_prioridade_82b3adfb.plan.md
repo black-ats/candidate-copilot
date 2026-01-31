@@ -7,13 +7,13 @@ todos:
     status: completed
   - id: perf-suspense
     content: Adicionar Suspense boundaries nas páginas principais
-    status: pending
+    status: completed
   - id: perf-lazy
     content: Lazy load do CopilotDrawer com dynamic import
-    status: pending
+    status: completed
   - id: state-duplicate
     content: Corrigir estado duplicado do Copilot (remover prop, usar só store)
-    status: pending
+    status: completed
   - id: state-revalidate
     content: Adicionar revalidatePath('/dashboard') nas mutations de aplicações
     status: pending
