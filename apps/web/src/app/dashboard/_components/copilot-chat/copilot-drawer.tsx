@@ -10,7 +10,7 @@ import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, type Copilo
 import type { ChatMessage } from '@/lib/copilot/types'
 import Link from 'next/link'
 import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
-import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage } from './insight-messages'
+import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage, getBenchmarkInitialMessage } from './insight-messages'
 
 export function CopilotDrawer() {
   // Single source of truth: Zustand store
@@ -19,7 +19,8 @@ export function CopilotDrawer() {
     close: onClose, 
     insightContext, 
     heroContext, 
-    interviewContext, 
+    interviewContext,
+    benchmarkContext,
     clearContext 
   } = useCopilotDrawer()
   
@@ -35,17 +36,20 @@ export function CopilotDrawer() {
   const prevInsightContextId = useRef<string | null>(null)
   const prevHeroContextKey = useRef<string | null>(null)
   const prevInterviewContextId = useRef<string | null>(null)
+  const prevBenchmarkContextKey = useRef<string | null>(null)
 
   // Reset chat when context changes
   useEffect(() => {
     const currentInsightId = insightContext?.id || null
     const currentHeroKey = heroContext ? `${heroContext.context}-${heroContext.company}-${heroContext.title}` : null
     const currentInterviewId = interviewContext?.sessionId || null
+    const currentBenchmarkKey = benchmarkContext ? `benchmark-${benchmarkContext.userTaxa}-${benchmarkContext.mediaTaxa}` : null
 
     const contextChanged = 
       (currentInsightId && currentInsightId !== prevInsightContextId.current) ||
       (currentHeroKey && currentHeroKey !== prevHeroContextKey.current) ||
-      (currentInterviewId && currentInterviewId !== prevInterviewContextId.current)
+      (currentInterviewId && currentInterviewId !== prevInterviewContextId.current) ||
+      (currentBenchmarkKey && currentBenchmarkKey !== prevBenchmarkContextKey.current)
 
     if (contextChanged && isOpen) {
       // Reset chat for new context
@@ -58,7 +62,8 @@ export function CopilotDrawer() {
     prevInsightContextId.current = currentInsightId
     prevHeroContextKey.current = currentHeroKey
     prevInterviewContextId.current = currentInterviewId
-  }, [insightContext, heroContext, interviewContext, isOpen])
+    prevBenchmarkContextKey.current = currentBenchmarkKey
+  }, [insightContext, heroContext, interviewContext, benchmarkContext, isOpen])
 
   // Fechar com Escape
   useEffect(() => {
@@ -98,12 +103,19 @@ export function CopilotDrawer() {
     }
   }, [isOpen])
 
-  // Show initial message when opening with insight, hero, or interview context
+  // Show initial message when opening with insight, hero, interview, or benchmark context
   useEffect(() => {
     if (isOpen && !hasShownInitialMessage && messages.length === 0) {
       let initialMessage: string | null = null
       
-      if (interviewContext) {
+      if (benchmarkContext) {
+        initialMessage = getBenchmarkInitialMessage(
+          benchmarkContext.userTaxa, 
+          benchmarkContext.mediaTaxa, 
+          benchmarkContext.isAbove, 
+          benchmarkContext.percentil
+        )
+      } else if (interviewContext) {
         initialMessage = getInterviewInitialMessage(interviewContext.cargo, interviewContext.score)
       } else if (insightContext) {
         initialMessage = insightInitialMessages[insightContext.tipo] || insightInitialMessages.default
@@ -128,7 +140,7 @@ export function CopilotDrawer() {
         setHasShownInitialMessage(true)
       }
     }
-  }, [isOpen, insightContext, heroContext, interviewContext, hasShownInitialMessage, messages.length])
+  }, [isOpen, insightContext, heroContext, interviewContext, benchmarkContext, hasShownInitialMessage, messages.length])
 
   const handleSubmit = useCallback(async (question: string) => {
     if (!question.trim() || isLoading || limitReached) return
@@ -176,7 +188,17 @@ export function CopilotDrawer() {
         tips: interviewContext.tips,
       } : null
       
-      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData)
+      // Convert BenchmarkContext to BenchmarkContextData for the server action
+      const benchmarkContextData = benchmarkContext ? {
+        userTaxa: benchmarkContext.userTaxa,
+        mediaTaxa: benchmarkContext.mediaTaxa,
+        percentil: benchmarkContext.percentil,
+        totalUsuarios: benchmarkContext.totalUsuarios,
+        diff: benchmarkContext.diff,
+        isAbove: benchmarkContext.isAbove,
+      } : null
+      
+      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData)
       
       // Check if limit was reached
       if (response.limitReached) {
@@ -220,7 +242,7 @@ export function CopilotDrawer() {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext])
+  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -319,6 +341,7 @@ export function CopilotDrawer() {
                     insightContext={insightContext}
                     heroContext={heroContext}
                     interviewContext={interviewContext}
+                    benchmarkContext={benchmarkContext}
                     hasInterviewHistory={hasInterviewHistory}
                   />
                 </div>

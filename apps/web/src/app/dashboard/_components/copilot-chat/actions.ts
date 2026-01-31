@@ -7,7 +7,7 @@ import { getAIProvider } from '@/lib/ai'
 import { validateInput, checkTopic } from '@/lib/ai/security'
 import { canUseCopilot } from '@/lib/subscription/check-access'
 import { incrementCopilotUsage } from '@/lib/subscription/actions'
-import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData } from '@/lib/copilot/types'
+import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData } from '@/lib/copilot/types'
 import { trackAIUsage } from '@/lib/ai/usage-tracker'
 
 export async function getUserContext(): Promise<UserContext> {
@@ -128,6 +128,7 @@ export async function sendChatMessage(
   insightContext?: InsightContextData | null,
   heroContext?: HeroContextData | null,
   interviewContext?: InterviewContextData | null,
+  benchmarkContext?: BenchmarkContextData | null,
   cachedUserContext?: UserContext | null  // Contexto cacheado para evitar queries repetidas
 ): Promise<ChatResponse> {
   const supabase = await createClient()
@@ -189,7 +190,7 @@ export async function sendChatMessage(
   
   // Query complexa - usar AI provider
   const provider = getAIProvider()
-  const systemPrompt = buildSystemPrompt(context, insightContext, heroContext, interviewContext)
+  const systemPrompt = buildSystemPrompt(context, insightContext, heroContext, interviewContext, benchmarkContext)
   
   const aiResponse = await provider.complete([
     { role: 'system', content: systemPrompt },

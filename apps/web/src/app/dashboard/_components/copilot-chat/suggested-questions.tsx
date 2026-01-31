@@ -3,12 +3,12 @@
 import { 
   TrendingUp, Clock, Target, Lightbulb, 
   Sparkles, HelpCircle, AlertTriangle, ListChecks,
-  Mic
+  Mic, Users
 } from 'lucide-react'
 import type { SuggestedQuestion } from '@/lib/copilot/types'
 import type { LucideIcon } from 'lucide-react'
-import type { InsightContext, HeroContext, InterviewContext } from '@/hooks/use-copilot-drawer'
-import { insightSuggestedQuestions, heroSuggestedQuestions, interviewSuggestedQuestions } from './insight-messages'
+import type { InsightContext, HeroContext, InterviewContext, BenchmarkContext } from '@/hooks/use-copilot-drawer'
+import { insightSuggestedQuestions, heroSuggestedQuestions, interviewSuggestedQuestions, benchmarkSuggestedQuestions } from './insight-messages'
 
 interface ExtendedQuestion extends SuggestedQuestion {
   icon: LucideIcon
@@ -103,12 +103,29 @@ const interviewQuestions: ExtendedQuestion[] = [
   },
 ]
 
+// Perguntas de Benchmark
+const benchmarkQuestions: ExtendedQuestion[] = [
+  {
+    id: 'minha-comparacao',
+    label: 'Como me comparo com outros candidatos?',
+    category: 'benchmark',
+    icon: Users,
+  },
+  {
+    id: 'melhorar-taxa',
+    label: 'Como melhorar minha taxa de conversão?',
+    category: 'benchmark',
+    icon: TrendingUp,
+  },
+]
+
 const categoryLabels: Record<string, string> = {
   metricas: 'Métricas',
   proximos_passos: 'Próximos Passos',
   insights: 'Seus Insights',
   analise: 'Análise',
   interview: 'Mock Interview',
+  benchmark: 'Comparação',
 }
 
 interface SuggestedQuestionsProps {
@@ -118,6 +135,7 @@ interface SuggestedQuestionsProps {
   insightContext?: InsightContext | null
   heroContext?: HeroContext | null
   interviewContext?: InterviewContext | null
+  benchmarkContext?: BenchmarkContext | null
   hasInterviewHistory?: boolean
 }
 
@@ -128,10 +146,13 @@ export function SuggestedQuestions({
   insightContext,
   heroContext,
   interviewContext,
+  benchmarkContext,
   hasInterviewHistory = false
 }: SuggestedQuestionsProps) {
-  // If there's interview, insight, or hero context, show context-specific questions
-  const contextQuestions = interviewContext
+  // If there's benchmark, interview, insight, or hero context, show context-specific questions
+  const contextQuestions = benchmarkContext
+    ? benchmarkSuggestedQuestions
+    : interviewContext
     ? interviewSuggestedQuestions
     : insightContext 
     ? insightSuggestedQuestions[insightContext.tipo] || insightSuggestedQuestions.default
@@ -182,10 +203,10 @@ export function SuggestedQuestions({
     )
   }
   
-  // Incluir perguntas de interview para todos usuarios com historico de entrevista
+  // Incluir perguntas de interview e benchmark para todos usuarios
   const allQuestions = hasInterviewHistory
-    ? [...defaultQuestions, ...interviewQuestions]
-    : defaultQuestions
+    ? [...defaultQuestions, ...interviewQuestions, ...benchmarkQuestions]
+    : [...defaultQuestions, ...benchmarkQuestions]
   
   // Filtrar por categorias se especificado
   const questions = categories 

@@ -49,6 +49,52 @@
 <Badge className="bg-amber/20 text-amber">Destaque</Badge>
 ```
 
+### Botao do Copilot
+
+**IMPORTANTE**: Todo botao que abre o Copilot DEVE usar o componente `CopilotButton`:
+
+```tsx
+import { CopilotButton } from '@/components/copilot-button'
+
+// Padrao - usar size="sm" para manter compacto
+<CopilotButton size="sm" onClick={handleClick}>
+  Dicas no Copilot
+</CopilotButton>
+
+// Variante text - apenas texto
+<CopilotButton size="sm" variant="text" onClick={handleClick}>
+  Perguntar ao Copilot
+</CopilotButton>
+```
+
+**Identidade visual**:
+- Icone: `Sparkles` (lucide-react) - automatico via `showIcon={true}`
+- Gradiente: `from-violet-500 via-purple-500 to-fuchsia-500`
+- Hover: `from-violet-400 via-purple-400 to-fuchsia-400`
+- Texto branco, fonte medium
+
+**Regras**:
+- NUNCA criar botao do Copilot com estilo customizado
+- SEMPRE usar `CopilotButton` para consistencia
+- SEMPRE usar `size="sm"` para manter o botao compacto
+- Para contextos especificos, criar wrapper (ex: `BenchmarkCopilotButton`)
+
+**Exemplo de wrapper para contexto especifico**:
+```tsx
+// apps/web/src/app/dashboard/aplicacoes/_components/benchmark-copilot-button.tsx
+import { CopilotButton } from '@/components/copilot-button'
+import { useCopilotDrawer, type BenchmarkContext } from '@/hooks/use-copilot-drawer'
+
+export function BenchmarkCopilotButton({ context }: { context: BenchmarkContext }) {
+  const { openWithBenchmarkContext } = useCopilotDrawer()
+  return (
+    <CopilotButton size="sm" onClick={() => openWithBenchmarkContext(context)}>
+      Dicas no Copilot
+    </CopilotButton>
+  )
+}
+```
+
 ## Spacing
 
 Use espacamento consistente:

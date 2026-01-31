@@ -65,7 +65,7 @@ export interface ChatMessage {
 export interface SuggestedQuestion {
   id: string
   label: string
-  category: 'metricas' | 'proximos_passos' | 'insights' | 'analise' | 'interview'
+  category: 'metricas' | 'proximos_passos' | 'insights' | 'analise' | 'interview' | 'benchmark'
 }
 
 // Historico de entrevistas simuladas para contexto do Copilot
@@ -108,4 +108,13 @@ export interface InterviewContextData {
   strengths: string[]
   improvements: string[]
   tips: string[]
+}
+
+export interface BenchmarkContextData {
+  userTaxa: number
+  mediaTaxa: number
+  percentil: number
+  totalUsuarios: number
+  diff: number
+  isAbove: boolean
 }

@@ -36,6 +36,8 @@ export async function createApplication(data: CreateApplicationInput) {
     }
   }
 
+  const initialStatus = validated.data.status || 'aplicado'
+
   // Insert application
   const { data: application, error: appError } = await supabase
     .from('applications')
@@ -48,7 +50,7 @@ export async function createApplication(data: CreateApplicationInput) {
       salary_range: validated.data.salary_range || null,
       job_description: validated.data.job_description || null,
       notes: validated.data.notes || null,
-      status: 'aplicado',
+      status: initialStatus,
     })
     .select('id')
     .single()
@@ -68,7 +70,7 @@ export async function createApplication(data: CreateApplicationInput) {
     .insert({
       application_id: application.id,
       from_status: null,
-      to_status: 'aplicado',
+      to_status: initialStatus,
       notes: 'Aplicação criada',
     })
 

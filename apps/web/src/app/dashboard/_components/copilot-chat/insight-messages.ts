@@ -144,3 +144,29 @@ export const interviewSuggestedQuestions: string[] = [
   'Como lidar com perguntas dificeis?',
   'Como falar sobre pontos fracos de forma positiva?',
 ]
+
+// Mensagem inicial para contexto de benchmark
+export function getBenchmarkInitialMessage(userTaxa: number, mediaTaxa: number, isAbove: boolean, percentil: number): string {
+  if (isAbove) {
+    const topPercent = 100 - percentil
+    if (topPercent <= 20) {
+      return `Parabéns! Sua taxa de conversão de **${userTaxa}%** está no top ${topPercent}% dos usuários da plataforma. Você está indo muito bem! Quer entender o que pode fazer para manter esse ritmo ou melhorar ainda mais?`
+    }
+    return `Boa notícia! Sua taxa de conversão de **${userTaxa}%** está acima da média de ${mediaTaxa}% dos outros usuários. Quer conversar sobre como você pode manter esse bom desempenho?`
+  } else if (userTaxa === mediaTaxa) {
+    return `Sua taxa de conversão de **${userTaxa}%** está na média da plataforma. Isso é um bom ponto de partida! Vamos conversar sobre como você pode se destacar e ultrapassar essa marca?`
+  } else {
+    return `Sua taxa de conversão de **${userTaxa}%** está um pouco abaixo da média de ${mediaTaxa}%. Não se preocupe - isso é muito comum e existem várias formas de melhorar! Vamos conversar sobre estratégias?`
+  }
+}
+
+export const benchmarkSuggestedQuestions: string[] = [
+  'Como posso melhorar minha taxa de conversão?',
+  'O que significa essa taxa na prática?',
+  'Quais estratégias funcionam para conseguir mais entrevistas?',
+  'Como personalizar melhor minhas candidaturas?',
+  'Devo aplicar para mais vagas ou focar em qualidade?',
+  'Como saber se estou aplicando para as vagas certas?',
+  'Qual a importância do currículo na taxa de conversão?',
+  'Como otimizar meu perfil LinkedIn?',
+]

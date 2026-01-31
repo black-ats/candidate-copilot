@@ -117,6 +117,7 @@ export function ChatFlow() {
         company: draft.company || '',
         title: draft.title || '',
         url: draft.url || undefined,
+        status: draft.status || 'aplicado',
       })
 
       if (result.error) {

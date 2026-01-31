@@ -1,4 +1,4 @@
-import type { UserContext, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData } from './types'
+import type { UserContext, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData } from './types'
 import type { Application } from '@/lib/types/application'
 
 interface InsightFromDB {
@@ -128,7 +128,8 @@ export function buildSystemPrompt(
   context: UserContext, 
   insightContext?: InsightContextData | null,
   heroContext?: HeroContextData | null,
-  interviewContext?: InterviewContextData | null
+  interviewContext?: InterviewContextData | null,
+  benchmarkContext?: BenchmarkContextData | null
 ): string {
   const contextStr = formatContextForPrompt(context)
   
@@ -194,21 +195,56 @@ IMPORTANTE: O usuário clicou em "Conversar" a partir desta dica. Quando ele per
 ele está se referindo EXATAMENTE a esta mensagem acima. Ajude-o a aprofundar este tema específico.`
   }
 
+  // Add benchmark context if available
+  if (benchmarkContext) {
+    const positionText = benchmarkContext.isAbove 
+      ? `**${Math.abs(benchmarkContext.diff)}% acima** da média da plataforma`
+      : benchmarkContext.diff === 0
+      ? 'na **média** da plataforma'
+      : `**${Math.abs(benchmarkContext.diff)}% abaixo** da média da plataforma`
+    
+    const percentilText = benchmarkContext.percentil > 0
+      ? `Isso coloca o usuário no **top ${100 - benchmarkContext.percentil}%** dos usuários.`
+      : ''
+
+    prompt += `
+
+CONTEXTO DE BENCHMARK (Comparação com outros usuários):
+O usuário está analisando como sua taxa de conversão se compara com outros usuários da plataforma.
+
+Dados do benchmark:
+- Taxa de conversão do usuário: **${benchmarkContext.userTaxa}%**
+- Média da plataforma: **${benchmarkContext.mediaTaxa}%**
+- Diferença: ${positionText}
+${percentilText}
+- Base de comparação: ${benchmarkContext.totalUsuarios} usuários ativos
+
+IMPORTANTE: 
+- O usuário quer entender o que essa comparação significa para sua busca de emprego
+- Se estiver acima da média, parabenize e sugira como manter/melhorar
+- Se estiver abaixo, seja encorajador e ofereça dicas práticas para melhorar
+- Explique que taxa de conversão é a % de aplicações que avançam para entrevistas
+- Sugira ações concretas baseadas na posição do usuário`
+  }
+
   prompt += `
 
 DIRETRIZES:
 1. Sempre baseie suas respostas nos dados reais do usuário
-2. Seja direto e objetivo - evite respostas genéricas
-3. Quando apropriado, sugira ações concretas
+2. Seja MUITO direto e objetivo - vá direto ao ponto
+3. Quando apropriado, sugira 1-2 ações concretas (não mais)
 4. Use um tom amigável mas profissional
 5. Se não tiver dados suficientes, diga isso claramente
 6. Responda sempre em português brasileiro
 
-FORMATO DE RESPOSTA:
-- Use parágrafos curtos
-- Destaque números e métricas importantes com **negrito**
-- Inclua próximos passos quando relevante
-- Evite listas muito longas`
+FORMATO DE RESPOSTA (IMPORTANTE - RESPOSTAS CURTAS):
+- MÁXIMO 3-4 parágrafos por resposta
+- Parágrafos curtos de 1-2 frases
+- Destaque apenas 1-2 números/métricas mais relevantes com **negrito**
+- Evite listas - se precisar, máximo 3 itens
+- Não repita informações que o usuário já sabe
+- Evite introduções desnecessárias como "Ótima pergunta!" ou "Claro!"
+- Prefira responder em poucas linhas do que em parágrafos longos`
 
   return prompt
 }

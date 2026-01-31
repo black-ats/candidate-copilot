@@ -3,16 +3,23 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Button, Input, Textarea } from '@ui/components'
+import { Button, Input, Textarea, RadioGroup } from '@ui/components'
 import { createApplication } from '../actions'
 import { createApplicationSchema } from '@/lib/schemas/application'
 import { track } from '@/lib/analytics/track'
+import { statusConfig, type ApplicationStatus } from '@/lib/types/application'
+
+const statusOptions = Object.entries(statusConfig).map(([value, config]) => ({
+  value,
+  label: config.label,
+}))
 
 export function FormFlow() {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [generalError, setGeneralError] = useState<string | null>(null)
+  const [status, setStatus] = useState<ApplicationStatus>('aplicado')
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -28,6 +35,7 @@ export function FormFlow() {
       salary_range: formData.get('salary_range') as string,
       job_description: formData.get('job_description') as string,
       notes: formData.get('notes') as string,
+      status,
     }
 
     const validated = createApplicationSchema.safeParse(data)
@@ -49,7 +57,7 @@ export function FormFlow() {
       } else {
         track('application_created', {
           company: validated.data.company,
-          status: 'aplicado',
+          status: validated.data.status || 'aplicado',
           source: 'form_flow',
         })
         router.push('/dashboard/aplicacoes')
@@ -72,6 +80,18 @@ export function FormFlow() {
           label="Cargo *"
           placeholder="Ex: Desenvolvedor Sênior"
           error={errors.title}
+        />
+      </div>
+
+      {/* Status */}
+      <div>
+        <label className="block text-sm font-medium text-navy mb-2">Status atual</label>
+        <RadioGroup
+          name="status"
+          options={statusOptions}
+          value={status}
+          onChange={(value) => setStatus(value as ApplicationStatus)}
+          orientation="horizontal"
         />
       </div>
 

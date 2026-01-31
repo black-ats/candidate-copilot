@@ -18,6 +18,7 @@ export const createApplicationSchema = z.object({
   salary_range: z.string().optional(),
   job_description: z.string().optional(),
   notes: z.string().optional(),
+  status: applicationStatusSchema.optional(),
 })
 
 export const updateApplicationSchema = z.object({
