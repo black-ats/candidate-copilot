@@ -183,7 +183,7 @@ export async function getHeroData(hasPendingInsight: boolean = false): Promise<H
 
   // Detectar contexto e construir mensagem
   const contextResult = detectContext(userData)
-  const heroData = await buildMessage(contextResult)
+  const heroData = await buildMessage(contextResult, user.id)
 
   return heroData
 }

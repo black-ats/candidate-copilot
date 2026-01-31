@@ -8,6 +8,7 @@ import { validateInput, checkTopic } from '@/lib/ai/security'
 import { canUseCopilot } from '@/lib/subscription/check-access'
 import { incrementCopilotUsage } from '@/lib/subscription/actions'
 import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData } from '@/lib/copilot/types'
+import { trackAIUsage } from '@/lib/ai/usage-tracker'
 
 export async function getUserContext(): Promise<UserContext> {
   const supabase = await createClient()
@@ -126,7 +127,8 @@ export async function sendChatMessage(
   _history: ChatMessage[],
   insightContext?: InsightContextData | null,
   heroContext?: HeroContextData | null,
-  interviewContext?: InterviewContextData | null
+  interviewContext?: InterviewContextData | null,
+  cachedUserContext?: UserContext | null  // Contexto cacheado para evitar queries repetidas
 ): Promise<ChatResponse> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -170,8 +172,8 @@ export async function sendChatMessage(
     }
   }
   
-  // Buscar contexto do usuario
-  const context = await getUserContext()
+  // Usar contexto cacheado se disponivel, senao buscar do DB
+  const context = cachedUserContext || await getUserContext()
   
   // Classificar e processar a query
   const result = handleQuery(sanitizedQuestion, context)
@@ -194,6 +196,11 @@ export async function sendChatMessage(
     { role: 'user', content: sanitizedQuestion },
   ])
   const response = aiResponse.content
+  
+  // Track AI usage for cost monitoring
+  if (aiResponse.usage) {
+    await trackAIUsage(user.id, 'copilot', aiResponse.model, aiResponse.usage)
+  }
   
   // Increment usage after successful response
   await incrementCopilotUsage()
