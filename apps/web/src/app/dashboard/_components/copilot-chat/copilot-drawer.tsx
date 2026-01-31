@@ -211,6 +211,7 @@ export function CopilotDrawer() {
         role: 'assistant',
         content: response.message,
         timestamp: new Date(),
+        cta: response.cta ?? undefined,
       }
       
       setMessages(prev => [...prev, assistantMessage])

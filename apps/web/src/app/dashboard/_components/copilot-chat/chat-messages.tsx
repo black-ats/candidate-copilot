@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { Sparkles, User } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import type { ChatMessage } from '@/lib/copilot/types'
+import { CopilotCTA } from './copilot-cta'
 
 interface ChatMessagesProps {
   messages: ChatMessage[]
@@ -52,26 +53,31 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       </div>
       
       {/* Message */}
-      <div className={`
-        max-w-[85%] rounded-xl px-4 py-3
-        ${isUser 
-          ? 'bg-navy text-sand' 
-          : 'bg-stone/10 text-navy'
-        }
-      `}>
-        {isUser ? (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">
-            {message.content}
-          </p>
-        ) : (
-          <div className="text-sm leading-relaxed prose prose-sm prose-navy max-w-none 
-            prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0
-            prose-headings:text-navy prose-strong:text-navy">
-            <ReactMarkdown>
+      <div className="max-w-[85%]">
+        <div className={`
+          rounded-xl px-4 py-3
+          ${isUser 
+            ? 'bg-navy text-sand' 
+            : 'bg-stone/10 text-navy'
+          }
+        `}>
+          {isUser ? (
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">
               {message.content}
-            </ReactMarkdown>
-          </div>
-        )}
+            </p>
+          ) : (
+            <div className="text-sm leading-relaxed prose prose-sm prose-navy max-w-none 
+              [&>p]:mb-4 [&>p:last-child]:mb-0 [&>ul]:my-2 [&>ol]:my-2
+              prose-headings:text-navy prose-strong:text-navy">
+              <ReactMarkdown>
+                {message.content}
+              </ReactMarkdown>
+            </div>
+          )}
+        </div>
+        
+        {/* CTA contextual */}
+        {!isUser && message.cta && <CopilotCTA cta={message.cta} />}
       </div>
     </div>
   )

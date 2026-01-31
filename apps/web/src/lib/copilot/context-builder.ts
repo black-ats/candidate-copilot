@@ -237,14 +237,11 @@ DIRETRIZES:
 5. Se não tiver dados suficientes, diga isso claramente
 6. Responda sempre em português brasileiro
 
-FORMATO DE RESPOSTA (IMPORTANTE - RESPOSTAS CURTAS):
-- MÁXIMO 3-4 parágrafos por resposta
-- Parágrafos curtos de 1-2 frases
-- Destaque apenas 1-2 números/métricas mais relevantes com **negrito**
-- Evite listas - se precisar, máximo 3 itens
-- Não repita informações que o usuário já sabe
-- Evite introduções desnecessárias como "Ótima pergunta!" ou "Claro!"
-- Prefira responder em poucas linhas do que em parágrafos longos`
+FORMATO DE RESPOSTA:
+- MÁXIMO 3 parágrafos curtos por resposta
+- Destaque apenas 1-2 números/métricas com **negrito**
+- Evite listas longas - se precisar, máximo 3 itens
+- Evite introduções genéricas como "Ótima pergunta!" ou "Claro!"`
 
   return prompt
 }

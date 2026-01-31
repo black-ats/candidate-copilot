@@ -55,11 +55,19 @@ export interface UserContext {
   interviewHistory?: InterviewHistoryData | null
 }
 
+export interface CopilotCTA {
+  type: 'interview_pro' | 'insight' | 'add_application'
+  label: string
+  href: string
+  icon?: 'video' | 'sparkles' | 'plus'
+}
+
 export interface ChatMessage {
   id: string
   role: 'user' | 'assistant'
   content: string
   timestamp: Date
+  cta?: CopilotCTA
 }
 
 export interface SuggestedQuestion {

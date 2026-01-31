@@ -7,7 +7,8 @@ import { getAIProvider } from '@/lib/ai'
 import { validateInput, checkTopic } from '@/lib/ai/security'
 import { canUseCopilot } from '@/lib/subscription/check-access'
 import { incrementCopilotUsage } from '@/lib/subscription/actions'
-import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData } from '@/lib/copilot/types'
+import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData, CopilotCTA } from '@/lib/copilot/types'
+import { detectCTA } from '@/lib/copilot/cta-detector'
 import { trackAIUsage } from '@/lib/ai/usage-tracker'
 
 export async function getUserContext(): Promise<UserContext> {
@@ -89,6 +90,7 @@ export interface ChatResponse {
   message: string
   isDirect: boolean
   limitReached?: boolean
+  cta?: CopilotCTA | null
 }
 
 export interface CopilotAccessInfo {
@@ -176,6 +178,14 @@ export async function sendChatMessage(
   // Usar contexto cacheado se disponivel, senao buscar do DB
   const context = cachedUserContext || await getUserContext()
   
+  // Detectar CTA contextual baseado na pergunta
+  const cta = detectCTA({
+    question: sanitizedQuestion,
+    userContext: context,
+    hasInterviewContext: !!interviewContext,
+    hasInsightContext: !!insightContext,
+  })
+  
   // Classificar e processar a query
   const result = handleQuery(sanitizedQuestion, context)
   
@@ -185,6 +195,7 @@ export async function sendChatMessage(
     return {
       message: result.response,
       isDirect: true,
+      cta,
     }
   }
   
@@ -209,5 +220,6 @@ export async function sendChatMessage(
   return {
     message: response,
     isDirect: false,
+    cta,
   }
 }
