@@ -85,7 +85,7 @@ export function ChangeStatusModal({
 
           <Textarea
             label="Notas (opcional)"
-            placeholder="Adicione uma nota sobre esta mudanca..."
+            placeholder="Adicione uma nota sobre esta mudança..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             className="min-h-[80px]"

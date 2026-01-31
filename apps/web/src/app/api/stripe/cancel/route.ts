@@ -86,8 +86,8 @@ export async function POST(req: Request) {
       success: true, 
       immediate,
       message: immediate 
-        ? 'Assinatura cancelada. Voce foi movido para o plano Free.'
-        : 'Assinatura sera cancelada no fim do periodo atual.'
+        ? 'Assinatura cancelada. Você foi movido para o plano Free.'
+        : 'Assinatura será cancelada no fim do período atual.'
     })
   } catch (error) {
     console.error('Error canceling subscription:', error)

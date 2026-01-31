@@ -11,7 +11,7 @@ import { ContextSelector, type ContextOption, type ContextData } from './context
 
 const senioridadeOptions = [
   { value: 'estagio', label: 'Estágio' },
-  { value: 'junior', label: 'Junior' },
+  { value: 'junior', label: 'Júnior' },
   { value: 'pleno', label: 'Pleno' },
   { value: 'senior', label: 'Sênior' },
   { value: 'lideranca', label: 'Liderança' },

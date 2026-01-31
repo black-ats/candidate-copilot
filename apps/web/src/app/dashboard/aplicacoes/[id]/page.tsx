@@ -149,7 +149,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
           <Card className="p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
               <Clock className="w-5 h-5 text-navy/50" />
-              <h2 className="text-lg font-semibold text-navy">Historico</h2>
+              <h2 className="text-lg font-semibold text-navy">Histórico</h2>
             </div>
             <StatusTimeline history={history} />
           </Card>

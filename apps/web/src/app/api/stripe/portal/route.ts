@@ -39,7 +39,7 @@ export async function POST() {
   } catch (error) {
     console.error('Error creating portal session:', error)
     return NextResponse.json(
-      { error: 'Erro ao criar sessao do portal' },
+      { error: 'Erro ao criar sessão do portal' },
       { status: 500 }
     )
   }

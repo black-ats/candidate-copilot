@@ -55,7 +55,7 @@ export async function saveInsight(data: InsightData) {
   
   const validated = insightSchema.safeParse(data)
   if (!validated.success) {
-    return { error: 'Dados invalidos' }
+    return { error: 'Dados inválidos' }
   }
   
   const { data: insertedInsight, error } = await supabase

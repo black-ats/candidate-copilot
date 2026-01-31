@@ -45,7 +45,7 @@ export type InterviewFeedback = {
 
 // Waitlist schema
 const waitlistSchema = z.object({
-  email: z.string().email('Email invalido'),
+  email: z.string().email('Email inválido'),
   source: z.string().optional(),
 })
 
@@ -55,7 +55,7 @@ export async function joinWaitlist(formData: FormData) {
 
   const validated = waitlistSchema.safeParse({ email, source })
   if (!validated.success) {
-    return { error: 'Email invalido' }
+    return { error: 'Email inválido' }
   }
 
   const supabase = await createClient()

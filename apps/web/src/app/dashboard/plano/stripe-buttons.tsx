@@ -114,7 +114,7 @@ export function CouponInput() {
           discounted_price: data.discounted_price,
         })
       } else {
-        setError(data.error || 'Cupom invalido')
+        setError(data.error || 'Cupom inválido')
       }
     } catch (err) {
       console.error('Error validating coupon:', err)
@@ -311,7 +311,7 @@ export function CancelSubscriptionSection({ hasStripeSubscription, currentPeriod
                 disabled={isLoading}
                 className="w-full p-3 text-left border border-stone/30 rounded-lg hover:border-amber hover:bg-amber/5 transition-colors disabled:opacity-50"
               >
-                <p className="font-medium text-navy text-sm sm:text-base">Cancelar no fim do periodo</p>
+                <p className="font-medium text-navy text-sm sm:text-base">Cancelar no fim do período</p>
                 <p className="text-xs sm:text-sm text-navy/60 mt-1">
                   Continue usando o Pro ate {currentPeriodEnd}, depois muda para Free.
                 </p>

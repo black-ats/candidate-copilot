@@ -82,7 +82,7 @@ export function generateInsight(data: EntryFlowData): Insight {
       ],
     },
     outro: {
-      recommendation: 'Defina seu proximo passo com clareza',
+      recommendation: 'Defina seu próximo passo com clareza',
       why: [
         'Clareza de objetivo acelera qualquer processo de carreira',
         'Seu contexto atual permite explorar opções',
@@ -146,9 +146,9 @@ export function generateInsight(data: EntryFlowData): Insight {
 
 // Helper to get display labels
 export const senioridadeLabels: Record<string, string> = {
-  junior: 'Junior',
+  junior: 'Júnior',
   pleno: 'Pleno',
-  senior: 'Senior',
+  senior: 'Sênior',
   lead: 'Lead',
   exec: 'Executivo',
 }
@@ -157,20 +157,20 @@ export const areaLabels: Record<string, string> = {
   tech: 'Tecnologia',
   produto: 'Produto',
   design: 'Design',
-  negocios: 'Negocios',
+  negocios: 'Negócios',
   outro: 'Outro',
 }
 
 export const statusLabels: Record<string, string> = {
   empregado: 'Empregado',
   desempregado: 'Desempregado',
-  transicao: 'Em transicao',
+  transicao: 'Em transição',
 }
 
 export const objetivoLabels: Record<string, string> = {
   avaliar_proposta: 'Avaliar proposta',
   mais_entrevistas: 'Conseguir mais entrevistas',
-  mudar_area: 'Mudar de area',
-  negociar_salario: 'Negociar salario',
+  mudar_area: 'Mudar de área',
+  negociar_salario: 'Negociar salário',
   outro: 'Outro objetivo',
 }

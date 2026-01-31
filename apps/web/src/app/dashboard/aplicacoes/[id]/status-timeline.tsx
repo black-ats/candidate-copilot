@@ -9,7 +9,7 @@ interface StatusTimelineProps {
 export function StatusTimeline({ history }: StatusTimelineProps) {
   if (!history || history.length === 0) {
     return (
-      <p className="text-navy/50 text-sm">Nenhum historico de status ainda.</p>
+      <p className="text-navy/50 text-sm">Nenhum histórico de status ainda.</p>
     )
   }
 

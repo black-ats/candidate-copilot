@@ -56,7 +56,7 @@ export default async function MetricsPage() {
               <MetricRow label="Ofertas" value={metrics.porStatus['proposta'] || 0} />
               <MetricRow label="Aceitas" value={metrics.porStatus['aceito'] || 0} />
               <MetricRow label="Rejeições" value={metrics.porStatus['rejeitado'] || 0} />
-              <MetricRow label="Desistencias" value={metrics.porStatus['desistencia'] || 0} />
+              <MetricRow label="Desistências" value={metrics.porStatus['desistencia'] || 0} />
             </div>
           </Card>
 

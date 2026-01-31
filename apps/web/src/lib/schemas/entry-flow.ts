@@ -40,9 +40,9 @@ export type EntryFlowData = z.infer<typeof entryFlowSchema>
 
 // Options for select/radio fields
 export const senioridadeOptions = [
-  { value: 'junior', label: 'Junior' },
+  { value: 'junior', label: 'Júnior' },
   { value: 'pleno', label: 'Pleno' },
-  { value: 'senior', label: 'Senior' },
+  { value: 'senior', label: 'Sênior' },
   { value: 'lead', label: 'Lead / Tech Lead' },
   { value: 'exec', label: 'Executivo / Diretor' },
 ]

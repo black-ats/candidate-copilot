@@ -43,7 +43,7 @@ const areaLabels: Record<string, string> = {
 
 const senioridadeLabels: Record<string, string> = {
   estagio: 'Estágio',
-  junior: 'Junior',
+  junior: 'Júnior',
   pleno: 'Pleno',
   senior: 'Sênior',
   lideranca: 'Liderança',

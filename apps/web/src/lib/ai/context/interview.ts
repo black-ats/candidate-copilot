@@ -16,7 +16,7 @@ export class InterviewContextBuilder extends ContextBuilder {
     this.userContext = data
     
     const companyContext = data.company 
-      ? `\n\nCONTEXTO DA EMPRESA:\nO candidato esta se preparando para uma entrevista na empresa "${data.company}". Considere isso ao formular perguntas, incluindo possiveis questoes sobre fit cultural e motivacao para trabalhar nesta empresa especifica.`
+      ? `\n\nCONTEXTO DA EMPRESA:\nO candidato está se preparando para uma entrevista na empresa "${data.company}". Considere isso ao formular perguntas, incluindo possíveis questões sobre fit cultural e motivação para trabalhar nesta empresa específica.`
       : ''
     
     this.systemPrompt = `Você é um entrevistador experiente conduzindo uma entrevista para a vaga de ${data.cargo}${data.area ? ` na área de ${data.area}` : ''}${data.senioridade ? ` (nível ${data.senioridade})` : ''}.${companyContext}
@@ -49,7 +49,7 @@ type FeedbackContextData = {
 export class FeedbackContextBuilder extends ContextBuilder {
   constructor(data: FeedbackContextData) {
     super()
-    this.systemPrompt = `Voce e um coach de carreira avaliando as respostas de uma entrevista para ${data.cargo}${data.area ? ` (${data.area})` : ''}.
+    this.systemPrompt = `Você é um coach de carreira avaliando as respostas de uma entrevista para ${data.cargo}${data.area ? ` (${data.area})` : ''}.
 
 RESPOSTAS DO CANDIDATO:
 ${data.qa.map((qa, i) => `
@@ -58,9 +58,9 @@ Resposta: ${qa.answer}
 `).join('\n')}
 
 AVALIE:
-1. De uma nota geral de 0 a 100
-2. Para cada resposta, de feedback especifico (pontos fortes e a melhorar)
-3. De 3 dicas praticas para melhorar
+1. Dê uma nota geral de 0 a 100
+2. Para cada resposta, dê feedback específico (pontos fortes e a melhorar)
+3. Dê 3 dicas práticas para melhorar
 
 FORMATO DE RESPOSTA (JSON):
 {

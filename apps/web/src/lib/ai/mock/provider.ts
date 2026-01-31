@@ -57,7 +57,7 @@ Isso está dentro da média do mercado (25-30%). Continue focando em qualidade n
     if (message.includes('follow-up') || message.includes('follow up') || message.includes('followup')) {
       return `Identifiquei **2 empresas** que ainda não responderam há mais de 7 dias:
 
-1. **TechCorp** - 12 dias sem resposta (vaga de Dev Senior)
+1. **TechCorp** - 12 dias sem resposta (vaga de Dev Sênior)
 2. **StartupXYZ** - 8 dias sem resposta (vaga de Tech Lead)
 
 **Recomendação:** Envie um follow-up educado para TechCorp primeiro, pois é a mais antiga. Um email simples perguntando sobre o status do processo costuma funcionar bem.`
@@ -94,7 +94,7 @@ Quer que eu detalhe algum desses pontos?`
     if (message.includes('insight') || message.includes('recomendação') || message.includes('recomendacao')) {
       return `Seu último insight foi gerado recentemente:
 
-**Recomendação principal:** Foque em vagas de Senior/Tech Lead
+**Recomendação principal:** Foque em vagas de Sênior/Tech Lead
 
 **Por quê:**
 - Sua experiência combina bem com esse nível

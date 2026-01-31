@@ -139,7 +139,7 @@ export async function POST(req: Request) {
       discount_percent: coupon.discount_percent,
       duration_months: coupon.duration_months,
       expires_at: expiresAt.toISOString(),
-      message: `Cupom aplicado! Voce tem ${coupon.duration_months} ${coupon.duration_months === 1 ? 'mes' : 'meses'} de Pro gratis.`
+      message: `Cupom aplicado! Você tem ${coupon.duration_months} ${coupon.duration_months === 1 ? 'mês' : 'meses'} de Pro grátis.`
     })
   } catch (error) {
     console.error('Error applying coupon:', error)

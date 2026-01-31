@@ -36,20 +36,20 @@ export const statusConfig: Record<ApplicationStatus, {
   variant: 'default' | 'info' | 'success' | 'warning' | 'error' 
 }> = {
   aplicado: { label: 'Aplicado', variant: 'default' },
-  em_analise: { label: 'Em Analise', variant: 'info' },
+  em_analise: { label: 'Em Análise', variant: 'info' },
   entrevista: { label: 'Entrevista', variant: 'info' },
   proposta: { label: 'Proposta', variant: 'success' },
   aceito: { label: 'Aceito', variant: 'success' },
   rejeitado: { label: 'Rejeitado', variant: 'error' },
-  desistencia: { label: 'Desistencia', variant: 'warning' },
+  desistencia: { label: 'Desistência', variant: 'warning' },
 }
 
 export const statusOptions = [
   { value: 'aplicado', label: 'Aplicado' },
-  { value: 'em_analise', label: 'Em Analise' },
+  { value: 'em_analise', label: 'Em Análise' },
   { value: 'entrevista', label: 'Entrevista' },
   { value: 'proposta', label: 'Proposta' },
   { value: 'aceito', label: 'Aceito' },
   { value: 'rejeitado', label: 'Rejeitado' },
-  { value: 'desistencia', label: 'Desistencia' },
+  { value: 'desistencia', label: 'Desistência' },
 ] as const

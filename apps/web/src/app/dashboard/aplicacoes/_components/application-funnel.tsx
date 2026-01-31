@@ -20,7 +20,7 @@ interface ApplicationFunnelProps {
 
 const funnelStages = [
   { key: 'aplicado', label: 'Aplicado', color: 'bg-stone/40', textColor: 'text-navy/70' },
-  { key: 'emAnalise', label: 'Em Analise', color: 'bg-blue-400', textColor: 'text-blue-700' },
+  { key: 'emAnalise', label: 'Em Análise', color: 'bg-blue-400', textColor: 'text-blue-700' },
   { key: 'entrevista', label: 'Entrevista', color: 'bg-amber', textColor: 'text-amber' },
   { key: 'proposta', label: 'Proposta', color: 'bg-teal', textColor: 'text-teal' },
 ] as const
@@ -110,7 +110,7 @@ export function ApplicationFunnel({ data }: ApplicationFunnelProps) {
           {data.desistencia > 0 && (
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-stone/40" />
-              {data.desistencia} desistencia{data.desistencia > 1 ? 's' : ''}
+              {data.desistencia} desistência{data.desistencia > 1 ? 's' : ''}
             </span>
           )}
         </div>

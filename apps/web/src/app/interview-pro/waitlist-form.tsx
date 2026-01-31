@@ -41,7 +41,7 @@ export function WaitlistForm({ source = 'direct' }: WaitlistFormProps) {
         <div className="w-12 h-12 bg-teal/20 rounded-full flex items-center justify-center">
           <CheckCircle className="w-6 h-6 text-teal" />
         </div>
-        <p className="text-lg font-medium text-navy">Pronto! Voce esta na lista.</p>
+        <p className="text-lg font-medium text-navy">Pronto! Você está na lista.</p>
         <p className="text-sm text-navy/60">Avisaremos quando estiver pronto.</p>
       </div>
     )

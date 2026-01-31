@@ -142,7 +142,7 @@ function AuthContent() {
                 Entre na sua conta
               </h1>
               <p className="text-navy/70">
-                Ou crie uma conta gratuita para comecar
+                Ou crie uma conta gratuita para começar
               </p>
             </div>
 

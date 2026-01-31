@@ -39,7 +39,7 @@ export interface RateLimitResult {
   success: boolean
   /** Numero de requests restantes */
   remaining: number
-  /** Timestamp de quando o limite sera resetado */
+  /** Timestamp de quando o limite será resetado */
   resetTime: number
   /** Numero total de requests permitidos */
   limit: number

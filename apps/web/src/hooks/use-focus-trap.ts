@@ -33,7 +33,7 @@ export function useFocusTrap(isOpen: boolean) {
 
     // Focar no primeiro elemento focavel
     if (firstElement) {
-      // Pequeno delay para garantir que o DOM esta pronto
+      // Pequeno delay para garantir que o DOM está pronto
       requestAnimationFrame(() => {
         firstElement.focus()
       })

@@ -76,7 +76,7 @@ const CONVERSATIONS: ConversationContext[] = [
       },
       {
         role: 'assistant',
-        content: 'Baseado no seu perfil Senior PM e objetivo "crescimento":\n\n• Proposta atual: movimento lateral\n• Mercado: aquecido para seu perfil\n\nRecomendo negociar ou continuar buscando. Posso ajudar com a estratégia?'
+        content: 'Baseado no seu perfil Sênior PM e objetivo "crescimento":\n\n• Proposta atual: movimento lateral\n• Mercado: aquecido para seu perfil\n\nRecomendo negociar ou continuar buscando. Posso ajudar com a estratégia?'
       }
     ]
   },

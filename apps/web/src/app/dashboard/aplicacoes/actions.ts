@@ -136,7 +136,7 @@ export async function updateApplication(data: UpdateApplicationInput) {
 export async function deleteApplication(id: string) {
   const validated = deleteApplicationSchema.safeParse({ id })
   if (!validated.success) {
-    return { error: 'ID invalido' }
+    return { error: 'ID inválido' }
   }
 
   const { supabase, user, error: authError } = await getAuthenticatedUser()
@@ -311,7 +311,7 @@ export async function getStatusHistory(applicationId: string) {
       applicationId: uuidValidation.data,
       feature: 'applications'
     })
-    return { error: 'Erro ao carregar historico', data: null }
+    return { error: 'Erro ao carregar histórico', data: null }
   }
 
   return { data, error: null }
