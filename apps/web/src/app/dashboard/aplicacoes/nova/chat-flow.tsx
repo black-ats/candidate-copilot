@@ -112,7 +112,7 @@ export function ChatFlow() {
       addBotMessage(steps[nextStep].question)
     } else {
       setCurrentStep(nextStep)
-      addBotMessage('Perfeito! Tudo pronto para salvar sua aplicacao. Clique no botao abaixo para confirmar.')
+      addBotMessage('Perfeito! Tudo pronto para salvar sua aplicação. Clique no botão abaixo para confirmar.')
     }
   }
 
@@ -174,7 +174,7 @@ export function ChatFlow() {
                 Salvando...
               </>
             ) : (
-              'Salvar aplicacao'
+              'Salvar aplicação'
             )}
           </Button>
         </div>

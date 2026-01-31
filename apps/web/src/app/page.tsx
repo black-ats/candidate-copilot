@@ -20,7 +20,7 @@ export default async function HomePage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/pricing" className="text-sm text-navy/70 hover:text-navy transition-colors hidden sm:block">
-              Precos
+              Preços
             </Link>
             {user ? (
               <Link href="/dashboard">

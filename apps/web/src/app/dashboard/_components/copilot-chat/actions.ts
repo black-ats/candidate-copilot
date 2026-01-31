@@ -16,7 +16,7 @@ export async function getUserContext(): Promise<UserContext> {
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
-    throw new Error('Nao autenticado')
+    throw new Error('Não autenticado')
   }
   
   // Paralelizar as 3 queries independentes para reduzir latência
@@ -137,7 +137,7 @@ export async function sendChatMessage(
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
-    throw new Error('Nao autenticado')
+    throw new Error('Não autenticado')
   }
 
   // ========== SECURITY CHECKS ==========

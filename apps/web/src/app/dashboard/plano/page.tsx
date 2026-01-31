@@ -293,7 +293,7 @@ export default async function PlanoPage({ searchParams }: { searchParams: Search
           <Card className="border-amber/30">
             <div className="p-4 sm:p-6">
               <h3 className="text-base sm:text-lg font-semibold text-navy mb-4">
-                Faca upgrade para o Pro
+                Faça upgrade para o Pro
               </h3>
               <ul className="space-y-2.5 sm:space-y-3 mb-6">
                 <li className="flex items-start sm:items-center gap-2.5 sm:gap-3">

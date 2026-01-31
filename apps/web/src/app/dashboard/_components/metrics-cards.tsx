@@ -28,7 +28,7 @@ export function MetricsCards({ metrics }: MetricsCardsProps) {
       icon: Clock,
       value: metrics.aguardandoResposta,
       label: 'Aguardando resposta',
-      description: 'Aplicacoes sem retorno',
+      description: 'Aplicações sem retorno',
       bgColor: 'bg-blue-50',
       iconColor: 'text-blue-600',
     },

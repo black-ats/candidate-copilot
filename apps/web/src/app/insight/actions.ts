@@ -44,7 +44,7 @@ export async function saveInsight(data: InsightData) {
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) {
-    return { error: 'Nao autenticado' }
+    return { error: 'Não autenticado' }
   }
   
   // Check if user has access before saving

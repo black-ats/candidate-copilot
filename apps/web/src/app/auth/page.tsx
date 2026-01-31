@@ -99,7 +99,7 @@ function AuthContent() {
             Clique no link para entrar na sua conta.
           </p>
           <p className="text-sm text-navy/50">
-            Nao recebeu? Verifique sua caixa de spam ou{' '}
+            Não recebeu? Verifique sua caixa de spam ou{' '}
             <button 
               onClick={() => setIsSuccess(false)}
               className="text-teal hover:underline"

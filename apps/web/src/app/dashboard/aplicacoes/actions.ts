@@ -31,7 +31,7 @@ export async function createApplication(data: CreateApplicationInput) {
   const accessCheck = await canAddApplication(user.id)
   if (!accessCheck.allowed) {
     return { 
-      error: 'Limite de vagas atingido. Faca upgrade para adicionar mais.', 
+      error: 'Limite de vagas atingido. Faça upgrade para adicionar mais.', 
       limitReached: true 
     }
   }

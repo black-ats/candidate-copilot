@@ -9,9 +9,9 @@ export const PLANS = {
     name: 'Free',
     price: 0,
     features: [
-      '3 insights por mes',
+      '3 insights por mês',
       'Tracking manual ilimitado',
-      'Copilot basico',
+      'Copilot básico',
     ],
   },
   pro: {
@@ -21,7 +21,7 @@ export const PLANS = {
     features: [
       'Insights ilimitados',
       'Tracking manual ilimitado',
-      'Copilot avancado',
+      'Copilot avançado',
       'Entrevista IA',
       'Career Coach IA',
     ],

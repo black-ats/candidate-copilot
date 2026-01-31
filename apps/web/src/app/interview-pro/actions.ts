@@ -60,7 +60,7 @@ export async function joinWaitlist(formData: FormData) {
     })
 
   if (error?.code === '23505') {
-    return { error: 'Este email ja esta na lista!' }
+    return { error: 'Este email já está na lista!' }
   }
   if (error) {
     return { error: 'Erro ao salvar. Tente novamente.' }

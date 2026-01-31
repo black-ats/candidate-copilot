@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Nao autenticado' },
+        { error: 'Não autenticado' },
         { status: 401 }
       )
     }
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     if (!code || typeof code !== 'string') {
       return NextResponse.json(
-        { error: 'Codigo do cupom invalido' },
+        { error: 'Código do cupom inválido' },
         { status: 400 }
       )
     }
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
 
     if (profile?.plan === 'pro') {
       return NextResponse.json(
-        { error: 'Voce ja tem o plano Pro ativo' },
+        { error: 'Você já tem o plano Pro ativo' },
         { status: 400 }
       )
     }
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     // Check if user has already used a coupon before (even if expired)
     if (profile?.coupon_applied_at) {
       return NextResponse.json(
-        { error: 'Voce ja usou um cupom anteriormente' },
+        { error: 'Você já usou um cupom anteriormente' },
         { status: 400 }
       )
     }
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
     if (couponError || !coupon) {
       return NextResponse.json(
-        { error: 'Cupom invalido ou expirado' },
+        { error: 'Cupom inválido ou expirado' },
         { status: 400 }
       )
     }

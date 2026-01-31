@@ -139,7 +139,7 @@ Gere uma mensagem curta (máximo 2 frases) comentando o resultado e incentivando
 Gere uma mensagem curta (máximo 2 frases) sugerindo que ele faça um follow-up. Seja conciso e direto.`,
     
     active_summary: `O usuário tem ${result.metadata?.totalApps} aplicações, sendo ${result.metadata?.activeApps} ativas.
-Gere uma dica do dia curta (maximo 2 frases) para quem esta em busca de emprego. Seja motivacional mas pratico.`,
+Gere uma dica do dia curta (máximo 2 frases) para quem está em busca de emprego. Seja motivacional mas prático.`,
   }
 
   const prompt = prompts[result.context]
