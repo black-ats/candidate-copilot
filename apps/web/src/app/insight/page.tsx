@@ -372,8 +372,8 @@ export default function InsightPage() {
               <div className="flex flex-col items-center gap-4 w-full px-4 sm:px-0">
                 <Link href="/auth" className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto">
-                    <MessageSquare className="mr-2 w-5 h-5" />
-                    Criar conta e continuar conversa
+                    <MessageSquare className="mr-2 w-5 h-5 flex-shrink-0" />
+                    Criar conta e continuar
                   </Button>
                 </Link>
 

@@ -148,7 +148,7 @@ export default function SessaoPage() {
 
       {/* Question Card */}
       <Card variant="elevated" className="mb-6">
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 bg-teal/20 rounded-full flex items-center justify-center flex-shrink-0">
               <MessageSquare className="w-5 h-5 text-teal" />
@@ -165,7 +165,7 @@ export default function SessaoPage() {
 
       {/* Answer Form */}
       <Card>
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6">
           <label className="block text-sm font-medium text-navy mb-2">
             Sua resposta
           </label>

@@ -63,7 +63,7 @@ export default async function InterviewProPage() {
             
             <div className="grid md:grid-cols-2 gap-6">
               {/* Text Mode - Available */}
-              <Card variant="elevated" className="p-6 border-teal/30">
+              <Card variant="elevated" className="p-4 sm:p-6 border-teal/30">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 bg-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <MessageSquare className="w-6 h-6 text-teal" />
@@ -95,7 +95,7 @@ export default async function InterviewProPage() {
               </Card>
 
               {/* Audio Mode - Coming Soon */}
-              <Card className="p-6 border-amber/30 bg-amber/5 relative overflow-hidden">
+              <Card className="p-4 sm:p-6 border-amber/30 bg-amber/5 relative overflow-hidden">
                 <div className="absolute top-4 right-4">
                   <Badge className="bg-amber/20 text-amber">Em breve</Badge>
                 </div>
@@ -138,7 +138,7 @@ export default async function InterviewProPage() {
               O que você vai ter acesso
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="text-center p-6">
+              <Card className="text-center p-4 sm:p-6">
                 <div className="w-12 h-12 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MessageSquare className="w-6 h-6 text-teal" />
                 </div>
@@ -150,7 +150,7 @@ export default async function InterviewProPage() {
                 </p>
               </Card>
 
-              <Card className="text-center p-6 border-amber/30 bg-amber/5">
+              <Card className="text-center p-4 sm:p-6 border-amber/30 bg-amber/5">
                 <div className="w-12 h-12 bg-amber/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Phone className="w-6 h-6 text-amber" />
                 </div>
@@ -162,7 +162,7 @@ export default async function InterviewProPage() {
                 </p>
               </Card>
 
-              <Card className="text-center p-6">
+              <Card className="text-center p-4 sm:p-6">
                 <div className="w-12 h-12 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <BarChart3 className="w-6 h-6 text-teal" />
                 </div>
@@ -174,7 +174,7 @@ export default async function InterviewProPage() {
                 </p>
               </Card>
 
-              <Card className="text-center p-6">
+              <Card className="text-center p-4 sm:p-6">
                 <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-6 h-6 text-navy" />
                 </div>

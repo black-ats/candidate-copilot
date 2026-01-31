@@ -30,7 +30,7 @@ export default function TermosPage() {
 
       <main className="flex-1 py-12 sm:py-16">
         <div className="container-narrow">
-          <h1 className="text-3xl sm:text-4xl font-bold text-navy mb-8">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy mb-8">
             Termos de Uso
           </h1>
           

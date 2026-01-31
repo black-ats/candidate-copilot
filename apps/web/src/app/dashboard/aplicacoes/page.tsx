@@ -347,7 +347,7 @@ async function ApplicationsListSection() {
   // Error state
   if (error) {
     return (
-      <Card className="p-6 text-center">
+      <Card className="p-4 sm:p-6 text-center">
         <p role="alert" className="text-red-600 mb-4">{error}</p>
         <RetryButton />
       </Card>
@@ -357,7 +357,7 @@ async function ApplicationsListSection() {
   // Empty state
   if (!applications || applications.length === 0) {
     return (
-      <Card className="p-8 text-center">
+      <Card className="p-4 sm:p-6 md:p-8 text-center">
         <div className="w-16 h-16 bg-stone/20 rounded-full flex items-center justify-center mx-auto mb-4">
           <Briefcase className="w-8 h-8 text-navy/40" />
         </div>

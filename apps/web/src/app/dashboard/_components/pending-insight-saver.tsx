@@ -66,7 +66,7 @@ export function PendingInsightSaver() {
 
   if (savedInsight) {
     return (
-      <Card className="p-6 bg-teal/10 border-teal/30 mb-6">
+      <Card className="p-4 sm:p-6 bg-teal/10 border-teal/30 mb-6">
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 bg-teal/20 rounded-lg flex items-center justify-center flex-shrink-0">
             <CheckCircle className="w-5 h-5 text-teal" />

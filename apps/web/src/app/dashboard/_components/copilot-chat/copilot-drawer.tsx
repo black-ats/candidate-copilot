@@ -303,7 +303,7 @@ export function CopilotDrawer() {
                 variant="ghost" 
                 size="sm" 
                 onClick={handleReset}
-                className="h-8 w-8 p-0"
+                className="min-h-[44px] min-w-[44px] p-2.5"
                 aria-label="Nova conversa"
               >
                 <RotateCcw className="w-4 h-4" aria-hidden="true" />
@@ -313,7 +313,7 @@ export function CopilotDrawer() {
               variant="ghost" 
               size="sm" 
               onClick={onClose}
-              className="h-8 w-8 p-0"
+              className="min-h-[44px] min-w-[44px] p-2.5"
               aria-label="Fechar Copilot"
             >
               <X className="w-5 h-5" aria-hidden="true" />

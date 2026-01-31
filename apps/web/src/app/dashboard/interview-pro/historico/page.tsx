@@ -73,7 +73,7 @@ export default async function HistoricoPage() {
 
       {/* Sessions List */}
       {sessions.length === 0 ? (
-        <Card className="p-8 text-center">
+        <Card className="p-4 sm:p-6 md:p-8 text-center">
           <div className="w-12 h-12 bg-stone/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <Calendar className="w-6 h-6 text-navy/40" />
           </div>
@@ -132,7 +132,7 @@ export default async function HistoricoPage() {
 
       {/* Evolution tip */}
       {sessions.length >= 3 && (
-        <Card className="mt-8 p-6 border-teal/30 bg-teal/5">
+        <Card className="mt-8 p-4 sm:p-6 border-teal/30 bg-teal/5">
           <h3 className="font-semibold text-navy mb-2">
             Dica de evolução
           </h3>

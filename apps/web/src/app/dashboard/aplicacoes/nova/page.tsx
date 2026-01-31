@@ -33,7 +33,7 @@ export default function NovaAplicacaoPage() {
           Voltar para lista
         </Link>
 
-        <Card className="p-8 text-center max-w-md mx-auto">
+        <Card className="p-4 sm:p-6 md:p-8 text-center max-w-md mx-auto">
           <div className="w-12 h-12 bg-amber/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Crown className="w-6 h-6 text-amber" />
           </div>
@@ -93,7 +93,7 @@ export default function NovaAplicacaoPage() {
         </button>
       </div>
 
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         {mode === 'chat' ? <ChatFlow /> : <FormFlow />}
       </Card>
     </div>

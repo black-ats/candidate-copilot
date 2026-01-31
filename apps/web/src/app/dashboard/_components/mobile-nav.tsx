@@ -55,7 +55,7 @@ export function MobileNav({ email, plan = 'free' }: MobileNavProps) {
           {/* Copilot quick access button */}
           <button
             onClick={openCopilotDrawer}
-            className="p-2 rounded-lg bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white hover:from-violet-400 hover:via-purple-400 hover:to-fuchsia-400 transition-colors"
+            className="p-3 min-w-[44px] min-h-[44px] rounded-lg bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 text-white hover:from-violet-400 hover:via-purple-400 hover:to-fuchsia-400 transition-colors flex items-center justify-center"
             aria-label="Abrir Copilot"
           >
             <Sparkles className="w-5 h-5" />
@@ -63,7 +63,7 @@ export function MobileNav({ email, plan = 'free' }: MobileNavProps) {
           
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-lg text-navy/70 hover:bg-stone/10 transition-colors"
+            className="p-3 min-w-[44px] min-h-[44px] rounded-lg text-navy/70 hover:bg-stone/10 transition-colors flex items-center justify-center"
             aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
           >
             {isOpen ? (
@@ -96,7 +96,7 @@ export function MobileNav({ email, plan = 'free' }: MobileNavProps) {
           <span className="font-semibold text-navy">Menu</span>
           <button
             onClick={closeMenu}
-            className="p-2 rounded-lg text-navy/70 hover:bg-stone/10 transition-colors"
+            className="p-3 min-w-[44px] min-h-[44px] rounded-lg text-navy/70 hover:bg-stone/10 transition-colors flex items-center justify-center"
             aria-label="Fechar menu"
           >
             <X className="w-5 h-5" />

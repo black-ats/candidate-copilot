@@ -39,7 +39,7 @@ export function UpgradePrompt({ remaining, limit, feature = 'insights' }: Upgrad
   const { title, subtitle } = messages[feature] || messages.insights
 
   return (
-    <Card className="p-8 text-center max-w-md mx-auto">
+    <Card className="p-4 sm:p-6 md:p-8 text-center max-w-md mx-auto">
       <div className="w-12 h-12 bg-amber/20 rounded-full flex items-center justify-center mx-auto mb-4">
         <Sparkles className="w-6 h-6 text-amber" />
       </div>

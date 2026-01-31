@@ -19,7 +19,7 @@ export default function ConfiguracoesPage() {
       </div>
 
       <div className="space-y-4">
-        <Card className="p-6 opacity-60">
+        <Card className="p-4 sm:p-6 opacity-60">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 bg-stone/10 rounded-lg flex items-center justify-center flex-shrink-0">
               <User className="w-5 h-5 text-navy/60" />
@@ -36,7 +36,7 @@ export default function ConfiguracoesPage() {
           </div>
         </Card>
 
-        <Card className="p-6 opacity-60">
+        <Card className="p-4 sm:p-6 opacity-60">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 bg-stone/10 rounded-lg flex items-center justify-center flex-shrink-0">
               <Bell className="w-5 h-5 text-navy/60" />
@@ -53,7 +53,7 @@ export default function ConfiguracoesPage() {
           </div>
         </Card>
 
-        <Card className="p-6 opacity-60">
+        <Card className="p-4 sm:p-6 opacity-60">
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 bg-stone/10 rounded-lg flex items-center justify-center flex-shrink-0">
               <Shield className="w-5 h-5 text-navy/60" />

@@ -135,7 +135,7 @@ export default async function ResultadoPage({ params }: Props) {
                       </p>
                       <ul className="space-y-1">
                         {pq.strengths.map((s, i) => (
-                          <li key={i} className="text-sm text-navy/70 pl-6">• {s}</li>
+                          <li key={i} className="text-sm text-navy/70 pl-4 sm:pl-6">• {s}</li>
                         ))}
                       </ul>
                     </div>
@@ -149,7 +149,7 @@ export default async function ResultadoPage({ params }: Props) {
                       </p>
                       <ul className="space-y-1">
                         {pq.improvements.map((s, i) => (
-                          <li key={i} className="text-sm text-navy/70 pl-6">• {s}</li>
+                          <li key={i} className="text-sm text-navy/70 pl-4 sm:pl-6">• {s}</li>
                         ))}
                       </ul>
                     </div>
@@ -161,7 +161,7 @@ export default async function ResultadoPage({ params }: Props) {
                         <Lightbulb className="w-4 h-4 text-amber" />
                         Dica
                       </p>
-                      <p className="text-sm text-navy/70 pl-6">{pq.tip}</p>
+                      <p className="text-sm text-navy/70 pl-4 sm:pl-6">{pq.tip}</p>
                     </div>
                   )}
                 </div>

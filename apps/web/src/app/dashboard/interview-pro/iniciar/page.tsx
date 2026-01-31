@@ -186,7 +186,7 @@ export default function IniciarPage() {
           <ArrowLeft className="w-4 h-4 mr-2" />
           Voltar
         </Link>
-        <Card className="p-6 text-center max-w-lg mx-auto">
+        <Card className="p-4 sm:p-6 text-center max-w-lg mx-auto">
           <div className="w-12 h-12 bg-amber/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Crown className="w-6 h-6 text-amber" />
           </div>
@@ -217,7 +217,7 @@ export default function IniciarPage() {
         </Link>
 
         <Card variant="elevated" className="max-w-lg mx-auto">
-          <div className="p-6 border-b border-stone/30">
+          <div className="p-4 sm:p-6 border-b border-stone/30">
             <div className="flex items-start justify-between">
               <div>
                 <h1 className="text-2xl font-semibold text-navy mb-2">
@@ -236,7 +236,7 @@ export default function IniciarPage() {
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <ContextSelector
               applications={applications}
               lastInsight={lastInsight}
@@ -260,7 +260,7 @@ export default function IniciarPage() {
       </button>
 
       <Card variant="elevated" className="max-w-lg mx-auto">
-        <div className="p-6 border-b border-stone/30">
+        <div className="p-4 sm:p-6 border-b border-stone/30">
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-2xl font-semibold text-navy mb-2">
@@ -281,7 +281,7 @@ export default function IniciarPage() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5">
           <div>
             <label className="block text-sm font-medium text-navy mb-2">
               Cargo / Vaga *

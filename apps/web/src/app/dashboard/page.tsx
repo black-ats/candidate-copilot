@@ -355,7 +355,7 @@ export default async function DashboardPage() {
       <PendingInsightSaver />
 
       <div className="mb-8">
-        <h1 className="text-3xl font-semibold text-navy mb-2">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-navy mb-2">
           Bem-vindo ao seu Copilot
         </h1>
         <p className="text-navy/70">

@@ -83,7 +83,7 @@ export default function EditarAplicacaoPage() {
   if (!application) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Card className="p-6 text-center max-w-md">
+        <Card className="p-4 sm:p-6 text-center max-w-md">
           <p role="alert" className="text-red-600 mb-4">{generalError || 'Aplicação não encontrada'}</p>
           <Link href="/dashboard/aplicacoes">
             <Button>Voltar para lista</Button>
@@ -108,7 +108,7 @@ export default function EditarAplicacaoPage() {
         Editar Aplicação
       </h1>
 
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Required fields */}
           <div className="grid sm:grid-cols-2 gap-4">

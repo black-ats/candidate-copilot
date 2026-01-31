@@ -77,7 +77,7 @@ export default async function PricingPage() {
       <main className="flex-1 py-16 sm:py-24">
         <div className="container-narrow">
           <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl font-bold text-navy mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-navy mb-4">
               Planos simples, sem surpresas
             </h1>
             <p className="text-lg text-navy/70 max-w-2xl mx-auto">
@@ -104,7 +104,7 @@ export default async function PricingPage() {
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-navy mb-2">{plan.name}</h2>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-navy">{plan.price}</span>
+                    <span className="text-3xl sm:text-4xl font-bold text-navy">{plan.price}</span>
                     <span className="text-navy/60">{plan.period}</span>
                   </div>
                   <p className="text-navy/70 mt-2">{plan.description}</p>

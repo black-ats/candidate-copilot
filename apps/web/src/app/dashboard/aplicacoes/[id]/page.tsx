@@ -86,7 +86,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
         {/* Main content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Details card */}
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-navy mb-4">Detalhes</h2>
             
             <div className="space-y-4">
@@ -134,7 +134,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
           </Card>
 
           {/* Notes card */}
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-navy mb-4">Notas Pessoais</h2>
             {application.notes ? (
               <p className="text-navy whitespace-pre-wrap">{application.notes}</p>
@@ -146,7 +146,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
 
         {/* Timeline sidebar */}
         <div>
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
               <Clock className="w-5 h-5 text-navy/50" />
               <h2 className="text-lg font-semibold text-navy">Historico</h2>

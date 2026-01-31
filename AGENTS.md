@@ -12,6 +12,8 @@ npm run lint         # check linting
 
 **Supabase**: Migrations em `supabase/migrations/`. Rodar localmente com `supabase start`.
 
+**Teste Mobile**: Sempre testar no DevTools com viewports 375px (iPhone SE) e 390px (iPhone 14).
+
 ---
 
 ## Roadmap e Futuro
@@ -30,14 +32,16 @@ Regras detalhadas em `.cursor/rules/`:
 |---------|----------|
 | `project.md` | Idioma, do's e don'ts |
 | `product.md` | North Star, Product Truths, Limites |
-| `ux.md` | UX Skills, Copy, Tom, Estados |
-| `design.md` | Paleta Warm Intelligence, Componentes |
+| `ux.md` | UX Skills, Copy, Tom, Estados, **Mobile Checklist** |
+| `design.md` | Paleta Warm Intelligence, Componentes, **Mobile Patterns** |
 | `ai.md` | Postura Copilot, Guardrails, Formatos |
 | `engineering.md` | Stack, Arquitetura, Server Actions |
-| `patterns.md` | Code snippets reutilizaveis |
+| `patterns.md` | Code snippets reutilizaveis, **Mobile Code Patterns** |
 | `workflow.md` | DoD, PRs, Commits |
 | `roadmap.md` | Disciplina de leitura/atualizacao do Roadmap |
 | `growth.md` | Estrategias de aquisicao, canais, metricas, tom de conteudo |
+
+> **IMPORTANTE**: Ao criar/editar componentes de UI, SEMPRE consultar a secao "Mobile Patterns" em `design.md` e `patterns.md`.
 
 ---
 

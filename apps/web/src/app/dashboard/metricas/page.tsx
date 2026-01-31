@@ -31,7 +31,7 @@ export default async function MetricsPage() {
       </div>
 
       {metrics.total === 0 ? (
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <p className="text-navy/70 mb-4">
             Adicione suas primeiras aplicacoes para ver metricas da sua busca.
           </p>
@@ -42,7 +42,7 @@ export default async function MetricsPage() {
       ) : (
         <div className="space-y-6">
           {/* Resumo */}
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-navy mb-4">
               Resumo da sua busca
             </h2>
@@ -61,7 +61,7 @@ export default async function MetricsPage() {
           </Card>
 
           {/* Distribuicao */}
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-navy mb-4">
               Distribuição por status
             </h2>

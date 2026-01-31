@@ -63,7 +63,7 @@ export function HeroCard({ data }: HeroCardProps) {
       {/* Dismiss button */}
       <button
         onClick={handleDismiss}
-        className="absolute top-3 sm:top-4 right-3 sm:right-4 p-1 text-navy/40 hover:text-navy/60 transition-colors"
+        className="absolute top-2 sm:top-3 right-2 sm:right-3 p-3 min-w-[44px] min-h-[44px] text-navy/40 hover:text-navy/60 transition-colors flex items-center justify-center"
         aria-label="Ignorar"
       >
         <X className="w-4 h-4" />

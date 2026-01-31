@@ -63,7 +63,7 @@ export function ChangeStatusModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="change-status-title"
-        className="relative bg-white rounded-lg shadow-lg w-full max-w-md mx-4 p-6"
+        className="relative bg-white rounded-lg shadow-lg w-full max-w-md mx-4 p-4 sm:p-6"
       >
         <button
           onClick={onClose}

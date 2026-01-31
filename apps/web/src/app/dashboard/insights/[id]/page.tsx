@@ -74,7 +74,7 @@ export default async function InsightDetailPage({
       {/* Insight Content */}
       <Card variant="elevated" className="mb-6 overflow-hidden">
         {/* Recommendation Header */}
-        <div className="bg-navy text-sand p-6">
+        <div className="bg-navy text-sand p-4 sm:p-6">
           <h1 className="text-xl font-semibold">
             {insight.recommendation}
           </h1>
@@ -82,7 +82,7 @@ export default async function InsightDetailPage({
 
         {/* Why section */}
         {insight.why && insight.why.length > 0 && (
-          <div className="p-6 border-b border-stone/30">
+          <div className="p-4 sm:p-6 border-b border-stone/30">
             <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
               Por que?
             </h3>
@@ -99,7 +99,7 @@ export default async function InsightDetailPage({
 
         {/* Risks */}
         {insight.risks && insight.risks.length > 0 && (
-          <div className="p-6 border-b border-stone/30 bg-amber/5">
+          <div className="p-4 sm:p-6 border-b border-stone/30 bg-amber/5">
             <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
               Riscos a considerar
             </h3>
@@ -116,7 +116,7 @@ export default async function InsightDetailPage({
 
         {/* Next Steps */}
         {insight.next_steps && insight.next_steps.length > 0 && (
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
               Proximos passos
             </h3>
@@ -135,7 +135,7 @@ export default async function InsightDetailPage({
       </Card>
 
       {/* CTA: Continuar conversa */}
-      <Card className="p-6 text-center bg-teal/5 border-teal/20">
+      <Card className="p-4 sm:p-6 text-center bg-teal/5 border-teal/20">
         <MessageSquare className="w-8 h-8 text-teal mx-auto mb-3" />
         <h2 className="text-lg font-semibold text-navy mb-2">
           Quer aprofundar?

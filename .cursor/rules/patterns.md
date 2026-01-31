@@ -214,6 +214,128 @@ openWithInterviewContext({
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 ```
 
+## Mobile Patterns (OBRIGATORIO)
+
+### Tap Targets (44px minimo)
+
+```typescript
+// Close button com tap target adequado
+<button 
+  className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center"
+  aria-label="Fechar"
+>
+  <X className="w-5 h-5" />
+</button>
+
+// Botao de navegacao/tab
+<button className="px-4 py-3.5 min-h-[44px] rounded-lg text-sm font-medium">
+  {label}
+</button>
+
+// CTA button
+<Button size="lg" className="min-h-[44px]">
+  Ação
+</Button>
+```
+
+### Padding Responsivo
+
+```typescript
+// Card
+<Card className="p-4 sm:p-6 md:p-8">
+
+// Secao interna
+<div className="p-4 sm:p-6 border-b">
+
+// Container de chat/conteudo
+<div className="p-4 sm:p-5 space-y-4">
+```
+
+### Tipografia Responsiva
+
+```typescript
+// Hero heading
+<h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold">
+
+// Section heading
+<h2 className="text-2xl sm:text-3xl font-semibold">
+
+// Blockquote/texto destaque
+<blockquote className="text-base sm:text-lg">
+
+// Page title (legal pages)
+<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+```
+
+### Layout Flex Responsivo
+
+```typescript
+// Banner/counter que empilha no mobile
+<div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:justify-between">
+  <p>Conteudo</p>
+  <Link>Ação</Link>
+</div>
+
+// Alert box
+<div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+  <Icon className="flex-shrink-0" />
+  <div>Conteudo</div>
+</div>
+```
+
+### Min-Height Responsivo
+
+```typescript
+// Chat container
+<div className="min-h-[220px] sm:min-h-[280px]">
+
+// Hero section
+<section className="min-h-[60vh] sm:min-h-[70vh]">
+```
+
+### Botao com Texto Responsivo
+
+```typescript
+// Texto curto no mobile, completo no desktop
+<Button size="lg">
+  <span className="sm:hidden">Comecar gratis</span>
+  <span className="hidden sm:inline">Comecar minha entrevista gratis</span>
+  <ArrowRight className="ml-2 w-5 h-5" />
+</Button>
+
+// Alternativa: whitespace-nowrap se o texto couber
+<Button className="whitespace-nowrap">
+  Texto curto
+</Button>
+```
+
+### List Padding
+
+```typescript
+// Lista com marcadores
+<ul className="list-disc pl-4 sm:pl-6 space-y-2">
+  <li>Item</li>
+</ul>
+
+// Lista ordenada
+<ol className="list-decimal pl-4 sm:pl-6 space-y-2">
+  <li>Item</li>
+</ol>
+```
+
+### Gaps Responsivos
+
+```typescript
+// Gap em flex
+<div className="flex gap-4 sm:gap-6">
+
+// Gap em grid
+<div className="grid gap-4 sm:gap-6 lg:gap-8">
+
+// Space-y
+<div className="space-y-4 sm:space-y-6">
+```
+
 ## Loading States
 
 ```typescript

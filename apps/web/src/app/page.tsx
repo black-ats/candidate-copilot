@@ -179,7 +179,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              <Card className="p-6">
+              <Card className="p-4 sm:p-6">
                 <h3 className="text-lg font-semibold text-navy mb-2">Free</h3>
                 <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-3xl font-bold text-navy">R$ 0</span>
@@ -195,7 +195,7 @@ export default async function HomePage() {
                   <Button variant="secondary" className="w-full">Comecar gratis</Button>
                 </Link>
               </Card>
-              <Card className="p-6 border-amber border-2 relative">
+              <Card className="p-4 sm:p-6 border-amber border-2 relative">
                 <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber text-navy">
                   Recomendado
                 </Badge>

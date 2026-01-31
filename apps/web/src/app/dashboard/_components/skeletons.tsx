@@ -12,7 +12,7 @@ function Skeleton({ className = '' }: { className?: string }) {
  */
 export function HeroCardSkeleton() {
   return (
-    <Card variant="elevated" className="p-6 bg-gradient-to-r from-teal/5 to-amber/5 border-teal/20">
+    <Card variant="elevated" className="p-4 sm:p-6 bg-gradient-to-r from-teal/5 to-amber/5 border-teal/20">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <Skeleton className="w-8 h-8 rounded-full" />
@@ -39,9 +39,9 @@ export function HeroCardSkeleton() {
  */
 export function StrategyCardSkeleton() {
   return (
-    <Card variant="elevated" className="p-6">
+    <Card variant="elevated" className="p-4 sm:p-6">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-4">
         <div className="flex items-center gap-3">
           <Skeleton className="w-10 h-10 rounded-lg" />
           <div>
@@ -83,7 +83,7 @@ export function StrategyCardSkeleton() {
 export function ApplicationsCardSkeleton() {
   return (
     <Card variant="elevated" className="p-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
         <div className="flex items-center gap-3">
           <Skeleton className="w-10 h-10 rounded-lg" />
           <div>
@@ -115,7 +115,7 @@ export function ApplicationsCardSkeleton() {
 export function InterviewCardSkeleton() {
   return (
     <Card variant="elevated" className="p-5">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
         <div className="flex items-center gap-3">
           <Skeleton className="w-10 h-10 rounded-lg" />
           <div>
@@ -143,7 +143,7 @@ export function ApplicationsListSkeleton() {
     <div className="space-y-3">
       {[1, 2, 3].map((i) => (
         <Card key={i} className="p-4">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <Skeleton className="w-4 h-4 rounded" />
@@ -184,7 +184,7 @@ export function StatsAndFunnelSkeleton() {
 
       {/* Funnel skeleton */}
       <Card className="p-4 mb-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-4">
           <Skeleton className="h-4 w-36" />
           <Skeleton className="h-3 w-24" />
         </div>

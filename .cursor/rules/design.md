@@ -121,3 +121,135 @@ Padrao mobile-first:
 ```tsx
 <div className="flex flex-col sm:flex-row">
 ```
+
+---
+
+## Mobile Patterns (OBRIGATORIO)
+
+### 1. Tap Targets - Minimo 44x44px
+
+Todo elemento clicavel DEVE ter no minimo 44x44px para acessibilidade touch.
+
+```tsx
+// ERRADO - tap target muito pequeno
+<button className="p-2.5">
+  <X className="w-5 h-5" />
+</button>
+
+// CERTO - tap target adequado
+<button className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center">
+  <X className="w-5 h-5" />
+</button>
+
+// Para botoes com texto curto
+<button className="px-4 py-3.5 min-h-[44px]">
+  Ação
+</button>
+```
+
+### 2. Padding Responsivo
+
+Cards e secoes DEVEM ter padding menor no mobile.
+
+```tsx
+// ERRADO - padding fixo
+<Card className="p-8">
+
+// CERTO - padding responsivo
+<Card className="p-4 sm:p-6 md:p-8">
+
+// Para secoes internas
+<div className="p-4 sm:p-6">
+```
+
+### 3. Tipografia Responsiva
+
+Headings DEVEM escalar de forma suave.
+
+```tsx
+// ERRADO - pulo muito grande
+<h1 className="text-4xl sm:text-6xl">
+
+// CERTO - escala gradual
+<h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">
+
+// Para textos secundarios
+<p className="text-base sm:text-lg">
+```
+
+### 4. Layout Flex Responsivo
+
+Layouts que empilham no mobile DEVEM usar flex-col com breakpoint.
+
+```tsx
+// ERRADO - pode quebrar no mobile
+<div className="flex items-center justify-between">
+
+// CERTO - empilha no mobile
+<div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:justify-between">
+```
+
+### 5. Min-Height Responsivo
+
+Containers com altura minima DEVEM ser menores no mobile.
+
+```tsx
+// ERRADO - altura fixa
+<div className="min-h-[280px]">
+
+// CERTO - altura responsiva
+<div className="min-h-[220px] sm:min-h-[280px]">
+```
+
+### 6. Texto Longo em Botoes
+
+Botoes com texto longo DEVEM ter versao curta no mobile.
+
+```tsx
+// ERRADO - texto muito longo pode quebrar
+<Button>
+  Comecar minha entrevista gratis
+  <ArrowRight className="ml-2 w-5 h-5" />
+</Button>
+
+// CERTO - texto responsivo
+<Button>
+  <span className="sm:hidden">Comecar gratis</span>
+  <span className="hidden sm:inline">Comecar minha entrevista gratis</span>
+  <ArrowRight className="ml-2 w-5 h-5" />
+</Button>
+```
+
+### 7. List Padding
+
+Listas com marcadores DEVEM ter padding menor no mobile.
+
+```tsx
+// ERRADO - pode causar overflow
+<ul className="list-disc pl-6">
+
+// CERTO - padding responsivo
+<ul className="list-disc pl-4 sm:pl-6">
+```
+
+### 8. Gaps Responsivos
+
+Gaps entre elementos DEVEM diminuir no mobile.
+
+```tsx
+// ERRADO - gap fixo grande
+<div className="flex gap-6">
+
+// CERTO - gap responsivo
+<div className="flex gap-4 sm:gap-6">
+```
+
+### Checklist Mobile (antes de finalizar)
+
+- [ ] Tap targets >= 44px (botoes, links, icones clicaveis)
+- [ ] Padding responsivo em cards/secoes
+- [ ] Tipografia com escala gradual
+- [ ] Layouts flex-col no mobile
+- [ ] Min-heights responsivos
+- [ ] Textos longos em botoes com versao curta
+- [ ] Testar em 375px (iPhone SE) e 390px (iPhone 14)

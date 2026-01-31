@@ -54,7 +54,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       // Fallback padrao
       return (
-        <div className="flex flex-col items-center justify-center p-8 min-h-[400px]">
+        <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 min-h-[400px]">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
             <AlertTriangle className="w-8 h-8 text-red-600" aria-hidden="true" />
           </div>
