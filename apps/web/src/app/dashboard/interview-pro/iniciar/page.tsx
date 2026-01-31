@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button, Card, Input, Badge } from '@ui/components'
 import { ArrowLeft, ArrowRight, Loader2, Gift, Crown } from 'lucide-react'
-import { createInterviewSession, getLastInsightData, checkInterviewAccess } from '../actions'
+import { createInterviewSession, getLastInsightData, checkInterviewAccess, getUserApplications, type ActiveApplication } from '../actions'
 import { track } from '@/lib/analytics/track'
+import { ContextSelector, type ContextOption, type ContextData } from './context-selector'
 
 const senioridadeOptions = [
   { value: 'estagio', label: 'Estágio' },
@@ -34,11 +35,30 @@ type AccessInfo = {
   isTrialAvailable: boolean
 }
 
+type LastInsightData = {
+  cargo?: string
+  area?: string
+  senioridade?: string
+}
+
 export default function IniciarPage() {
   const router = useRouter()
+  
+  // Step management
+  const [step, setStep] = useState<'context' | 'form'>('context')
+  const [contextData, setContextData] = useState<ContextData | null>(null)
+  
+  // Form fields
   const [cargo, setCargo] = useState('')
   const [area, setArea] = useState('')
   const [senioridade, setSenioridade] = useState('')
+  const [company, setCompany] = useState('')
+  
+  // Data loading
+  const [applications, setApplications] = useState<ActiveApplication[]>([])
+  const [lastInsight, setLastInsight] = useState<LastInsightData | null>(null)
+  
+  // State management
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState(true)
   const [error, setError] = useState('')
@@ -55,17 +75,56 @@ export default function IniciarPage() {
         return
       }
 
-      // Load last insight data
-      const lastData = await getLastInsightData()
-      if (lastData) {
-        setCargo(lastData.cargo || '')
-        setArea(lastData.area || '')
-        setSenioridade(lastData.senioridade || '')
+      // Load data in parallel
+      const [insightData, appsData] = await Promise.all([
+        getLastInsightData(),
+        getUserApplications(),
+      ])
+      
+      setLastInsight(insightData)
+      setApplications(appsData)
+      
+      // If no applications and no insight, skip to form step
+      if (appsData.length === 0 && !insightData?.cargo) {
+        setStep('form')
       }
+      
       setIsLoadingData(false)
     }
     loadData()
   }, [])
+  
+  // Handle context selection
+  const handleContextSelect = (option: ContextOption, data?: ContextData) => {
+    if (option === 'manual') {
+      // Go to form with empty fields
+      setContextData({ source: 'manual' })
+      setStep('form')
+      return
+    }
+    
+    if (data) {
+      setContextData(data)
+      
+      // Pre-fill form based on selection
+      if (data.source === 'job' && data.jobTitle) {
+        setCargo(data.jobTitle)
+        setCompany(data.company || '')
+      } else if (data.source === 'insight') {
+        setCargo(data.cargo || '')
+        setArea(data.area || '')
+        setSenioridade(data.senioridade || '')
+      }
+      
+      setStep('form')
+    }
+  }
+  
+  // Go back to context selection
+  const handleBackToContext = () => {
+    setStep('context')
+    setError('')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -82,6 +141,9 @@ export default function IniciarPage() {
         cargo: cargo.trim(),
         area: area || undefined,
         senioridade: senioridade || undefined,
+        company: company.trim() || undefined,
+        source: contextData?.source || 'manual',
+        applicationId: contextData?.applicationId,
       })
 
       if (result.error) {
@@ -95,6 +157,8 @@ export default function IniciarPage() {
           cargo,
           area,
           senioridade,
+          company: company || undefined,
+          source: contextData?.source || 'manual',
         })
         router.push(`/dashboard/interview-pro/sessao/${result.session.id}`)
       }
@@ -143,12 +207,57 @@ export default function IniciarPage() {
     )
   }
 
+  // Step 1: Context Selection
+  if (step === 'context') {
+    return (
+      <div className="container-narrow py-8 sm:py-12">
+        <Link href="/dashboard/interview-pro" className="inline-flex items-center text-navy/70 hover:text-navy mb-6">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Voltar
+        </Link>
+
+        <Card variant="elevated" className="max-w-lg mx-auto">
+          <div className="p-6 border-b border-stone/30">
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-2xl font-semibold text-navy mb-2">
+                  Escolher contexto
+                </h1>
+                <p className="text-navy/70">
+                  Selecione como quer se preparar para a entrevista.
+                </p>
+              </div>
+              {accessInfo?.plan === 'free' && accessInfo.isTrialAvailable && (
+                <Badge className="bg-teal/20 text-teal flex items-center gap-1">
+                  <Gift className="w-3 h-3" />
+                  Trial
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="p-6">
+            <ContextSelector
+              applications={applications}
+              lastInsight={lastInsight}
+              onSelect={handleContextSelect}
+            />
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // Step 2: Form
   return (
     <div className="container-narrow py-8 sm:py-12">
-      <Link href="/dashboard/interview-pro" className="inline-flex items-center text-navy/70 hover:text-navy mb-6">
+      <button
+        onClick={handleBackToContext}
+        className="inline-flex items-center text-navy/70 hover:text-navy mb-6"
+      >
         <ArrowLeft className="w-4 h-4 mr-2" />
         Voltar
-      </Link>
+      </button>
 
       <Card variant="elevated" className="max-w-lg mx-auto">
         <div className="p-6 border-b border-stone/30">
@@ -158,7 +267,9 @@ export default function IniciarPage() {
                 Configurar entrevista
               </h1>
               <p className="text-navy/70">
-                Informe a vaga para perguntas personalizadas.
+                {contextData?.source === 'job' 
+                  ? `Treinando para vaga em ${contextData.company}`
+                  : 'Confirme os dados para perguntas personalizadas.'}
               </p>
             </div>
             {accessInfo?.plan === 'free' && accessInfo.isTrialAvailable && (
@@ -181,6 +292,20 @@ export default function IniciarPage() {
               placeholder="Ex: Desenvolvedor Frontend"
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-navy mb-2">
+              Empresa (opcional)
+            </label>
+            <Input
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              placeholder="Ex: TechCorp"
+            />
+            <p className="text-xs text-navy/50 mt-1">
+              Ajuda a gerar perguntas mais específicas
+            </p>
           </div>
 
           <div>

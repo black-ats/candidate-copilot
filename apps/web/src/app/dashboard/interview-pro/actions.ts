@@ -15,6 +15,9 @@ export type InterviewSession = {
   cargo: string
   area: string | null
   senioridade: string | null
+  company: string | null
+  source: 'job' | 'insight' | 'manual' | null
+  application_id: string | null
   status: 'in_progress' | 'completed' | 'abandoned'
   questions: string[]
   answers: string[]
@@ -71,11 +74,17 @@ export async function joinWaitlist(formData: FormData) {
   return { success: true }
 }
 
+// Context source type
+export type ContextSource = 'job' | 'insight' | 'manual'
+
 // Criar nova sessao
 export async function createInterviewSession(data: {
   cargo: string
   area?: string
   senioridade?: string
+  company?: string
+  source?: ContextSource
+  applicationId?: string
 }): Promise<{ session?: InterviewSession; error?: string }> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -88,19 +97,20 @@ export async function createInterviewSession(data: {
     return { error: 'Você já usou sua entrevista de teste. Faça upgrade para Pro.' }
   }
 
-  // Gerar primeira pergunta
+  // Gerar primeira pergunta com contexto enriquecido
   const provider = getAIProvider()
   const contextBuilder = new InterviewContextBuilder({
     cargo: data.cargo,
     area: data.area,
     senioridade: data.senioridade,
+    company: data.company,
     questionNumber: 1,
   })
 
   const response = await provider.complete(contextBuilder.build(''))
   const firstQuestion = response.content.trim()
 
-  // Criar sessao
+  // Criar sessao com contexto enriquecido
   const { data: session, error } = await supabase
     .from('interview_sessions')
     .insert({
@@ -108,6 +118,9 @@ export async function createInterviewSession(data: {
       cargo: data.cargo,
       area: data.area || null,
       senioridade: data.senioridade || null,
+      company: data.company || null,
+      source: data.source || 'manual',
+      application_id: data.applicationId || null,
       questions: [firstQuestion],
     })
     .select()
@@ -373,4 +386,29 @@ export async function abandonSession(sessionId: string): Promise<{ success: bool
 
   if (error) return { success: false, error: error.message }
   return { success: true }
+}
+
+// Buscar aplicacoes ativas do usuario para contextualizacao
+export type ActiveApplication = {
+  id: string
+  company: string
+  title: string
+  status: string
+}
+
+export async function getUserApplications(): Promise<ActiveApplication[]> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+
+  // Apenas vagas em aberto (status ativos), limitado a 3
+  const { data } = await supabase
+    .from('applications')
+    .select('id, company, title, status')
+    .eq('user_id', user.id)
+    .in('status', ['aplicado', 'em_analise', 'entrevista'])
+    .order('created_at', { ascending: false })
+    .limit(3)
+
+  return data || []
 }
