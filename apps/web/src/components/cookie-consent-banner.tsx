@@ -98,7 +98,7 @@ export function CookieConsentBanner() {
           
           <button 
             onClick={handleReject}
-            className="absolute top-3 right-3 sm:static p-2.5 text-navy/40 hover:text-navy transition-colors"
+            className="absolute top-3 right-3 sm:static p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-navy/40 hover:text-navy transition-colors"
             aria-label="Fechar"
           >
             <X className="w-5 h-5" />

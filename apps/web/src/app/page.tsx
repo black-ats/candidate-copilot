@@ -43,7 +43,7 @@ export default async function HomePage() {
       <main className="flex-1">
         <section className="py-16 sm:py-24 lg:py-32">
           <div className="container-narrow text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-navy leading-tight tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-navy leading-tight tracking-tight">
               Decisões de carreira com clareza, não com ansiedade.
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-navy/70 max-w-2xl mx-auto">
@@ -71,7 +71,7 @@ export default async function HomePage() {
               Como funciona
             </h2>
             <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-              <Card className="text-center p-8">
+              <Card className="text-center p-6 sm:p-8">
                 <div className="w-12 h-12 bg-teal/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-teal">1</span>
                 </div>
@@ -83,7 +83,7 @@ export default async function HomePage() {
                 </p>
               </Card>
 
-              <Card className="text-center p-8">
+              <Card className="text-center p-6 sm:p-8">
                 <div className="w-12 h-12 bg-amber/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-amber">2</span>
                 </div>
@@ -95,7 +95,7 @@ export default async function HomePage() {
                 </p>
               </Card>
 
-              <Card className="text-center p-8">
+              <Card className="text-center p-6 sm:p-8">
                 <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-navy">3</span>
                 </div>
@@ -133,8 +133,8 @@ export default async function HomePage() {
                   ))}
                 </ul>
               </div>
-              <Card variant="elevated" className="p-8">
-                <blockquote className="text-lg text-navy/80 italic">
+              <Card variant="elevated" className="p-6 sm:p-8">
+                <blockquote className="text-base sm:text-lg text-navy/80 italic">
                   "Em vez de ficar dias remoendo uma decisao, tive clareza em minutos sobre o que fazia sentido pra mim."
                 </blockquote>
                 <div className="mt-4 text-sm text-navy/60">

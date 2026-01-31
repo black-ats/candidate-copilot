@@ -210,7 +210,7 @@ export default function InsightPage() {
       <main className="container-narrow py-8 sm:py-12">
         {/* Remaining insights counter for Free users */}
         {isLoggedIn && accessCheck && accessCheck.plan === 'free' && accessCheck.remaining !== null && (
-          <div className="mb-6 p-3 bg-amber/10 rounded-lg flex items-center justify-between">
+          <div className="mb-6 p-3 bg-amber/10 rounded-lg flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:justify-between">
             <p className="text-sm text-navy/70">
               <span className="font-medium text-navy">{accessCheck.remaining}</span> de {accessCheck.limit} insights restantes este mes
             </p>
@@ -252,7 +252,7 @@ export default function InsightPage() {
           </div>
 
           {/* Why Section */}
-          <div className="p-6 border-b border-stone/30">
+          <div className="p-4 sm:p-6 border-b border-stone/30">
             <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
               Por que?
             </h2>
@@ -267,7 +267,7 @@ export default function InsightPage() {
           </div>
 
           {/* Risks Section */}
-          <div className="p-6 border-b border-stone/30 bg-amber/5">
+          <div className="p-4 sm:p-6 border-b border-stone/30 bg-amber/5">
             <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
               Riscos a considerar
             </h2>
@@ -282,7 +282,7 @@ export default function InsightPage() {
           </div>
 
           {/* Next Steps Section */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
               Proximos passos
             </h2>
@@ -300,7 +300,7 @@ export default function InsightPage() {
         </Card>
 
         {/* CTA Section */}
-        <Card className="p-6 sm:p-8 text-center">
+        <Card className="p-4 sm:p-6 md:p-8 text-center">
           {isLoggedIn ? (
             <>
               <div className="flex items-center justify-center gap-2 mb-2">

@@ -40,8 +40,8 @@ export default function TermosPage() {
             </p>
 
             {/* Important AI Warning */}
-            <div className="bg-amber/10 border border-amber/30 rounded-lg p-6 flex gap-4">
-              <AlertTriangle className="w-6 h-6 text-amber flex-shrink-0 mt-1" />
+            <div className="bg-amber/10 border border-amber/30 rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <AlertTriangle className="w-6 h-6 text-amber flex-shrink-0" />
               <div>
                 <h3 className="font-semibold text-navy mb-2">Aviso Importante sobre Uso de IA</h3>
                 <p className="text-navy/80 text-sm leading-relaxed">
@@ -66,7 +66,7 @@ export default function TermosPage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 O GoHire Copilot é uma plataforma que oferece:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>Insights personalizados de carreira gerados por IA</li>
                 <li>Acompanhamento de candidaturas a vagas</li>
                 <li>Entrevistas simuladas com feedback automático</li>
@@ -79,7 +79,7 @@ export default function TermosPage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Para usar determinadas funcionalidades, você deve criar uma conta. Você é responsável por:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>Manter a confidencialidade de sua conta</li>
                 <li>Todas as atividades realizadas em sua conta</li>
                 <li>Fornecer informações precisas e atualizadas</li>
@@ -92,7 +92,7 @@ export default function TermosPage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Você reconhece e concorda que:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>Os insights e recomendações são gerados por IA e podem conter imprecisões</li>
                 <li>O conteúdo gerado não constitui aconselhamento profissional</li>
                 <li>Você é responsável por validar informações antes de tomar decisões</li>
@@ -106,7 +106,7 @@ export default function TermosPage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 O Serviço oferece planos gratuitos e pagos:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li><strong>Plano Free:</strong> Acesso limitado a funcionalidades básicas</li>
                 <li><strong>Plano Pro:</strong> Acesso ilimitado mediante assinatura mensal</li>
                 <li>Pagamentos são processados pelo Stripe de forma segura</li>
@@ -120,7 +120,7 @@ export default function TermosPage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Você concorda em NÃO usar o Serviço para:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>Violar leis ou regulamentos aplicáveis</li>
                 <li>Transmitir conteúdo ilegal, ofensivo ou prejudicial</li>
                 <li>Tentar acessar sistemas ou dados não autorizados</li>
@@ -144,7 +144,7 @@ export default function TermosPage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Na extensão máxima permitida por lei:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>O Serviço é fornecido &quot;como está&quot; sem garantias</li>
                 <li>Não garantimos resultados específicos de carreira</li>
                 <li>Não somos responsáveis por decisões tomadas com base em nossos insights</li>

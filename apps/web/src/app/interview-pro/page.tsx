@@ -201,7 +201,8 @@ export default async function InterviewProPage() {
             </p>
             <Link href="/auth">
               <Button size="lg">
-                Comecar minha entrevista gratis
+                <span className="sm:hidden">Comecar gratis</span>
+                <span className="hidden sm:inline">Comecar minha entrevista gratis</span>
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </Link>

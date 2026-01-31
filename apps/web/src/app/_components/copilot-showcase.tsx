@@ -217,7 +217,7 @@ export function CopilotShowcase() {
                   key={conv.id}
                   onClick={() => handleContextChange(index)}
                   className={`
-                    flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium
+                    flex items-center gap-2 px-4 py-3.5 min-h-[44px] rounded-lg text-sm font-medium
                     whitespace-nowrap transition-all duration-200
                     ${activeContext === index 
                       ? 'bg-navy text-sand shadow-md' 
@@ -246,7 +246,7 @@ export function CopilotShowcase() {
             </div>
 
             {/* Chat Messages */}
-            <div className="p-5 space-y-4 min-h-[280px] bg-sand/30">
+            <div className="p-4 sm:p-5 space-y-4 min-h-[220px] sm:min-h-[280px] bg-sand/30">
               {animatingMessages.map((message, index) => (
                 <AnimatedMessage 
                   key={`${activeContext}-${index}`}
@@ -264,7 +264,7 @@ export function CopilotShowcase() {
             {/* CTA dentro do chat */}
             <div className="px-5 py-4 border-t border-stone/20 bg-white flex justify-center">
               <Link href="/dashboard">
-                <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-white font-medium bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 transition-all shadow-md hover:shadow-lg">
+                <button className="flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] rounded-lg text-white font-medium bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 transition-all shadow-md hover:shadow-lg">
                   Experimente o Copilot
                   <ArrowRight className="w-5 h-5" />
                 </button>

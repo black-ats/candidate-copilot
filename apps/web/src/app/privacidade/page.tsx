@@ -53,7 +53,7 @@ export default function PrivacidadePage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Coletamos os seguintes tipos de dados:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li><strong>Dados de Cadastro:</strong> E-mail fornecido durante a criação da conta.</li>
                 <li><strong>Dados de Carreira:</strong> Cargo, área de atuação, senioridade, objetivos profissionais e informações sobre vagas que você acompanha.</li>
                 <li><strong>Dados de Uso:</strong> Interações com o Copilot, insights gerados, sessões de entrevista simulada.</li>
@@ -67,7 +67,7 @@ export default function PrivacidadePage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Utilizamos seus dados para:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>Fornecer insights personalizados de carreira</li>
                 <li>Processar sessões de entrevista simulada</li>
                 <li>Permitir o acompanhamento de candidaturas</li>
@@ -83,7 +83,7 @@ export default function PrivacidadePage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 O tratamento de seus dados pessoais está fundamentado nas seguintes bases legais:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li><strong>Execução de Contrato:</strong> Para fornecer os serviços contratados.</li>
                 <li><strong>Consentimento:</strong> Para cookies analíticos e de marketing.</li>
                 <li><strong>Legítimo Interesse:</strong> Para melhorias do produto e segurança.</li>
@@ -95,7 +95,7 @@ export default function PrivacidadePage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Seus dados podem ser compartilhados com:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li><strong>OpenAI:</strong> Para processamento de linguagem natural nos insights e entrevistas (dados anonimizados quando possível).</li>
                 <li><strong>Stripe:</strong> Para processamento seguro de pagamentos.</li>
                 <li><strong>Supabase:</strong> Para armazenamento seguro de dados.</li>
@@ -109,7 +109,7 @@ export default function PrivacidadePage() {
               <p className="text-navy/80 leading-relaxed mb-4">
                 Como titular dos dados, você tem direito a:
               </p>
-              <ul className="list-disc pl-6 space-y-2 text-navy/80">
+              <ul className="list-disc pl-4 sm:pl-6 space-y-2 text-navy/80">
                 <li>Confirmar a existência de tratamento</li>
                 <li>Acessar seus dados pessoais</li>
                 <li>Corrigir dados incompletos ou desatualizados</li>
