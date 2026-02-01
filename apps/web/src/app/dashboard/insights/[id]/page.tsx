@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Card, Badge, Button } from '@ui/components'
 import { ArrowLeft, CheckCircle, AlertTriangle, MessageSquare, ArrowRight } from 'lucide-react'
+import { objetivoLabels } from '@/lib/insight-engine'
 import { CopilotCTACard } from './continue-button'
 import { ContextualCTAs } from './contextual-ctas'
 import { validateUUID } from '@/lib/schemas/uuid'
@@ -76,7 +77,7 @@ export default async function InsightDetailPage({
       <div className="mb-6 flex flex-wrap gap-2">
         <Badge>{insight.cargo}</Badge>
         {insight.area && <Badge variant="info">{insight.area}</Badge>}
-        {insight.objetivo && <Badge variant="info">{insight.objetivo}</Badge>}
+        {insight.objetivo && <Badge variant="info">{objetivoLabels[insight.objetivo] || insight.objetivo}</Badge>}
       </div>
 
       {/* Insight Content */}
