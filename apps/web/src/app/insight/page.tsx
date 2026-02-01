@@ -1,22 +1,21 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button, Card, Badge } from '@ui/components'
 import { Sparkles, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, User, MessageSquare, Clock } from 'lucide-react'
 import {
-  generateInsight,
   senioridadeLabels,
   areaLabels,
   statusLabels,
   objetivoLabels,
-  type Insight,
-} from '@/lib/insight-engine'
+  type DiagnosticInsight,
+} from '@/lib/insight-engine-v2'
 import { track } from '@/lib/analytics/track'
 import type { EntryFlowData } from '@/lib/schemas/entry-flow'
 import { useUser } from '@/hooks/use-user'
-import { saveInsight, checkInsightAccess } from './actions'
+import { saveInsight, checkInsightAccess, generateInsightAction } from './actions'
 import { UpgradePrompt } from '@/components/upgrade-prompt'
 
 type AccessCheck = {
@@ -30,11 +29,12 @@ export default function InsightPage() {
   const router = useRouter()
   const { isLoggedIn, loading: authLoading } = useUser()
   const [data, setData] = useState<EntryFlowData | null>(null)
-  const [insight, setInsight] = useState<Insight | null>(null)
+  const [insight, setInsight] = useState<DiagnosticInsight | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [saved, setSaved] = useState(false)
   const [accessCheck, setAccessCheck] = useState<AccessCheck | null>(null)
   const [limitReached, setLimitReached] = useState(false)
+  const isGeneratingRef = useRef(false) // Guard against double execution in Strict Mode
 
   // Check access when auth state changes
   useEffect(() => {
@@ -50,6 +50,9 @@ export default function InsightPage() {
   }, [authLoading, isLoggedIn])
 
   useEffect(() => {
+    // Guard against double execution in React Strict Mode
+    if (isGeneratingRef.current) return
+    
     // Get data from sessionStorage
     const storedData = sessionStorage.getItem('entryFlowData')
 
@@ -59,23 +62,42 @@ export default function InsightPage() {
       return
     }
 
+    async function generateInsight(parsedData: EntryFlowData) {
+      // Set guard immediately
+      isGeneratingRef.current = true
+      
+      try {
+        // Generate insight via server action (A/B test happens server-side)
+        const result = await generateInsightAction(parsedData)
+        
+        if (result.success && result.insight) {
+          setInsight(result.insight)
+          setIsLoading(false)
+
+          // Track insight generation with source for A/B analysis
+          track('insight_generated', {
+            cargo: parsedData.cargo,
+            area: parsedData.area,
+            senioridade: parsedData.senioridade,
+            insightType: result.insight.type,
+            source: result.source, // 'template' or 'llm'
+          })
+        } else {
+          console.error('[InsightPage] Failed to generate insight:', result.error)
+          isGeneratingRef.current = false // Reset on error
+          router.push('/comecar')
+        }
+      } catch (error) {
+        console.error('[InsightPage] Error generating insight:', error)
+        isGeneratingRef.current = false // Reset on error
+        router.push('/comecar')
+      }
+    }
+
     try {
       const parsedData = JSON.parse(storedData) as EntryFlowData
       setData(parsedData)
-
-      // Simulate processing time for better UX
-      setTimeout(() => {
-        const generatedInsight = generateInsight(parsedData)
-        setInsight(generatedInsight)
-        setIsLoading(false)
-
-        // Track insight generation
-        track('insight_generated', {
-          cargo: parsedData.cargo,
-          area: parsedData.area,
-          senioridade: parsedData.senioridade,
-        })
-      }, 1500)
+      generateInsight(parsedData)
     } catch {
       router.push('/comecar')
     }
@@ -92,11 +114,23 @@ export default function InsightPage() {
         tempoSituacao: data.tempoSituacao,
         urgencia: data.urgencia,
         objetivo: data.objetivo,
-        objetivoOutro: data.objetivoOutro,
-        recommendation: insight.recommendation,
-        why: insight.why,
-        risks: insight.risks,
-        nextSteps: insight.nextSteps,
+        // V1.1 contextual fields (English names for DB)
+        decisionBlocker: data.bloqueioDecisao,
+        interviewBottleneck: data.gargaloEntrevistas,
+        maxStage: data.faseMaxima,
+        leverageSignals: data.sinaisAlavanca,
+        pivotType: data.tipoPivot,
+        transferableStrengths: data.forcasTransferiveis,
+        avoidedDecision: data.decisaoEvitando,
+        // V1.1 diagnostic insight fields
+        type: insight.type,
+        typeLabel: insight.typeLabel,
+        diagnosis: insight.diagnosis,
+        pattern: insight.pattern,
+        risk: insight.risk,
+        nextStep: insight.nextStep,
+        inputHash: insight.inputHash,
+        confidence: insight.confidence,
       }))
     }
   }, [data, insight])
@@ -121,11 +155,23 @@ export default function InsightPage() {
         tempoSituacao: data.tempoSituacao,
         urgencia: data.urgencia,
         objetivo: data.objetivo,
-        objetivoOutro: data.objetivoOutro,
-        recommendation: insight.recommendation,
-        why: insight.why,
-        risks: insight.risks,
-        nextSteps: insight.nextSteps,
+        // V1.1 contextual fields (English names for DB)
+        decisionBlocker: data.bloqueioDecisao,
+        interviewBottleneck: data.gargaloEntrevistas,
+        maxStage: data.faseMaxima,
+        leverageSignals: data.sinaisAlavanca,
+        pivotType: data.tipoPivot,
+        transferableStrengths: data.forcasTransferiveis,
+        avoidedDecision: data.decisaoEvitando,
+        // V1.1 diagnostic insight fields
+        type: insight.type,
+        typeLabel: insight.typeLabel,
+        diagnosis: insight.diagnosis,
+        pattern: insight.pattern,
+        risk: insight.risk,
+        nextStep: insight.nextStep,
+        inputHash: insight.inputHash,
+        confidence: insight.confidence,
       }).then((result) => {
         if (result.success) {
           setSaved(true)
@@ -159,7 +205,7 @@ export default function InsightPage() {
             <Sparkles className="w-8 h-8 text-navy" />
           </div>
           <h2 className="text-xl font-semibold text-navy mb-2">Analisando seu contexto...</h2>
-          <p className="text-navy/70">Preparando seu insight personalizado</p>
+          <p className="text-navy/70">Preparando sua análise personalizada</p>
         </div>
       </div>
     )
@@ -212,7 +258,7 @@ export default function InsightPage() {
         {isLoggedIn && accessCheck && accessCheck.plan === 'free' && accessCheck.remaining !== null && (
           <div className="mb-6 p-3 bg-amber/10 rounded-lg flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:justify-between">
             <p className="text-sm text-navy/70">
-              <span className="font-medium text-navy">{accessCheck.remaining}</span> de {accessCheck.limit} insights restantes este mês
+              <span className="font-medium text-navy">{accessCheck.remaining}</span> de {accessCheck.limit} análises restantes este mês
             </p>
             <Link href="/dashboard/plano" className="text-sm font-medium text-amber hover:text-amber/80">
               Upgrade →
@@ -234,68 +280,50 @@ export default function InsightPage() {
           </div>
         </div>
 
-        {/* Decision Card */}
+        {/* Decision Card - V1.1 Diagnostic Structure */}
         <Card variant="elevated" className="mb-6 overflow-hidden">
-          {/* Recommendation Header */}
-          <div className="bg-navy text-sand p-6">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-amber rounded-lg flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-5 h-5 text-navy" />
-              </div>
-              <div>
-                <p className="text-sm text-sand/70 mb-1">Recomendação</p>
-                <h1 className="text-xl sm:text-2xl font-semibold">
-                  {insight.recommendation}
-                </h1>
-              </div>
-            </div>
+          {/* Header with type badge */}
+          <div className="bg-navy text-sand p-4 sm:p-6">
+            <Badge variant="warning" className="mb-3">
+              {insight.typeLabel}
+            </Badge>
+            <h1 className="text-xl sm:text-2xl font-semibold">
+              Sua análise de carreira
+            </h1>
           </div>
 
-          {/* Why Section */}
+          {/* Diagnosis - Current situation */}
           <div className="p-4 sm:p-6 border-b border-stone/30">
-            <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
-              Por que?
+            <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-2">
+              Situação atual
             </h2>
-            <ul className="space-y-2">
-              {insight.why.map((reason, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
-                  <span className="text-navy">{reason}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-navy">{insight.diagnosis}</p>
           </div>
 
-          {/* Risks Section */}
+          {/* Pattern observed */}
+          <div className="p-4 sm:p-6 border-b border-stone/30">
+            <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-2">
+              Padrão observado
+            </h2>
+            <p className="text-navy">{insight.pattern}</p>
+          </div>
+
+          {/* Risk - highlighted */}
           <div className="p-4 sm:p-6 border-b border-stone/30 bg-amber/5">
-            <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
-              Riscos a considerar
+            <h2 className="text-sm font-semibold text-amber uppercase tracking-wide mb-2 flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" />
+              Risco aberto
             </h2>
-            <ul className="space-y-2">
-              {insight.risks.map((risk, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" />
-                  <span className="text-navy">{risk}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="text-navy">{insight.risk}</p>
           </div>
 
-          {/* Next Steps Section */}
+          {/* Next step - actionable */}
           <div className="p-4 sm:p-6">
-            <h2 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
-              Próximos passos
+            <h2 className="text-sm font-semibold text-teal uppercase tracking-wide mb-2 flex items-center gap-2">
+              <ArrowRight className="w-4 h-4" />
+              Próximo passo recomendado
             </h2>
-            <ol className="space-y-3">
-              {insight.nextSteps.map((step, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <span className="w-6 h-6 bg-teal text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">
-                    {index + 1}
-                  </span>
-                  <span className="text-navy">{step}</span>
-                </li>
-              ))}
-            </ol>
+            <p className="text-navy font-medium">{insight.nextStep}</p>
           </div>
         </Card>
 
@@ -306,29 +334,29 @@ export default function InsightPage() {
               <div className="flex items-center justify-center gap-2 mb-2">
                 <CheckCircle className="w-5 h-5 text-teal" />
                 <h2 className="text-xl font-semibold text-navy">
-                  Insight salvo!
+                  Análise salva!
                 </h2>
               </div>
               <p className="text-navy/70 mb-6 max-w-md mx-auto">
-                Você pode acessar este e outros insights no seu dashboard.
+                Você pode acessar esta e outras análises no seu dashboard.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link href="/dashboard">
                   <Button size="lg">
                     <ArrowRight className="mr-2 w-5 h-5" />
-                    Ir para o Dashboard
+                    Revisar no Dashboard
                   </Button>
                 </Link>
                 <Button variant="ghost" onClick={handleStartOver}>
                   <RefreshCw className="mr-2 w-5 h-5" />
-                  Novo insight
+                  Nova análise
                 </Button>
               </div>
             </>
           ) : (
             <>
               <h2 className="text-xl font-semibold text-navy mb-2">
-                Quer continuar essa conversa?
+                Quer aprofundar essa análise?
               </h2>
               <p className="text-navy/70 mb-6 max-w-md mx-auto">
                 Veja o que o Copilot pode te ajudar a responder:
@@ -345,10 +373,10 @@ export default function InsightPage() {
                     <p className="text-navy text-sm">
                       {data.objetivo === 'avaliar_proposta' && 'Qual salário devo pedir na negociação?'}
                       {data.objetivo === 'mais_entrevistas' && 'Como posso melhorar meu currículo para essa vaga?'}
+                      {data.objetivo === 'avancar_processos' && 'Como me preparar para a próxima etapa?'}
                       {data.objetivo === 'mudar_area' && 'Quais skills preciso desenvolver primeiro?'}
                       {data.objetivo === 'negociar_salario' && 'Como devo abordar a conversa de aumento?'}
-                      {data.objetivo === 'entender_mercado' && 'Qual a faixa salarial para meu perfil?'}
-                      {!['avaliar_proposta', 'mais_entrevistas', 'mudar_area', 'negociar_salario', 'entender_mercado'].includes(data.objetivo) && 'O que você recomenda como próximo passo?'}
+                      {!['avaliar_proposta', 'mais_entrevistas', 'avancar_processos', 'mudar_area', 'negociar_salario'].includes(data.objetivo) && 'O que você recomenda como próximo passo?'}
                     </p>
                   </div>
                 </div>
@@ -363,7 +391,7 @@ export default function InsightPage() {
                       Baseado no seu perfil de <span className="font-medium">{data.cargo}</span> com experiência em <span className="font-medium">{areaLabels[data.area]}</span>, posso te ajudar a...
                     </p>
                     <p className="text-teal text-xs mt-2 font-medium">
-                      Crie uma conta para ver a resposta completa →
+                      Crie uma conta grátis para continuar →
                     </p>
                   </div>
                 </div>
@@ -373,7 +401,7 @@ export default function InsightPage() {
                 <Link href="/auth" className="w-full sm:w-auto">
                   <Button size="lg" className="w-full sm:w-auto">
                     <MessageSquare className="mr-2 w-5 h-5 flex-shrink-0" />
-                    Criar conta e continuar
+                    Criar conta grátis
                   </Button>
                 </Link>
 
@@ -384,7 +412,7 @@ export default function InsightPage() {
 
                 <Button variant="ghost" size="sm" onClick={handleStartOver} className="w-full sm:w-auto">
                   <RefreshCw className="mr-2 w-4 h-4" />
-                  Começar de novo
+                  Nova análise
                 </Button>
               </div>
             </>
@@ -393,7 +421,7 @@ export default function InsightPage() {
 
         {/* Disclaimer */}
         <p className="mt-6 text-center text-sm text-navy/50">
-          Este insight foi gerado com base nas informações que você forneceu e serve como um ponto de partida para reflexão. Decisões de carreira são pessoais e devem considerar seu contexto completo.
+          Esta análise foi gerada com base nas informações que você forneceu e serve como um ponto de partida para reflexão. Decisões de carreira são pessoais e devem considerar seu contexto completo.
         </p>
       </main>
     </div>

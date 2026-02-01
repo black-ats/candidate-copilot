@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Card } from '@ui/components'
+import { Card, Badge } from '@ui/components'
 import { Lightbulb, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { InsightChatButton } from './chat-button'
@@ -19,7 +19,7 @@ export default async function InsightsPage() {
   
   const { data: insights } = await supabase
     .from('insights')
-    .select('id, recommendation, objetivo, cargo, area, next_steps, created_at')
+    .select('id, recommendation, diagnosis, type_label, objetivo, cargo, area, next_steps, next_step, created_at')
     .order('created_at', { ascending: false })
 
   return (
@@ -30,11 +30,11 @@ export default async function InsightsPage() {
             <Lightbulb className="w-5 h-5 text-amber" />
           </div>
           <h1 className="text-2xl font-semibold text-navy">
-            Seus Insights
+            Suas Análises
           </h1>
         </div>
         <p className="text-navy/70">
-          Todos os insights salvos da sua jornada de carreira.
+          Todas as análises salvas da sua jornada de carreira.
         </p>
       </div>
 
@@ -46,8 +46,15 @@ export default async function InsightsPage() {
                 <div className="flex items-start gap-3 sm:gap-4">
                   <Sparkles className="w-5 h-5 text-amber flex-shrink-0 mt-1" />
                   <div className="flex-1 min-w-0">
+                    {/* V1.1: Show type label badge */}
+                    {insight.type_label && (
+                      <Badge variant="warning" className="mb-2 text-xs">
+                        {insight.type_label}
+                      </Badge>
+                    )}
                     <p className="text-navy font-medium mb-2">
-                      {insight.recommendation}
+                      {/* V1.1: Use diagnosis, V1: Use recommendation */}
+                      {insight.diagnosis || insight.recommendation}
                     </p>
                     {insight.objetivo && (
                       <p className="text-sm text-navy/60 mb-2">
@@ -72,16 +79,16 @@ export default async function InsightsPage() {
             <Lightbulb className="w-6 h-6 text-navy/40" />
           </div>
           <h2 className="text-lg font-medium text-navy mb-2">
-            Nenhum insight salvo ainda
+            Nenhuma análise salva ainda
           </h2>
           <p className="text-navy/60 mb-4 max-w-md mx-auto">
-            Comece respondendo algumas perguntas para receber insights personalizados sobre sua carreira.
+            Comece respondendo algumas perguntas para receber análises personalizadas sobre sua carreira.
           </p>
           <Link 
             href="/comecar"
             className="inline-flex items-center justify-center px-4 py-2 bg-amber text-navy font-medium rounded-lg hover:bg-amber/90 transition-colors"
           >
-            Gerar primeiro insight
+            Gerar primeira análise
           </Link>
         </Card>
       )}

@@ -5,10 +5,16 @@ import { objetivoLabels } from '@/lib/insight-engine'
 
 interface InsightData {
   id: string
-  recommendation: string
+  // V1 fields
+  recommendation?: string
+  next_steps?: string[]
+  // V1.1 fields
+  diagnosis?: string
+  next_step?: string
+  type_label?: string
+  // Common fields
   objetivo?: string
   cargo?: string
-  next_steps?: string[]
   created_at: string
 }
 
@@ -59,7 +65,7 @@ export function StrategyCard({ insight }: StrategyCardProps) {
         
         <div className="bg-white/60 rounded-lg p-4 mb-4">
           <p className="text-sm text-navy/70">
-            Responda 3 perguntas rápidas sobre seu momento profissional e receba:
+            Responda 4 perguntas rápidas sobre seu momento profissional e receba:
           </p>
           <ul className="mt-2 space-y-1 text-sm text-navy/70">
             <li className="flex items-center gap-2">
@@ -90,7 +96,10 @@ export function StrategyCard({ insight }: StrategyCardProps) {
   }
 
   const age = getInsightAge(insight.created_at)
-  const nextSteps = insight.next_steps?.slice(0, 4) || []
+  // Support both V1 (next_steps array) and V1.1 (next_step string) formats
+  const nextSteps = insight.next_steps?.slice(0, 4) || (insight.next_step ? [insight.next_step] : [])
+  // Use V1.1 diagnosis if available, otherwise use V1 recommendation
+  const mainContent = insight.diagnosis || insight.recommendation || ''
 
   return (
     <Card variant="elevated" className="p-4 sm:p-6">
@@ -104,7 +113,8 @@ export function StrategyCard({ insight }: StrategyCardProps) {
               Sua Estratégia
             </h2>
             <p className="text-sm text-navy/60">
-              {(insight.objetivo && objetivoLabels[insight.objetivo]) || insight.cargo || 'Recomendação personalizada'}
+              {/* V1.1: Show type label, V1: Show objetivo or cargo */}
+              {insight.type_label || (insight.objetivo && objetivoLabels[insight.objetivo]) || insight.cargo || 'Análise personalizada'}
             </p>
           </div>
         </div>
@@ -113,10 +123,10 @@ export function StrategyCard({ insight }: StrategyCardProps) {
         </Badge>
       </div>
 
-      {/* Main recommendation */}
+      {/* Main content: V1.1 diagnostico or V1 recommendation */}
       <div className="bg-navy/5 rounded-lg p-4 mb-4">
         <p className="text-navy font-medium">
-          {insight.recommendation}
+          {mainContent}
         </p>
       </div>
 
@@ -124,7 +134,7 @@ export function StrategyCard({ insight }: StrategyCardProps) {
       {nextSteps.length > 0 && (
         <div className="mb-4">
           <h3 className="text-sm font-medium text-navy/70 mb-3">
-            Proximos passos
+            {insight.next_step ? 'Próximo passo' : 'Próximos passos'}
           </h3>
           <div className="border-l-2 border-teal/30 pl-4 space-y-3">
             {nextSteps.map((step, index) => (

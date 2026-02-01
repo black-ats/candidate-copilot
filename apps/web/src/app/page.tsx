@@ -52,7 +52,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/comecar">
                 <Button size="lg" className="w-full sm:w-auto">
-                  Ver meu primeiro insight
+                  Ver minha primeira análise
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
@@ -79,7 +79,7 @@ export default async function HomePage() {
                   Conte seu contexto
                 </h3>
                 <p className="text-navy/70">
-                  Responda 3 perguntas simples sobre sua situação profissional atual e o que você quer resolver.
+                  Responda 4 perguntas simples sobre sua situação profissional atual e o que você quer resolver.
                 </p>
               </Card>
 
@@ -88,10 +88,10 @@ export default async function HomePage() {
                   <span className="text-2xl font-bold text-amber">2</span>
                 </div>
                 <h3 className="text-lg font-semibold text-navy mb-2">
-                  Receba um insight
+                  Receba uma análise
                 </h3>
                 <p className="text-navy/70">
-                  Com base no que você informou, receba um direcionamento claro com recomendações e próximos passos.
+                  Com base no que você informou, receba um diagnóstico claro com padrões identificados e próximo passo.
                 </p>
               </Card>
 
@@ -122,9 +122,9 @@ export default async function HomePage() {
                   {[
                     'Avaliar uma proposta de emprego',
                     'Conseguir mais entrevistas',
-                    'Mudar de área ou carreira',
+                    'Avançar em processos seletivos',
                     'Negociar salário atual',
-                    'Entender o mercado atual',
+                    'Mudar de área ou carreira',
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <Target className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
@@ -186,7 +186,7 @@ export default async function HomePage() {
                   <span className="text-navy/60">/mês</span>
                 </div>
                 <ul className="space-y-2 text-sm text-navy/70 mb-6">
-                  <li>✓ 3 insights por mês</li>
+                  <li>✓ 3 análises por mês</li>
                   <li>✓ 5 vagas para acompanhar</li>
                   <li>✓ 5 perguntas/dia no Copilot</li>
                   <li>✓ 1 entrevista simulada grátis</li>
@@ -224,7 +224,7 @@ export default async function HomePage() {
               Pronto para ter mais clareza?
             </h2>
             <p className="text-sand/70 mb-8 max-w-xl mx-auto">
-              Comece agora e receba seu primeiro insight de carreira em menos de 2 minutos. Sem precisar criar conta.
+              Comece agora e receba sua primeira análise de carreira em menos de 2 minutos. Sem precisar criar conta.
             </p>
             <Link href="/comecar">
               <Button size="lg" className="bg-amber hover:bg-amber/90 text-navy">

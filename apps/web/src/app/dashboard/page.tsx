@@ -31,7 +31,7 @@ async function StrategyCardSection() {
   const supabase = await createClient()
   const { data: latestInsight } = await supabase
     .from('insights')
-    .select('id, recommendation, objetivo, cargo, next_steps, created_at')
+    .select('id, recommendation, diagnosis, next_step, type_label, objetivo, cargo, next_steps, created_at')
     .order('created_at', { ascending: false })
     .limit(1)
     .single()

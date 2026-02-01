@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Card, Badge, Button } from '@ui/components'
-import { ArrowLeft, CheckCircle, AlertTriangle, MessageSquare } from 'lucide-react'
+import { ArrowLeft, CheckCircle, AlertTriangle, MessageSquare, ArrowRight } from 'lucide-react'
 import { ContinueConversationButton } from './continue-button'
 import { validateUUID } from '@/lib/schemas/uuid'
 
@@ -37,6 +37,11 @@ async function getInsight(id: string) {
   return insight
 }
 
+// Check if this is a V1.1 insight (has diagnostic fields)
+function isV2Insight(insight: { diagnosis?: string; type?: string }): boolean {
+  return Boolean(insight.diagnosis && insight.type)
+}
+
 export default async function InsightDetailPage({ 
   params 
 }: { 
@@ -48,6 +53,8 @@ export default async function InsightDetailPage({
   if (!insight) {
     notFound()
   }
+
+  const isV2 = isV2Insight(insight)
 
   return (
     <div className="container-narrow py-8 sm:py-12">
@@ -73,64 +80,122 @@ export default async function InsightDetailPage({
 
       {/* Insight Content */}
       <Card variant="elevated" className="mb-6 overflow-hidden">
-        {/* Recommendation Header */}
-        <div className="bg-navy text-sand p-4 sm:p-6">
-          <h1 className="text-xl font-semibold">
-            {insight.recommendation}
-          </h1>
-        </div>
+        {isV2 ? (
+          <>
+            {/* V1.1 Diagnostic Structure */}
+            <div className="bg-navy text-sand p-4 sm:p-6">
+              {insight.type_label && (
+                <Badge variant="warning" className="mb-3">
+                  {insight.type_label}
+                </Badge>
+              )}
+              <h1 className="text-xl font-semibold">
+                Sua análise de carreira
+              </h1>
+            </div>
 
-        {/* Why section */}
-        {insight.why && insight.why.length > 0 && (
-          <div className="p-4 sm:p-6 border-b border-stone/30">
-            <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
-              Por que?
-            </h3>
-            <ul className="space-y-2">
-              {insight.why.map((item: string, i: number) => (
-                <li key={i} className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
-                  <span className="text-navy">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            {/* Diagnosis - Current situation */}
+            <div className="p-4 sm:p-6 border-b border-stone/30">
+              <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-2">
+                Situação atual
+              </h3>
+              <p className="text-navy">{insight.diagnosis}</p>
+            </div>
 
-        {/* Risks */}
-        {insight.risks && insight.risks.length > 0 && (
-          <div className="p-4 sm:p-6 border-b border-stone/30 bg-amber/5">
-            <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
-              Riscos a considerar
-            </h3>
-            <ul className="space-y-2">
-              {insight.risks.map((item: string, i: number) => (
-                <li key={i} className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" />
-                  <span className="text-navy">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            {/* Pattern observed */}
+            {insight.pattern && (
+              <div className="p-4 sm:p-6 border-b border-stone/30">
+                <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-2">
+                  Padrão observado
+                </h3>
+                <p className="text-navy">{insight.pattern}</p>
+              </div>
+            )}
 
-        {/* Next Steps */}
-        {insight.next_steps && insight.next_steps.length > 0 && (
-          <div className="p-4 sm:p-6">
-            <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
-              Proximos passos
-            </h3>
-            <ol className="space-y-3">
-              {insight.next_steps.map((item: string, i: number) => (
-                <li key={i} className="flex items-start gap-3">
-                  <span className="w-6 h-6 bg-teal text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">
-                    {i + 1}
-                  </span>
-                  <span className="text-navy">{item}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+            {/* Risk - highlighted */}
+            {insight.risk && (
+              <div className="p-4 sm:p-6 border-b border-stone/30 bg-amber/5">
+                <h3 className="text-sm font-semibold text-amber uppercase tracking-wide mb-2 flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4" />
+                  Risco aberto
+                </h3>
+                <p className="text-navy">{insight.risk}</p>
+              </div>
+            )}
+
+            {/* Next step - actionable */}
+            {insight.next_step && (
+              <div className="p-4 sm:p-6">
+                <h3 className="text-sm font-semibold text-teal uppercase tracking-wide mb-2 flex items-center gap-2">
+                  <ArrowRight className="w-4 h-4" />
+                  Próximo passo recomendado
+                </h3>
+                <p className="text-navy font-medium">{insight.next_step}</p>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            {/* V1 Legacy Structure */}
+            <div className="bg-navy text-sand p-4 sm:p-6">
+              <h1 className="text-xl font-semibold">
+                {insight.recommendation}
+              </h1>
+            </div>
+
+            {/* Why section */}
+            {insight.why && insight.why.length > 0 && (
+              <div className="p-4 sm:p-6 border-b border-stone/30">
+                <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
+                  Por que?
+                </h3>
+                <ul className="space-y-2">
+                  {insight.why.map((item: string, i: number) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-teal flex-shrink-0 mt-0.5" />
+                      <span className="text-navy">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Risks */}
+            {insight.risks && insight.risks.length > 0 && (
+              <div className="p-4 sm:p-6 border-b border-stone/30 bg-amber/5">
+                <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
+                  Riscos a considerar
+                </h3>
+                <ul className="space-y-2">
+                  {insight.risks.map((item: string, i: number) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <AlertTriangle className="w-5 h-5 text-amber flex-shrink-0 mt-0.5" />
+                      <span className="text-navy">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Next Steps */}
+            {insight.next_steps && insight.next_steps.length > 0 && (
+              <div className="p-4 sm:p-6">
+                <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
+                  Próximos passos
+                </h3>
+                <ol className="space-y-3">
+                  {insight.next_steps.map((item: string, i: number) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="w-6 h-6 bg-teal text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">
+                        {i + 1}
+                      </span>
+                      <span className="text-navy">{item}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </>
         )}
       </Card>
 
@@ -141,7 +206,7 @@ export default async function InsightDetailPage({
           Quer aprofundar?
         </h2>
         <p className="text-navy/70 mb-4">
-          Converse com o Copilot sobre este insight e tire suas duvidas.
+          Converse com o Copilot sobre esta análise e tire suas dúvidas.
         </p>
         <ContinueConversationButton 
           insight={{
@@ -149,8 +214,9 @@ export default async function InsightDetailPage({
             cargo: insight.cargo,
             area: insight.area,
             objetivo: insight.objetivo,
-            recommendation: insight.recommendation,
-            next_steps: insight.next_steps || [],
+            // Support both V1 and V1.1 formats
+            recommendation: insight.recommendation || insight.diagnosis || '',
+            next_steps: insight.next_steps || (insight.next_step ? [insight.next_step] : []),
           }} 
         />
       </Card>

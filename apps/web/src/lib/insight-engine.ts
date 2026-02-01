@@ -81,6 +81,23 @@ export function generateInsight(data: EntryFlowData): Insight {
         'Agende conversa com seu gestor com antecedência',
       ],
     },
+    avancar_processos: {
+      recommendation: 'Identifique onde você está travando',
+      why: [
+        'Cada fase do processo exige habilidades diferentes',
+        'Entender o padrão de rejeição revela o gargalo real',
+        'Feedback estruturado acelera a correção',
+      ],
+      risks: [
+        'Continuar sem ajuste queima oportunidades boas',
+        'Frustração pode afetar performance nas próximas etapas',
+      ],
+      nextSteps: [
+        'Mapeie as últimas 5 rejeições por fase',
+        'Peça feedback específico quando possível',
+        'Pratique a fase onde mais trava (mock interview, case, etc.)',
+      ],
+    },
     outro: {
       recommendation: 'Defina seu próximo passo com clareza',
       why: [
@@ -170,6 +187,7 @@ export const statusLabels: Record<string, string> = {
 export const objetivoLabels: Record<string, string> = {
   avaliar_proposta: 'Avaliar proposta',
   mais_entrevistas: 'Conseguir mais entrevistas',
+  avancar_processos: 'Avançar em processos',
   mudar_area: 'Mudar de área',
   negociar_salario: 'Negociar salário',
   outro: 'Outro objetivo',
