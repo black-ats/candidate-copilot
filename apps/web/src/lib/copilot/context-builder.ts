@@ -139,15 +139,87 @@ usuários a tomar decisões sobre sua busca de emprego.
 CONTEXTO DO USUÁRIO:
 ${contextStr}`
 
-  // Add insight context if available
+  // Add insight context if available (enhanced for V1.1)
   if (insightContext) {
+    const isV2 = !!insightContext.diagnosis
+    
     prompt += `
 
-CONTEXTO DO INSIGHT ATUAL:
-O usuário gerou um insight sobre "${insightContext.cargo}" com a recomendação: "${insightContext.recommendation}".
-${insightContext.next_steps.length > 0 ? `Próximos passos sugeridos: ${insightContext.next_steps.join(', ')}.` : ''}
+===== CONTEXTO DO INSIGHT (IMPORTANTE) =====
 
-Ajude o usuário a aprofundar este tema e tomar uma decisão.`
+O usuário está conversando sobre uma ANÁLISE DE CARREIRA que ele acabou de gerar.
+
+PERFIL DO USUÁRIO:
+- Cargo: ${insightContext.cargo}
+${insightContext.senioridade ? `- Senioridade: ${insightContext.senioridade}` : ''}
+${insightContext.area ? `- Área: ${insightContext.area}` : ''}
+${insightContext.status ? `- Status: ${insightContext.status}` : ''}
+${insightContext.objetivo ? `- Objetivo principal: ${insightContext.objetivo}` : ''}
+${insightContext.urgencia ? `- Urgência: ${insightContext.urgencia}/5` : ''}
+${insightContext.tempoSituacao ? `- Tempo nessa situação: ${insightContext.tempoSituacao}` : ''}`
+
+    // Add V1.1 contextual data if available
+    if (insightContext.decisionBlocker) {
+      prompt += `\n- O que trava a decisão: ${insightContext.decisionBlocker}`
+    }
+    if (insightContext.interviewBottleneck) {
+      prompt += `\n- Onde trava nas entrevistas: ${insightContext.interviewBottleneck}`
+    }
+    if (insightContext.maxStage) {
+      prompt += `\n- Fase máxima que costuma chegar: ${insightContext.maxStage}`
+    }
+    if (insightContext.leverageSignals) {
+      prompt += `\n- Sinal de alavanca para negociação: ${insightContext.leverageSignals}`
+    }
+    if (insightContext.pivotType) {
+      prompt += `\n- Tipo de mudança desejada: ${insightContext.pivotType}`
+    }
+    if (insightContext.transferableStrengths) {
+      prompt += `\n- Forças transferíveis: ${insightContext.transferableStrengths}`
+    }
+    if (insightContext.avoidedDecision) {
+      prompt += `\n- Decisão que está evitando: ${insightContext.avoidedDecision}`
+    }
+
+    if (isV2) {
+      // V1.1 diagnostic insight
+      prompt += `
+
+DIAGNÓSTICO GERADO:
+${insightContext.typeLabel ? `- Tipo: ${insightContext.typeLabel}` : ''}
+- Situação atual: ${insightContext.diagnosis}
+${insightContext.pattern ? `- Padrão observado: ${insightContext.pattern}` : ''}
+${insightContext.risk ? `- Risco identificado: ${insightContext.risk}` : ''}
+${insightContext.nextStep ? `- Próximo passo sugerido: ${insightContext.nextStep}` : ''}`
+    } else if (insightContext.recommendation) {
+      // V1 legacy insight
+      prompt += `
+
+ANÁLISE GERADA:
+- Recomendação: ${insightContext.recommendation}
+${insightContext.next_steps && insightContext.next_steps.length > 0 ? `- Próximos passos: ${insightContext.next_steps.join('; ')}` : ''}`
+    }
+
+    prompt += `
+
+COMO AJUDAR O USUÁRIO:
+1. SEJA CONVERSACIONAL: O usuário quer DISCUTIR a análise, não receber mais uma análise genérica
+2. FAÇA PERGUNTAS: Se precisar de mais contexto para ajudar, pergunte! Ex: "Você já tentou X?", "O que te impede de Y?"
+3. SEJA ESPECÍFICO: Use os dados dele (cargo, área, situação) para dar conselhos práticos
+4. AJUDE NA DECISÃO: O objetivo é ajudá-lo a tomar uma DECISÃO ou AÇÃO concreta
+5. SEJA HONESTO: Se o caminho dele parece arriscado, diga isso de forma construtiva
+6. EXPLORE ALTERNATIVAS: Ajude a ver ângulos que ele pode não ter considerado
+
+EXEMPLOS DE BOAS RESPOSTAS:
+- "Você mencionou que trava na fase técnica. Que tipo de feedback você costuma receber?"
+- "Com seu perfil de X anos como ${insightContext.cargo}, você já considerou aplicar para Y?"
+- "O risco que identifiquei é Z. O que você acha? Faz sentido no seu contexto?"
+
+NÃO FAÇA:
+- Repetir o diagnóstico que já foi mostrado
+- Dar conselhos genéricos de coaching
+- Ser condescendente ou excessivamente positivo
+- Evitar perguntas por medo de parecer invasivo`
   }
 
   // Add interview context if available (mock interview feedback)
@@ -270,19 +342,14 @@ PERFIL DE CARREIRA:
   }
   
   if (ctx.insights.length > 0) {
+    const lastInsight = ctx.insights[0]
     prompt += `
 
-HISTÓRICO DE INSIGHTS:`
-    
-    ctx.insights.slice(0, 3).forEach((insight, i) => {
-      prompt += `
-
-[Insight ${i + 1} - ${insight.createdAt}]
-- Recomendação: "${insight.recommendation}"
-- Motivos: ${insight.why.join('; ')}
-- Riscos: ${insight.risks.join('; ')}
-- Próximos passos: ${insight.nextSteps.join('; ')}`
-    })
+ÚLTIMA ANÁLISE DE CARREIRA (${lastInsight.createdAt}):
+- Recomendação: "${lastInsight.recommendation}"
+${lastInsight.why.length > 0 ? `- Motivos: ${lastInsight.why.join('; ')}` : ''}
+${lastInsight.risks.length > 0 ? `- Riscos: ${lastInsight.risks.join('; ')}` : ''}
+${lastInsight.nextSteps.length > 0 ? `- Próximos passos: ${lastInsight.nextSteps.join('; ')}` : ''}`
   }
   
   if (ctx.recentApplications.length > 0) {

@@ -149,7 +149,7 @@ FORMATO DE RESPOSTA (JSON):
   "diagnosis": "Descreva a situação atual em 2-3 frases, falando diretamente com o usuário (ex: 'Você está...')",
   "pattern": "Explique o padrão que você observa, conectando os pontos de forma lógica",
   "risk": "Aponte um risco real e específico, em 1-2 frases diretas",
-  "nextStep": "Sugira 1-3 ações concretas para as próximas 1-2 semanas"
+  "nextStep": "Sugira 1-2 ações concretas para as próximas 1-2 semanas"
 }
 
 IMPORTANTE:

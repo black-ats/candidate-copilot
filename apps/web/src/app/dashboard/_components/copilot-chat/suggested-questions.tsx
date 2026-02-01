@@ -15,63 +15,57 @@ interface ExtendedQuestion extends SuggestedQuestion {
 }
 
 const defaultQuestions: ExtendedQuestion[] = [
-  // Metricas
+  // Ação imediata
   {
-    id: 'taxa-conversao',
-    label: 'Qual minha taxa de conversão?',
-    category: 'metricas',
-    icon: TrendingUp,
-  },
-  {
-    id: 'aguardando',
-    label: 'Quantas aplicações aguardando resposta?',
-    category: 'metricas',
-    icon: Clock,
-  },
-  // Proximos passos
-  {
-    id: 'follow-up',
-    label: 'Quais empresas devo fazer follow-up?',
+    id: 'o-que-fazer',
+    label: 'O que eu deveria fazer agora?',
     category: 'proximos_passos',
     icon: Target,
   },
   {
-    id: 'melhorar',
-    label: 'O que posso fazer para melhorar?',
+    id: 'follow-up',
+    label: 'Preciso fazer follow-up em alguma vaga?',
     category: 'proximos_passos',
-    icon: Lightbulb,
+    icon: Clock,
   },
-  // Insights
+  // Análise da situação
   {
-    id: 'ultimo-insight',
-    label: 'Me lembre do meu último insight',
+    id: 'como-estou',
+    label: 'Como está minha busca de emprego?',
+    category: 'metricas',
+    icon: TrendingUp,
+  },
+  {
+    id: 'onde-estou-errando',
+    label: 'Onde você acha que estou errando?',
+    category: 'analise',
+    icon: HelpCircle,
+  },
+  // Sobre a última análise
+  {
+    id: 'ultima-analise',
+    label: 'O que dizia minha última análise?',
     category: 'insights',
     icon: Sparkles,
   },
   {
-    id: 'recomendacoes',
-    label: 'Quais foram suas recomendações?',
-    category: 'insights',
-    icon: Lightbulb,
-  },
-  {
     id: 'riscos',
-    label: 'Quais riscos você identificou?',
+    label: 'Quais riscos você identificou pra mim?',
     category: 'insights',
     icon: AlertTriangle,
   },
+  // Melhorias
   {
-    id: 'proximos-passos',
-    label: 'Quais próximos passos sugeriu?',
-    category: 'insights',
-    icon: ListChecks,
+    id: 'melhorar-conversao',
+    label: 'Como consigo mais entrevistas?',
+    category: 'proximos_passos',
+    icon: Lightbulb,
   },
-  // Analise
   {
-    id: 'padroes',
-    label: 'Quais padrões você identifica?',
-    category: 'analise',
-    icon: HelpCircle,
+    id: 'preparar-entrevista',
+    label: 'Me ajuda a preparar para entrevistas',
+    category: 'interview',
+    icon: Mic,
   },
 ]
 

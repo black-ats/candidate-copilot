@@ -96,8 +96,28 @@ export interface InsightContextData {
   tipo: string
   cargo: string
   area?: string
-  recommendation: string
-  next_steps: string[]
+  senioridade?: string
+  status?: string
+  objetivo?: string
+  // V1 fields
+  recommendation?: string
+  next_steps?: string[]
+  // V1.1 diagnostic fields
+  diagnosis?: string
+  pattern?: string
+  risk?: string
+  nextStep?: string
+  typeLabel?: string
+  // V1.1 contextual data
+  urgencia?: number
+  tempoSituacao?: string
+  decisionBlocker?: string
+  interviewBottleneck?: string
+  maxStage?: string
+  leverageSignals?: string
+  pivotType?: string
+  transferableStrengths?: string
+  avoidedDecision?: string
 }
 
 export interface HeroContextData {

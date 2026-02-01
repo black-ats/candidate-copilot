@@ -158,14 +158,34 @@ export function CopilotDrawer() {
     setIsLoading(true)
     
     try {
-      // Convert InsightContext to InsightContextData for the server action
+      // Convert InsightContext to InsightContextData for the server action (V1.1 enhanced)
       const contextData = insightContext ? {
         id: insightContext.id,
         tipo: insightContext.tipo,
         cargo: insightContext.cargo,
         area: insightContext.area,
+        senioridade: insightContext.senioridade,
+        status: insightContext.status,
+        objetivo: insightContext.objetivo,
+        // V1 fields
         recommendation: insightContext.recommendation,
         next_steps: insightContext.next_steps,
+        // V1.1 diagnostic fields
+        diagnosis: insightContext.diagnosis,
+        pattern: insightContext.pattern,
+        risk: insightContext.risk,
+        nextStep: insightContext.nextStep,
+        typeLabel: insightContext.typeLabel,
+        // V1.1 contextual data
+        urgencia: insightContext.urgencia,
+        tempoSituacao: insightContext.tempoSituacao,
+        decisionBlocker: insightContext.decisionBlocker,
+        interviewBottleneck: insightContext.interviewBottleneck,
+        maxStage: insightContext.maxStage,
+        leverageSignals: insightContext.leverageSignals,
+        pivotType: insightContext.pivotType,
+        transferableStrengths: insightContext.transferableStrengths,
+        avoidedDecision: insightContext.avoidedDecision,
       } : null
       
       // Convert HeroContext to HeroContextData for the server action

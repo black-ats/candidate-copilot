@@ -1,11 +1,11 @@
 export const insightInitialMessages: Record<string, string> = {
-  avaliando_proposta: 'Vi que você está avaliando uma proposta. Me conta mais sobre ela - salário, benefícios, cultura da empresa - que te ajudo a decidir.',
-  buscando_emprego: 'Você está em busca de novas oportunidades. Vamos conversar sobre o que você procura e como posso ajudar.',
-  negociando_salario: 'Negociar salário pode ser desafiador. Me conta sua situação atual que te ajudo a montar uma estratégia.',
-  transicao_carreira: 'Mudança de carreira é uma decisão importante. Vamos explorar suas opções juntos.',
-  crescimento: 'Crescer na carreira exige planejamento. Vamos conversar sobre seus objetivos e próximos passos.',
-  estabilidade: 'Manter estabilidade enquanto evolui é um equilíbrio delicado. Como posso ajudar?',
-  default: 'Vamos conversar sobre seu insight. Como posso ajudar?'
+  avaliando_proposta: 'Vi sua análise sobre a proposta. O que mais te preocupa nessa decisão? Podemos explorar juntos os pontos que você ainda tem dúvida.',
+  buscando_emprego: 'Analisei sua situação. O que você achou do diagnóstico? Tem algo que não fez sentido ou que você quer aprofundar?',
+  negociando_salario: 'Vi que você quer negociar salário. Antes de pensar na estratégia, me conta: você já tem clareza sobre o quanto quer pedir e por quê?',
+  transicao_carreira: 'Mudança de área é uma decisão grande. O que te fez considerar essa transição agora? Entender isso ajuda a avaliar se é o momento certo.',
+  crescimento: 'Vi sua análise sobre crescimento. O que você acha que está travando seu avanço hoje? Às vezes o bloqueio não é onde parece.',
+  estabilidade: 'Estabilidade significa coisas diferentes pra cada pessoa. O que você está buscando exatamente? Financeiro, emocional, de rotina?',
+  default: 'Vi sua análise. O que você achou? Tem algo que não fez sentido ou que você quer explorar mais?'
 }
 
 // Mensagens iniciais para contextos do Hero Card
@@ -67,52 +67,60 @@ export const heroSuggestedQuestions: Record<string, string[]> = {
 
 export const insightSuggestedQuestions: Record<string, string[]> = {
   avaliando_proposta: [
-    'Qual o salário oferecido?',
-    'Quais os benefícios?',
-    'Como é a cultura da empresa?',
-    'É uma empresa estável?',
-    'Qual o potencial de crescimento?'
+    'Me ajuda a comparar com meu emprego atual',
+    'Esse salário está bom pro mercado?',
+    'O que perguntar antes de aceitar?',
+    'Como negociar sem perder a oferta?',
+    'Quais red flags eu deveria observar?'
   ],
   buscando_emprego: [
-    'Que tipo de vaga você quer?',
-    'Qual sua pretensão salarial?',
-    'Você considera remoto?',
-    'Quais empresas te interessam?'
+    'Onde você acha que eu estou errando?',
+    'Meu currículo pode ser o problema?',
+    'Estou aplicando pras vagas certas?',
+    'Como saber se é o momento de mudar estratégia?'
   ],
   negociando_salario: [
-    'Qual seu salário atual?',
-    'Quanto você quer pedir?',
-    'Você tem outras propostas?',
-    'Quando é a conversa?'
+    'Quanto eu deveria pedir?',
+    'Como justificar o aumento?',
+    'E se disserem não, o que fazer?',
+    'Qual o melhor momento pra essa conversa?'
   ],
   transicao_carreira: [
-    'Para qual área quer ir?',
-    'O que te motiva a mudar?',
-    'Quais skills você já tem?',
-    'Você consideraria ganhar menos inicialmente?'
+    'Faz sentido mudar agora ou espero mais?',
+    'Quanto tempo leva pra me estabilizar na nova área?',
+    'Preciso começar do zero em salário?',
+    'Por onde começo essa transição?'
   ],
   crescimento: [
-    'Qual cargo você almeja?',
-    'Quais habilidades precisa desenvolver?',
-    'Sua empresa atual oferece oportunidades?',
-    'Já conversou com seu gestor sobre isso?'
+    'O que está me segurando hoje?',
+    'Devo buscar crescer aqui ou sair?',
+    'Como saber se minha empresa valoriza meu trabalho?',
+    'Quais skills priorizar agora?'
   ],
   estabilidade: [
-    'O que significa estabilidade para você?',
-    'Como está sua empresa atual?',
-    'Quais são seus riscos hoje?',
-    'Você tem reserva de emergência?'
+    'Estou na zona de conforto ou seguro?',
+    'Quando vale a pena arriscar?',
+    'Como saber se estou estagnado?',
+    'Devo me preocupar com meu emprego atual?'
   ],
   default: [
-    'O que você achou do insight?',
-    'Tem alguma dúvida sobre os próximos passos?',
-    'Quer explorar algum ponto específico?'
+    'Isso faz sentido pra minha situação?',
+    'O que você acha que eu deveria fazer?',
+    'Tem algo que eu não estou vendo?',
+    'Qual o maior risco se eu não fizer nada?'
   ]
 }
 
 // Maps objetivo from EntryFlowData to tipo for insight context
 export function mapObjetivoToTipo(objetivo: string): string {
   const mapping: Record<string, string> = {
+    // V1.1 objectives
+    'avaliar_proposta': 'avaliando_proposta',
+    'mais_entrevistas': 'buscando_emprego',
+    'avancar_processos': 'buscando_emprego',
+    'negociar_salario': 'negociando_salario',
+    'mudar_area': 'transicao_carreira',
+    // Legacy V1 objectives
     'nova_oportunidade': 'buscando_emprego',
     'promocao': 'crescimento',
     'transicao': 'transicao_carreira',

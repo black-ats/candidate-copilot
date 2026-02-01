@@ -213,10 +213,28 @@ export default async function InsightDetailPage({
             id: insight.id,
             cargo: insight.cargo,
             area: insight.area,
+            senioridade: insight.senioridade,
+            status: insight.status,
             objetivo: insight.objetivo,
-            // Support both V1 and V1.1 formats
-            recommendation: insight.recommendation || insight.diagnosis || '',
-            next_steps: insight.next_steps || (insight.next_step ? [insight.next_step] : []),
+            // V1 fields
+            recommendation: insight.recommendation,
+            next_steps: insight.next_steps,
+            // V1.1 diagnostic fields
+            diagnosis: insight.diagnosis,
+            pattern: insight.pattern,
+            risk: insight.risk,
+            next_step: insight.next_step,
+            type_label: insight.type_label,
+            // V1.1 contextual data
+            urgencia: insight.urgencia,
+            tempo_situacao: insight.tempo_situacao,
+            decision_blocker: insight.decision_blocker,
+            interview_bottleneck: insight.interview_bottleneck,
+            max_stage: insight.max_stage,
+            leverage_signals: insight.leverage_signals,
+            pivot_type: insight.pivot_type,
+            transferable_strengths: insight.transferable_strengths,
+            avoided_decision: insight.avoided_decision,
           }} 
         />
       </Card>
