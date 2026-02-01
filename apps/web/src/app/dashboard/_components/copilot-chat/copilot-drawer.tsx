@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { X, Sparkles, Send, RotateCcw, Crown } from 'lucide-react'
+import { X, Sparkles, Send, RotateCcw, Crown, Plus } from 'lucide-react'
 import { Button, Badge } from '@ui/components'
 import { ChatMessages } from './chat-messages'
 import { WelcomeState } from './welcome-state'
 import { SuggestedQuestions } from './suggested-questions'
-import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, type CopilotAccessInfo } from './actions'
+import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, hasActiveProposal, type CopilotAccessInfo } from './actions'
 import type { ChatMessage } from '@/lib/copilot/types'
 import Link from 'next/link'
 import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
@@ -32,6 +32,7 @@ export function CopilotDrawer() {
   const [limitReached, setLimitReached] = useState(false)
   const [hasShownInitialMessage, setHasShownInitialMessage] = useState(false)
   const [hasInterviewHistory, setHasInterviewHistory] = useState(false)
+  const [hasProposal, setHasProposal] = useState<boolean | null>(null) // null = loading, true/false = loaded
 
   // Track previous context to detect changes
   const prevInsightContextId = useRef<string | null>(null)
@@ -94,7 +95,7 @@ export function CopilotDrawer() {
     }
   }, [isOpen])
 
-  // Check copilot access and interview history when drawer opens
+  // Check copilot access, interview history, and proposals when drawer opens
   useEffect(() => {
     if (isOpen) {
       checkCopilotAccess().then((info) => {
@@ -105,6 +106,8 @@ export function CopilotDrawer() {
       })
       // Check interview history for all users (Free users can have trial history)
       checkInterviewHistory().then(setHasInterviewHistory)
+      // Check if user has any active proposal
+      hasActiveProposal().then(setHasProposal)
     }
   }, [isOpen])
 
@@ -392,6 +395,26 @@ export function CopilotDrawer() {
                     benchmarkContext={benchmarkContext}
                     hasInterviewHistory={hasInterviewHistory}
                   />
+                  
+                  {/* Card para adicionar proposta quando não tem nenhuma ativa */}
+                  {hasProposal === false && (heroContext?.context?.includes('proposta') || heroContext?.context?.includes('avaliar')) && (
+                    <Link 
+                      href="/dashboard/aplicacoes/nova"
+                      onClick={onClose}
+                      className="mt-4 p-3 bg-amber/10 rounded-lg border border-amber/20 flex items-center gap-3 hover:bg-amber/15 transition-colors"
+                      style={{
+                        animation: 'fadeUp 0.4s ease-out forwards',
+                      }}
+                    >
+                      <div className="w-8 h-8 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Plus className="w-4 h-4 text-amber" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-navy">Adicionar proposta</p>
+                        <p className="text-xs text-navy/60">Registre para acompanhar</p>
+                      </div>
+                    </Link>
+                  )}
                 </div>
               )}
             </>

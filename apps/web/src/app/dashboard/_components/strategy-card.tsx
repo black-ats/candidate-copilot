@@ -63,6 +63,7 @@ function getContextualCTAs(objetivo: string | undefined): ContextualCTA[] {
       { type: 'interview', label: 'Treinar entrevistas' },
     ],
     avaliar_proposta: [
+      // { type: 'add_application', label: 'Adicionar a proposta' },
       { type: 'copilot', label: 'Analisar proposta', copilotMessage: 'Vamos analisar a proposta juntos? Me conta: qual empresa, cargo e qual o valor oferecido?' },
     ],
     negociar_salario: [

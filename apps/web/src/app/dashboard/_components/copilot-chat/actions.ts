@@ -124,6 +124,21 @@ export async function checkInterviewHistory(): Promise<boolean> {
   return (count ?? 0) > 0
 }
 
+export async function hasActiveProposal(): Promise<boolean> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) return false
+
+  const { count } = await supabase
+    .from('applications')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('status', 'proposta')
+
+  return (count || 0) > 0
+}
+
 export interface GlobalInitialMessageInfo {
   hasCareerContext: boolean
   objetivo?: string
