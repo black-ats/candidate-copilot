@@ -10,58 +10,58 @@ export const insightInitialMessages: Record<string, string> = {
 
 // Mensagens iniciais para contextos do Hero Card
 export const heroInitialMessages: Record<string, string | ((company?: string, title?: string) => string)> = {
-  pending_insight: 'Você tem um insight pendente! Quer que eu te ajude a entender melhor as recomendações?',
-  proposal_received: (company) => `Parabéns pela proposta${company ? ` da ${company}` : ''}! Vamos analisar juntos? Me conta os detalhes - salário, benefícios, cultura - que te ajudo a avaliar.`,
-  interview_soon: (company, title) => `Vi que você tem uma entrevista${company ? ` na ${company}` : ''}${title ? ` para ${title}` : ''}. Quer praticar? Posso simular perguntas comuns e te dar feedback.`,
-  needs_followup: (company, title) => `Sua aplicação${company ? ` na ${company}` : ''}${title ? ` para ${title}` : ''} está sem retorno há alguns dias. Quer que eu te ajude a escrever um follow-up profissional?`,
-  stale_apps: 'Notei que algumas aplicações estão paradas. Quer revisar juntos o status de cada uma e decidir os próximos passos?',
-  low_activity: 'Percebi que faz um tempo desde sua última aplicação. Como está sua busca? Posso ajudar a encontrar novas oportunidades.',
-  new_user: 'Olá! Sou seu Copilot de carreira. Posso te ajudar com candidaturas, preparação para entrevistas, negociação salarial e muito mais. Como posso ajudar?',
-  active_summary: 'Vi a dica do dia! Quer conversar mais sobre como aplicar isso na sua busca? Estou aqui para ajudar.',
+  pending_insight: 'Você tem um insight pendente! Quer que eu te ajude a entender melhor as recomendações e como elas se conectam com seu objetivo?',
+  proposal_received: (company, title) => `Vi que você recebeu uma proposta${company ? ` da **${company}**` : ''}${title ? ` para **${title}**` : ''}!\n\nVamos analisar juntos? Me conta:\n- Qual a faixa salarial oferecida?\n- O que mais te atrai (ou preocupa) nessa oportunidade?`,
+  interview_soon: (company, title) => `Vi que você tem uma entrevista${company ? ` na ${company}` : ''}${title ? ` para ${title}` : ''}. Essa pode ser a oportunidade de avançar pro seu objetivo. Quer praticar algumas perguntas?`,
+  needs_followup: (company, title) => `Sua aplicação${company ? ` na ${company}` : ''}${title ? ` para ${title}` : ''} está sem retorno há alguns dias. Quer que eu te ajude a escrever um follow-up estratégico?`,
+  stale_apps: 'Notei que algumas aplicações estão paradas. Quer revisar juntos e decidir onde vale investir energia?',
+  low_activity: 'Faz um tempo desde sua última atividade. Seu objetivo mudou ou você está travado em algo? Me conta que te ajudo.',
+  new_user: 'Olá! Sou seu Copilot de carreira. Antes de tudo, me conta: qual seu objetivo agora? Isso me ajuda a direcionar melhor as dicas.',
+  active_summary: 'Vi a dica do dia! Quer conversar sobre como isso se conecta com seu objetivo? Estou aqui para ajudar.',
 }
 
 export const heroSuggestedQuestions: Record<string, string[]> = {
   pending_insight: [
-    'O que significa essa recomendação?',
-    'Quais os próximos passos?',
-    'Como posso melhorar meu perfil?',
+    'Como isso se conecta com meu objetivo?',
+    'Quais os próximos passos pra mim?',
+    'Isso faz sentido pro meu momento?',
   ],
   proposal_received: [
-    'O salário está bom?',
-    'Devo negociar?',
-    'Como avaliar a cultura da empresa?',
-    'Quais perguntas fazer antes de aceitar?',
+    'Essa proposta faz sentido pro meu objetivo?',
+    'Devo negociar ou aceitar?',
+    'Quais perguntas fazer antes de decidir?',
+    'O que considerar além do salário?',
   ],
   interview_soon: [
-    'Quais perguntas devo esperar?',
-    'Como me preparar em pouco tempo?',
     'O que pesquisar sobre a empresa?',
+    'Quais perguntas devo esperar?',
+    'Como mostrar que sou a pessoa certa?',
     'Como responder sobre pretensão salarial?',
   ],
   needs_followup: [
     'Escreve um follow-up pra mim',
-    'Quanto tempo esperar antes de desistir?',
-    'Devo ligar ou mandar email?',
+    'Vale a pena insistir nessa vaga?',
+    'Quanto tempo esperar antes de seguir em frente?',
   ],
   stale_apps: [
-    'Como saber se devo desistir de uma vaga?',
-    'Vale fazer follow-up?',
-    'Como organizar melhor minhas aplicações?',
+    'Onde vale investir minha energia?',
+    'Devo desistir de alguma?',
+    'Como priorizar minhas aplicações?',
   ],
   low_activity: [
-    'Me ajuda a encontrar vagas',
-    'Como melhorar meu currículo?',
-    'Quais empresas estão contratando?',
+    'O que está me travando?',
+    'Minha estratégia faz sentido?',
+    'Por onde devo começar?',
   ],
   new_user: [
-    'Como funciona o Copilot?',
-    'Como adicionar uma aplicação?',
-    'Como me preparar para entrevistas?',
+    'Quero definir meu objetivo de carreira',
+    'Não sei bem o que quero, me ajuda?',
+    'Qual o primeiro passo pra mim?',
   ],
   active_summary: [
-    'Me conta mais sobre isso',
-    'Como aplicar essa dica?',
-    'Quais outras dicas você tem?',
+    'Como isso se conecta com meu objetivo?',
+    'O que devo fazer a partir disso?',
+    'Me ajuda a aplicar essa dica',
   ],
 }
 
@@ -178,3 +178,81 @@ export const benchmarkSuggestedQuestions: string[] = [
   'Qual a importância do currículo na taxa de conversão?',
   'Como otimizar meu perfil LinkedIn?',
 ]
+
+// Tipo para contexto de aplicação
+type ApplicationContextData = {
+  id: string
+  company: string
+  title: string
+  status: string
+  salaryRange?: string
+  notes?: string
+  jobDescription?: string
+  location?: string
+  url?: string
+}
+
+// Mensagem inicial para contexto de aplicação/proposta
+export function getApplicationInitialMessage(context: ApplicationContextData): string {
+  const { company, title, status, salaryRange, notes } = context
+  
+  // Se não é proposta, mensagem genérica
+  if (status !== 'proposta') {
+    return `Vi que você está acompanhando a vaga de **${title}** na **${company}**. Como posso te ajudar?`
+  }
+  
+  // Proposta: construir mensagem contextualizada
+  let message = `Vi que você recebeu uma proposta da **${company}** para **${title}**!`
+  
+  // Se tem salário, mostrar
+  if (salaryRange) {
+    message += `\n\nO salário oferecido é de **${salaryRange}**.`
+  }
+  
+  // Se tem notas (pode incluir notas do histórico de status)
+  if (notes) {
+    // Se as notas contêm separador, são notas combinadas (gerais + histórico)
+    const noteParts = notes.split('\n\n---\n\n')
+    if (noteParts.length > 1) {
+      // Notas gerais + notas do histórico
+      if (noteParts[0]) {
+        message += `\n\n📝 Notas: "${noteParts[0].length > 80 ? noteParts[0].substring(0, 80) + '...' : noteParts[0]}"`
+      }
+      if (noteParts[1]) {
+        message += `\n\n💬 Sobre a proposta: "${noteParts[1]}"`
+      }
+    } else {
+      message += `\n\n📝 Você anotou: "${notes.length > 100 ? notes.substring(0, 100) + '...' : notes}"`
+    }
+  }
+  
+  // Pergunta direcionadora baseada no que já sabemos
+  if (salaryRange || notes) {
+    message += `\n\nVamos analisar juntos? Me conta:\n- Qual era sua expectativa salarial?\n- O que mais te atrai (ou preocupa) nessa oportunidade?`
+  } else {
+    message += `\n\nVamos analisar juntos? Me conta:\n- Qual a faixa salarial oferecida?\n- O que mais te atrai (ou preocupa) nessa oportunidade?`
+  }
+  
+  return message
+}
+
+export const applicationSuggestedQuestions: Record<string, string[]> = {
+  proposta: [
+    'Esse salário está bom pro mercado?',
+    'O que perguntar antes de aceitar?',
+    'Devo negociar? Como?',
+    'Quais benefícios devo considerar além do salário?',
+    'O que considerar sobre a empresa/cultura?',
+  ],
+  entrevista: [
+    'Como me preparar pra entrevista?',
+    'O que pesquisar sobre a empresa?',
+    'Quais perguntas posso esperar?',
+    'Como responder sobre pretensão salarial?',
+  ],
+  default: [
+    'Como está minha candidatura?',
+    'Devo fazer follow-up?',
+    'Quando desistir dessa vaga?',
+  ],
+}

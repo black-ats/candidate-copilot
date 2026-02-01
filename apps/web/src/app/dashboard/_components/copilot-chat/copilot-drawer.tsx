@@ -10,7 +10,7 @@ import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, type Copilo
 import type { ChatMessage } from '@/lib/copilot/types'
 import Link from 'next/link'
 import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
-import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage, getBenchmarkInitialMessage } from './insight-messages'
+import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage, getBenchmarkInitialMessage, getApplicationInitialMessage } from './insight-messages'
 
 export function CopilotDrawer() {
   // Single source of truth: Zustand store
@@ -21,6 +21,7 @@ export function CopilotDrawer() {
     heroContext, 
     interviewContext,
     benchmarkContext,
+    applicationContext,
     clearContext 
   } = useCopilotDrawer()
   
@@ -37,6 +38,7 @@ export function CopilotDrawer() {
   const prevHeroContextKey = useRef<string | null>(null)
   const prevInterviewContextId = useRef<string | null>(null)
   const prevBenchmarkContextKey = useRef<string | null>(null)
+  const prevApplicationContextId = useRef<string | null>(null)
 
   // Reset chat when context changes
   useEffect(() => {
@@ -44,12 +46,14 @@ export function CopilotDrawer() {
     const currentHeroKey = heroContext ? `${heroContext.context}-${heroContext.company}-${heroContext.title}` : null
     const currentInterviewId = interviewContext?.sessionId || null
     const currentBenchmarkKey = benchmarkContext ? `benchmark-${benchmarkContext.userTaxa}-${benchmarkContext.mediaTaxa}` : null
+    const currentApplicationId = applicationContext?.id || null
 
     const contextChanged = 
       (currentInsightId && currentInsightId !== prevInsightContextId.current) ||
       (currentHeroKey && currentHeroKey !== prevHeroContextKey.current) ||
       (currentInterviewId && currentInterviewId !== prevInterviewContextId.current) ||
-      (currentBenchmarkKey && currentBenchmarkKey !== prevBenchmarkContextKey.current)
+      (currentBenchmarkKey && currentBenchmarkKey !== prevBenchmarkContextKey.current) ||
+      (currentApplicationId && currentApplicationId !== prevApplicationContextId.current)
 
     if (contextChanged && isOpen) {
       // Reset chat for new context
@@ -63,7 +67,8 @@ export function CopilotDrawer() {
     prevHeroContextKey.current = currentHeroKey
     prevInterviewContextId.current = currentInterviewId
     prevBenchmarkContextKey.current = currentBenchmarkKey
-  }, [insightContext, heroContext, interviewContext, benchmarkContext, isOpen])
+    prevApplicationContextId.current = currentApplicationId
+  }, [insightContext, heroContext, interviewContext, benchmarkContext, applicationContext, isOpen])
 
   // Fechar com Escape
   useEffect(() => {
@@ -103,12 +108,14 @@ export function CopilotDrawer() {
     }
   }, [isOpen])
 
-  // Show initial message when opening with insight, hero, interview, or benchmark context
+  // Show initial message when opening with specific context (insight, hero, interview, benchmark, application)
   useEffect(() => {
     if (isOpen && !hasShownInitialMessage && messages.length === 0) {
       let initialMessage: string | null = null
       
-      if (benchmarkContext) {
+      if (applicationContext) {
+        initialMessage = getApplicationInitialMessage(applicationContext)
+      } else if (benchmarkContext) {
         initialMessage = getBenchmarkInitialMessage(
           benchmarkContext.userTaxa, 
           benchmarkContext.mediaTaxa, 
@@ -120,13 +127,20 @@ export function CopilotDrawer() {
       } else if (insightContext) {
         initialMessage = insightInitialMessages[insightContext.tipo] || insightInitialMessages.default
       } else if (heroContext) {
-        const heroMsg = heroInitialMessages[heroContext.context]
-        if (typeof heroMsg === 'function') {
-          initialMessage = heroMsg(heroContext.company, heroContext.title)
+        // Se heroContext.message foi fornecido diretamente, usar ele
+        // Caso contrário, buscar na lista de mensagens predefinidas
+        if (heroContext.message && !heroInitialMessages[heroContext.context]) {
+          initialMessage = heroContext.message
         } else {
-          initialMessage = heroMsg || heroInitialMessages.active_summary as string
+          const heroMsg = heroInitialMessages[heroContext.context]
+          if (typeof heroMsg === 'function') {
+            initialMessage = heroMsg(heroContext.company, heroContext.title)
+          } else {
+            initialMessage = heroMsg || heroContext.message || heroInitialMessages.active_summary as string
+          }
         }
       }
+      // Sem contexto específico: mostrar WelcomeState com perguntas sugeridas
       
       if (initialMessage) {
         const assistantMessage: ChatMessage = {
@@ -140,7 +154,7 @@ export function CopilotDrawer() {
         setHasShownInitialMessage(true)
       }
     }
-  }, [isOpen, insightContext, heroContext, interviewContext, benchmarkContext, hasShownInitialMessage, messages.length])
+  }, [isOpen, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext, hasShownInitialMessage, messages.length])
 
   const handleSubmit = useCallback(async (question: string) => {
     if (!question.trim() || isLoading || limitReached) return
@@ -218,7 +232,20 @@ export function CopilotDrawer() {
         isAbove: benchmarkContext.isAbove,
       } : null
       
-      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData)
+      // Convert ApplicationContext to ApplicationContextData for the server action
+      const applicationContextData = applicationContext ? {
+        id: applicationContext.id,
+        company: applicationContext.company,
+        title: applicationContext.title,
+        status: applicationContext.status,
+        salaryRange: applicationContext.salaryRange,
+        notes: applicationContext.notes,
+        jobDescription: applicationContext.jobDescription,
+        location: applicationContext.location,
+        url: applicationContext.url,
+      } : null
+      
+      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData, applicationContextData)
       
       // Check if limit was reached
       if (response.limitReached) {
@@ -263,7 +290,7 @@ export function CopilotDrawer() {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext])
+  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()

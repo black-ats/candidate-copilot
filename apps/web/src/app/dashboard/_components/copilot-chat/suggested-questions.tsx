@@ -15,50 +15,49 @@ interface ExtendedQuestion extends SuggestedQuestion {
 }
 
 const defaultQuestions: ExtendedQuestion[] = [
-  // Ação imediata
+  // Foco no objetivo
   {
-    id: 'o-que-fazer',
-    label: 'O que eu deveria fazer agora?',
-    category: 'proximos_passos',
+    id: 'caminho-certo',
+    label: 'Estou no caminho certo pro meu objetivo?',
+    category: 'objetivo',
     icon: Target,
   },
   {
-    id: 'follow-up',
-    label: 'Preciso fazer follow-up em alguma vaga?',
-    category: 'proximos_passos',
-    icon: Clock,
+    id: 'prioridade',
+    label: 'O que deveria ser minha prioridade agora?',
+    category: 'decisao',
+    icon: ListChecks,
+  },
+  {
+    id: 'onde-travando',
+    label: 'Onde você acha que estou travando?',
+    category: 'decisao',
+    icon: HelpCircle,
   },
   // Análise da situação
   {
     id: 'como-estou',
-    label: 'Como está minha busca de emprego?',
-    category: 'metricas',
+    label: 'Como está minha situação hoje?',
+    category: 'situacao',
     icon: TrendingUp,
-  },
-  {
-    id: 'onde-estou-errando',
-    label: 'Onde você acha que estou errando?',
-    category: 'analise',
-    icon: HelpCircle,
-  },
-  // Sobre a última análise
-  {
-    id: 'ultima-analise',
-    label: 'O que dizia minha última análise?',
-    category: 'insights',
-    icon: Sparkles,
   },
   {
     id: 'riscos',
     label: 'Quais riscos você identificou pra mim?',
-    category: 'insights',
+    category: 'situacao',
     icon: AlertTriangle,
   },
-  // Melhorias
+  // Ações e próximos passos
+  {
+    id: 'proximo-passo',
+    label: 'Qual meu próximo passo?',
+    category: 'decisao',
+    icon: Sparkles,
+  },
   {
     id: 'melhorar-conversao',
     label: 'Como consigo mais entrevistas?',
-    category: 'proximos_passos',
+    category: 'objetivo',
     icon: Lightbulb,
   },
   {
@@ -69,7 +68,7 @@ const defaultQuestions: ExtendedQuestion[] = [
   },
 ]
 
-// Perguntas de Entrevista IA (aparecem para todos usuarios com historico de entrevista)
+// Perguntas de Entrevista IA (aparecem para todos usuários com histórico de entrevista)
 const interviewQuestions: ExtendedQuestion[] = [
   {
     id: 'ultima-entrevista',
@@ -114,10 +113,9 @@ const benchmarkQuestions: ExtendedQuestion[] = [
 ]
 
 const categoryLabels: Record<string, string> = {
-  metricas: 'Métricas',
-  proximos_passos: 'Próximos Passos',
-  insights: 'Seus Insights',
-  analise: 'Análise',
+  objetivo: 'Seu Objetivo',
+  decisao: 'Decisões',
+  situacao: 'Sua Situação',
   interview: 'Mock Interview',
   benchmark: 'Comparação',
 }

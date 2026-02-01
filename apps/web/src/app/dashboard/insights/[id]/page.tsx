@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Card, Badge, Button } from '@ui/components'
 import { ArrowLeft, CheckCircle, AlertTriangle, MessageSquare, ArrowRight } from 'lucide-react'
-import { ContinueConversationButton } from './continue-button'
+import { CopilotCTACard } from './continue-button'
+import { ContextualCTAs } from './contextual-ctas'
 import { validateUUID } from '@/lib/schemas/uuid'
 
 function formatDate(dateString: string) {
@@ -123,14 +124,15 @@ export default async function InsightDetailPage({
               </div>
             )}
 
-            {/* Next step - actionable */}
+            {/* Next step - actionable + Contextual CTA */}
             {insight.next_step && (
               <div className="p-4 sm:p-6">
                 <h3 className="text-sm font-semibold text-teal uppercase tracking-wide mb-2 flex items-center gap-2">
                   <ArrowRight className="w-4 h-4" />
                   Próximo passo recomendado
                 </h3>
-                <p className="text-navy font-medium">{insight.next_step}</p>
+                <p className="text-navy font-medium mb-4">{insight.next_step}</p>
+                <ContextualCTAs objetivo={insight.objetivo} variant="inline" />
               </div>
             )}
           </>
@@ -177,13 +179,13 @@ export default async function InsightDetailPage({
               </div>
             )}
 
-            {/* Next Steps */}
+            {/* Next Steps + Contextual CTA */}
             {insight.next_steps && insight.next_steps.length > 0 && (
               <div className="p-4 sm:p-6">
                 <h3 className="text-sm font-semibold text-navy/70 uppercase tracking-wide mb-3">
                   Próximos passos
                 </h3>
-                <ol className="space-y-3">
+                <ol className="space-y-3 mb-4">
                   {insight.next_steps.map((item: string, i: number) => (
                     <li key={i} className="flex items-start gap-3">
                       <span className="w-6 h-6 bg-teal text-white rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium">
@@ -193,51 +195,41 @@ export default async function InsightDetailPage({
                     </li>
                   ))}
                 </ol>
+                <ContextualCTAs objetivo={insight.objetivo} variant="inline" />
               </div>
             )}
           </>
         )}
       </Card>
 
-      {/* CTA: Continuar conversa */}
-      <Card className="p-4 sm:p-6 text-center bg-teal/5 border-teal/20">
-        <MessageSquare className="w-8 h-8 text-teal mx-auto mb-3" />
-        <h2 className="text-lg font-semibold text-navy mb-2">
-          Quer aprofundar?
-        </h2>
-        <p className="text-navy/70 mb-4">
-          Converse com o Copilot sobre esta análise e tire suas dúvidas.
-        </p>
-        <ContinueConversationButton 
-          insight={{
-            id: insight.id,
-            cargo: insight.cargo,
-            area: insight.area,
-            senioridade: insight.senioridade,
-            status: insight.status,
-            objetivo: insight.objetivo,
-            // V1 fields
-            recommendation: insight.recommendation,
-            next_steps: insight.next_steps,
-            // V1.1 diagnostic fields
-            diagnosis: insight.diagnosis,
-            pattern: insight.pattern,
-            risk: insight.risk,
-            next_step: insight.next_step,
-            type_label: insight.type_label,
-            // V1.1 contextual data
-            urgencia: insight.urgencia,
-            tempo_situacao: insight.tempo_situacao,
-            decision_blocker: insight.decision_blocker,
-            interview_bottleneck: insight.interview_bottleneck,
-            max_stage: insight.max_stage,
-            leverage_signals: insight.leverage_signals,
-            pivot_type: insight.pivot_type,
-            transferable_strengths: insight.transferable_strengths,
-            avoided_decision: insight.avoided_decision,
-          }} 
-        />
-      </Card>
+      {/* CTA: Continuar conversa - texto contextualizado por objetivo */}
+      <CopilotCTACard 
+        objetivo={insight.objetivo}
+        insight={{
+          id: insight.id,
+          cargo: insight.cargo,
+          area: insight.area,
+          senioridade: insight.senioridade,
+          status: insight.status,
+          objetivo: insight.objetivo,
+          recommendation: insight.recommendation,
+          next_steps: insight.next_steps,
+          diagnosis: insight.diagnosis,
+          pattern: insight.pattern,
+          risk: insight.risk,
+          next_step: insight.next_step,
+          type_label: insight.type_label,
+          urgencia: insight.urgencia,
+          tempo_situacao: insight.tempo_situacao,
+          decision_blocker: insight.decision_blocker,
+          interview_bottleneck: insight.interview_bottleneck,
+          max_stage: insight.max_stage,
+          leverage_signals: insight.leverage_signals,
+          pivot_type: insight.pivot_type,
+          transferable_strengths: insight.transferable_strengths,
+          avoided_decision: insight.avoided_decision,
+        }} 
+      />
     </div>
   )
 }

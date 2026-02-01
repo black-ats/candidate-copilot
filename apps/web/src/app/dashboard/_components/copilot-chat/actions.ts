@@ -7,7 +7,7 @@ import { getAIProvider } from '@/lib/ai'
 import { validateInput, checkTopic } from '@/lib/ai/security'
 import { canUseCopilot } from '@/lib/subscription/check-access'
 import { incrementCopilotUsage } from '@/lib/subscription/actions'
-import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData, CopilotCTA } from '@/lib/copilot/types'
+import type { UserContext, ChatMessage, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData, ApplicationContextData, CopilotCTA } from '@/lib/copilot/types'
 import { detectCTA } from '@/lib/copilot/cta-detector'
 import { trackAIUsage } from '@/lib/ai/usage-tracker'
 
@@ -124,6 +124,57 @@ export async function checkInterviewHistory(): Promise<boolean> {
   return (count ?? 0) > 0
 }
 
+export interface GlobalInitialMessageInfo {
+  hasCareerContext: boolean
+  objetivo?: string
+  message: string
+}
+
+export async function getGlobalInitialMessage(): Promise<GlobalInitialMessageInfo | null> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) return null
+  
+  // Get the user's most recent insight for career context
+  const { data: insight } = await supabase
+    .from('insights')
+    .select('objetivo, cargo')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single()
+  
+  if (insight?.objetivo) {
+    return {
+      hasCareerContext: true,
+      objetivo: insight.objetivo,
+      message: `Olá! Vi que seu objetivo é ${getObjetivoLabel(insight.objetivo)}. Como posso te ajudar hoje?`
+    }
+  }
+  
+  return {
+    hasCareerContext: false,
+    message: 'Olá! Antes de começar, que tal fazer uma análise rápida da sua situação? Assim consigo te ajudar melhor.'
+  }
+}
+
+function getObjetivoLabel(objetivo: string): string {
+  const labels: Record<string, string> = {
+    'avaliar_proposta': 'avaliar uma proposta',
+    'mais_entrevistas': 'conseguir mais entrevistas',
+    'avancar_processos': 'avançar nos processos',
+    'negociar_salario': 'negociar salário',
+    'mudar_area': 'mudar de área',
+    'nova_oportunidade': 'buscar nova oportunidade',
+    'promocao': 'buscar promoção',
+    'transicao': 'fazer transição de carreira',
+    'aumento': 'negociar aumento',
+    'estabilidade': 'buscar estabilidade',
+  }
+  return labels[objetivo] || objetivo
+}
+
 export async function sendChatMessage(
   question: string,
   _history: ChatMessage[],
@@ -131,6 +182,7 @@ export async function sendChatMessage(
   heroContext?: HeroContextData | null,
   interviewContext?: InterviewContextData | null,
   benchmarkContext?: BenchmarkContextData | null,
+  applicationContext?: ApplicationContextData | null,
   cachedUserContext?: UserContext | null  // Contexto cacheado para evitar queries repetidas
 ): Promise<ChatResponse> {
   const supabase = await createClient()
@@ -201,7 +253,7 @@ export async function sendChatMessage(
   
   // Query complexa - usar AI provider
   const provider = getAIProvider()
-  const systemPrompt = buildSystemPrompt(context, insightContext, heroContext, interviewContext, benchmarkContext)
+  const systemPrompt = buildSystemPrompt(context, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext)
   
   const aiResponse = await provider.complete([
     { role: 'system', content: systemPrompt },

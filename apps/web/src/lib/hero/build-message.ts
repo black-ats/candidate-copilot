@@ -184,7 +184,7 @@ function buildHeroDataFromAI(result: ContextDetectionResult, message: string): H
     proposal_received: {
       title: '🎉 Parabéns pela proposta!',
       primaryCta: { label: 'Avaliar proposta', href: `/dashboard/aplicacoes/${result.relevantApp?.id}` },
-      secondaryCta: { label: 'Analisar com Copilot', href: '/dashboard?chat=open' },
+      // secondaryCta: { label: 'Analisar com Copilot', href: '/dashboard?chat=open' },
     },
     interview_soon: {
       title: '🎤 Entrevista a caminho',
@@ -228,7 +228,7 @@ function getFallbackTemplate(result: ContextDetectionResult): HeroData {
       title: '🎉 Parabéns pela proposta!',
       message: `Você recebeu uma proposta da ${result.metadata?.company}! Avalie com calma os benefícios e a cultura da empresa.`,
       primaryCta: { label: 'Avaliar proposta', href: `/dashboard/aplicacoes/${result.relevantApp?.id}` },
-      secondaryCta: { label: 'Analisar com Copilot', href: '/dashboard?chat=open' },
+      // secondaryCta: { label: 'Analisar com Copilot', href: '/dashboard?chat=open' },
     },
     interview_soon: {
       context: 'interview_soon',

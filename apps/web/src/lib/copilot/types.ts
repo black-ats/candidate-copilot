@@ -73,7 +73,7 @@ export interface ChatMessage {
 export interface SuggestedQuestion {
   id: string
   label: string
-  category: 'metricas' | 'proximos_passos' | 'insights' | 'analise' | 'interview' | 'benchmark'
+  category: 'objetivo' | 'decisao' | 'situacao' | 'interview' | 'benchmark'
 }
 
 // Historico de entrevistas simuladas para contexto do Copilot
@@ -145,4 +145,17 @@ export interface BenchmarkContextData {
   totalUsuarios: number
   diff: number
   isAbove: boolean
+}
+
+// Contexto de aplicação/vaga para CTAs como proposta, entrevista, etc.
+export interface ApplicationContextData {
+  id: string
+  company: string
+  title: string
+  status: string
+  salaryRange?: string
+  notes?: string
+  jobDescription?: string
+  location?: string
+  url?: string
 }

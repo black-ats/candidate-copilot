@@ -1,4 +1,4 @@
-import type { UserContext, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData } from './types'
+import type { UserContext, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData, ApplicationContextData } from './types'
 import type { Application } from '@/lib/types/application'
 
 interface InsightFromDB {
@@ -129,12 +129,17 @@ export function buildSystemPrompt(
   insightContext?: InsightContextData | null,
   heroContext?: HeroContextData | null,
   interviewContext?: InterviewContextData | null,
-  benchmarkContext?: BenchmarkContextData | null
+  benchmarkContext?: BenchmarkContextData | null,
+  applicationContext?: ApplicationContextData | null
 ): string {
   const contextStr = formatContextForPrompt(context)
   
-  let prompt = `Você é o GoHire Copilot, um assistente de carreira que ajuda 
-usuários a tomar decisões sobre sua busca de emprego.
+  let prompt = `Você é o GoHire Copilot, um assistente que ajuda profissionais 
+a tomar decisões de carreira com clareza.
+
+Seu papel é ajudar o usuário a entender sua situação atual, 
+identificar padrões e tomar ações concretas baseadas no 
+objetivo de carreira dele.
 
 CONTEXTO DO USUÁRIO:
 ${contextStr}`
@@ -299,15 +304,65 @@ IMPORTANTE:
 - Sugira ações concretas baseadas na posição do usuário`
   }
 
+  // Add application context if available (proposta, entrevista, etc.)
+  if (applicationContext) {
+    const statusLabels: Record<string, string> = {
+      proposta: 'recebeu uma proposta',
+      entrevista: 'tem uma entrevista marcada',
+      aplicado: 'aplicou recentemente',
+      em_analise: 'está em análise',
+      aceito: 'foi aceito',
+      rejeitado: 'foi rejeitado',
+      desistencia: 'desistiu',
+    }
+    
+    const statusContext = statusLabels[applicationContext.status] || applicationContext.status
+    
+    prompt += `
+
+CONTEXTO DA VAGA (IMPORTANTE):
+O usuário está conversando sobre uma vaga específica onde ele ${statusContext}.
+
+DETALHES DA VAGA:
+- Empresa: ${applicationContext.company}
+- Cargo: ${applicationContext.title}
+- Status atual: ${applicationContext.status}
+${applicationContext.location ? `- Localização: ${applicationContext.location}` : ''}
+${applicationContext.salaryRange ? `- Faixa salarial: ${applicationContext.salaryRange}` : ''}
+${applicationContext.jobDescription ? `- Descrição: ${applicationContext.jobDescription.substring(0, 300)}${applicationContext.jobDescription.length > 300 ? '...' : ''}` : ''}
+${applicationContext.notes ? `
+NOTAS DO USUÁRIO (importante - pode conter informações relevantes como salário, benefícios, dúvidas):
+"${applicationContext.notes}"` : ''}`
+
+    // Diretrizes específicas para proposta
+    if (applicationContext.status === 'proposta') {
+      prompt += `
+
+VOCÊ ESTÁ AJUDANDO A AVALIAR UMA PROPOSTA:
+1. Se o usuário mencionou salário nas notas, use esse valor na análise
+2. Ajude a comparar a proposta com o mercado (se souber o cargo/senioridade)
+3. Sugira perguntas importantes antes de aceitar (benefícios, cultura, crescimento)
+4. Ajude a identificar red flags ou pontos positivos
+5. Se ele quiser negociar, ajude a estruturar argumentos
+6. SEJA DIRETO: ajude na decisão, não fique em cima do muro
+
+PERGUNTAS QUE VOCÊ PODE FAZER:
+- "Qual era sua expectativa salarial?"
+- "O que mais te atrai além do salário?"
+- "Tem algo que te preocupa nessa proposta?"
+- "Como isso se compara com sua situação atual?"`
+    }
+  }
+
   prompt += `
 
 DIRETRIZES:
-1. Sempre baseie suas respostas nos dados reais do usuário
-2. Seja MUITO direto e objetivo - vá direto ao ponto
-3. Quando apropriado, sugira 1-2 ações concretas (não mais)
-4. Use um tom amigável mas profissional
-5. Se não tiver dados suficientes, diga isso claramente
-6. Responda sempre em português brasileiro
+1. Foque no OBJETIVO de carreira do usuário - toda resposta deve conectar com isso
+2. Use dados de vagas para contextualizar, não como fim em si
+3. Ajude o usuário a tomar DECISÕES, não apenas informar métricas
+4. Quando apropriado, sugira 1-2 ações concretas (não mais)
+5. Se o usuário não tem análise de carreira, sugira fazer uma
+6. Responda em português brasileiro, de forma direta
 
 FORMATO DE RESPOSTA:
 - MÁXIMO 3 parágrafos curtos por resposta
@@ -319,49 +374,48 @@ FORMATO DE RESPOSTA:
 }
 
 function formatContextForPrompt(ctx: UserContext): string {
-  let prompt = `- Total de aplicações: ${ctx.profile.totalApplications}
+  let prompt = ''
+
+  // 1. PERFIL DE CARREIRA (prioridade máxima)
+  if (ctx.careerContext) {
+    prompt += `PERFIL DE CARREIRA:
+- Cargo: ${ctx.careerContext.cargo}
+- Senioridade: ${ctx.careerContext.senioridade}
+- Área: ${ctx.careerContext.area}
+- Objetivo principal: ${ctx.careerContext.objetivo}`
+  }
+  
+  // 2. ÚLTIMA ANÁLISE DE CARREIRA (insight)
+  if (ctx.insights.length > 0) {
+    const lastInsight = ctx.insights[0]
+    prompt += `${prompt ? '\n\n' : ''}ÚLTIMA ANÁLISE DE CARREIRA (${lastInsight.createdAt}):
+- Recomendação: "${lastInsight.recommendation}"
+${lastInsight.why.length > 0 ? `- Motivos: ${lastInsight.why.join('; ')}` : ''}
+${lastInsight.risks.length > 0 ? `- Riscos: ${lastInsight.risks.join('; ')}` : ''}
+${lastInsight.nextSteps.length > 0 ? `- Próximos passos: ${lastInsight.nextSteps.join('; ')}` : ''}`
+  }
+
+  // 3. CONTEXTO DE VAGAS (secundário, conectado ao objetivo)
+  prompt += `${prompt ? '\n\n' : ''}CONTEXTO DE VAGAS (para contextualizar a busca):
+- Total de aplicações: ${ctx.profile.totalApplications}
 - Taxa de conversão: ${ctx.metrics.taxaConversao}% (entrevistas/total)
 - Processos ativos: ${ctx.metrics.processosAtivos}
-- Aguardando resposta: ${ctx.metrics.aguardandoResposta} aplicações
-- Ofertas: ${ctx.metrics.ofertas}
-- Rejeições: ${ctx.metrics.rejeicoes}`
+- Aguardando resposta: ${ctx.metrics.aguardandoResposta}
+- Ofertas: ${ctx.metrics.ofertas}`
 
   if (ctx.pendingApplications.length > 0) {
     const oldest = ctx.pendingApplications[0]
     prompt += `\n- Aplicação mais antiga sem resposta: ${oldest.company} (${oldest.daysSinceApplied} dias)`
   }
   
-  if (ctx.careerContext) {
-    prompt += `
-
-PERFIL DE CARREIRA:
-- Cargo atual: ${ctx.careerContext.cargo}
-- Senioridade: ${ctx.careerContext.senioridade}
-- Área: ${ctx.careerContext.area}
-- Objetivo: ${ctx.careerContext.objetivo}`
-  }
-  
-  if (ctx.insights.length > 0) {
-    const lastInsight = ctx.insights[0]
-    prompt += `
-
-ÚLTIMA ANÁLISE DE CARREIRA (${lastInsight.createdAt}):
-- Recomendação: "${lastInsight.recommendation}"
-${lastInsight.why.length > 0 ? `- Motivos: ${lastInsight.why.join('; ')}` : ''}
-${lastInsight.risks.length > 0 ? `- Riscos: ${lastInsight.risks.join('; ')}` : ''}
-${lastInsight.nextSteps.length > 0 ? `- Próximos passos: ${lastInsight.nextSteps.join('; ')}` : ''}`
-  }
-  
   if (ctx.recentApplications.length > 0) {
-    prompt += `
-
-APLICAÇÕES RECENTES:`
+    prompt += `\n\nAPLICAÇÕES RECENTES:`
     ctx.recentApplications.slice(0, 5).forEach(app => {
       prompt += `\n- ${app.company} (${app.title}) - ${app.status} - ${app.daysSinceApplied} dias`
     })
   }
 
-  // Interview history (Entrevista IA)
+  // 4. HISTÓRICO DE ENTREVISTAS SIMULADAS
   if (ctx.interviewHistory && ctx.interviewHistory.totalSessions > 0) {
     const ih = ctx.interviewHistory
     prompt += `

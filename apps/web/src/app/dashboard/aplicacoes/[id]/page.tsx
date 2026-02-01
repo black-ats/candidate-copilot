@@ -7,9 +7,9 @@ import {
   Clock
 } from 'lucide-react'
 import { getApplication, getStatusHistory } from '../actions'
-import { StatusBadge } from '../_components/status-badge'
 import { StatusTimeline } from './status-timeline'
-import { ApplicationActions } from './application-actions'
+import { ActionBar } from './action-bar'
+import { StatusCTA } from './status-cta'
 import type { Application, StatusHistory } from '@/lib/types/application'
 
 interface Props {
@@ -49,19 +49,14 @@ export default async function ApplicationDetailPage({ params }: Props) {
       </Link>
 
       {/* Application header */}
-      <div className="mb-8">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Building2 className="w-4 h-4 text-navy/50" />
-              <span className="text-navy/70">{application.company}</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-semibold text-navy">
-              {application.title}
-            </h1>
-          </div>
-          <StatusBadge status={application.status} className="text-sm px-3 py-1" />
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-1">
+          <Building2 className="w-4 h-4 text-navy/50" />
+          <span className="text-navy/70">{application.company}</span>
         </div>
+        <h1 className="text-2xl sm:text-3xl font-semibold text-navy mb-2">
+          {application.title}
+        </h1>
         
         <div className="flex flex-wrap items-center gap-4 text-sm text-navy/60">
           {application.location && (
@@ -77,9 +72,21 @@ export default async function ApplicationDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Actions */}
-      <ApplicationActions 
-        application={application} 
+      {/* Action Bar - ações de edição e status */}
+      <ActionBar application={application} />
+
+      {/* CTA contextual baseado no status */}
+      <StatusCTA 
+        status={application.status}
+        applicationId={application.id}
+        company={application.company}
+        title={application.title}
+        salaryRange={application.salary_range}
+        notes={application.notes}
+        jobDescription={application.job_description}
+        location={application.location}
+        url={application.url}
+        statusHistory={history}
       />
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -155,6 +162,9 @@ export default async function ApplicationDetailPage({ params }: Props) {
           </Card>
         </div>
       </div>
+
+      {/* Spacer para compensar a barra fixa no mobile */}
+      <div className="h-20 md:hidden" />
     </div>
   )
 }

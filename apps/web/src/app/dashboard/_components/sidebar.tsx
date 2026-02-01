@@ -18,8 +18,8 @@ const CopilotDrawer = dynamic(
 
 const navItems = [
   { icon: Home, label: 'Início', href: '/dashboard' },
+  { icon: Lightbulb, label: 'Minhas Análises', href: '/dashboard/insights' },
   { icon: ClipboardList, label: 'Minhas Vagas', href: '/dashboard/aplicacoes' },
-  { icon: Lightbulb, label: 'Insights', href: '/dashboard/insights' },
   { icon: Mic, label: 'Entrevista IA', href: '/dashboard/interview-pro', badge: 'Pro' },
 ]
 

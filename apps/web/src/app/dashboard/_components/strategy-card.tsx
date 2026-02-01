@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Card, Badge, Button } from '@ui/components'
 import { Sparkles, ArrowRight, Target, RefreshCw } from 'lucide-react'
 import { objetivoLabels } from '@/lib/insight-engine'
+import { ContextualCTAButton } from './contextual-cta-button'
 
 interface InsightData {
   id: string
@@ -42,6 +43,37 @@ function getInsightAge(createdAt: string): { days: number; label: string; isStal
   }
   
   return { days, label, isStale }
+}
+
+type ContextualCTA = {
+  type: 'interview' | 'add_application' | 'copilot'
+  label: string
+  copilotMessage?: string
+}
+
+function getContextualCTAs(objetivo: string | undefined): ContextualCTA[] {
+  if (!objetivo) return []
+  
+  const ctasByObjetivo: Record<string, ContextualCTA[]> = {
+    mais_entrevistas: [
+      { type: 'interview', label: 'Treinar para entrevistas' },
+    ],
+    avancar_processos: [
+      { type: 'add_application', label: 'Adicionar vaga' },
+      { type: 'interview', label: 'Treinar entrevistas' },
+    ],
+    avaliar_proposta: [
+      { type: 'copilot', label: 'Analisar proposta', copilotMessage: 'Vamos analisar a proposta juntos? Me conta: qual empresa, cargo e qual o valor oferecido?' },
+    ],
+    negociar_salario: [
+      { type: 'copilot', label: 'Preparar argumentos', copilotMessage: 'Vamos preparar sua negociação. Quais são os pontos que você quer levantar?' },
+    ],
+    mudar_area: [
+      { type: 'copilot', label: 'Planejar a mudança', copilotMessage: 'Vamos explorar sua transição de carreira. O que te atrai na nova área?' },
+    ],
+  }
+  
+  return ctasByObjetivo[objetivo] || []
 }
 
 export function StrategyCard({ insight }: StrategyCardProps) {
@@ -147,7 +179,22 @@ export function StrategyCard({ insight }: StrategyCardProps) {
         </div>
       )}
 
-      {/* CTAs */}
+      {/* Contextual CTAs based on objetivo */}
+      {!age.isStale && getContextualCTAs(insight.objetivo).length > 0 && (
+        <div className="flex flex-col sm:flex-row gap-2 mb-4">
+          {getContextualCTAs(insight.objetivo).map((cta, index) => (
+            <ContextualCTAButton
+              key={index}
+              type={cta.type}
+              label={cta.label}
+              objetivo={insight.objetivo}
+              copilotMessage={cta.copilotMessage}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Main CTAs */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 pt-2 border-t border-stone/20">
         {age.isStale ? (
           <>
@@ -166,13 +213,13 @@ export function StrategyCard({ insight }: StrategyCardProps) {
         ) : (
           <>
             <Link href={`/dashboard/insights/${insight.id}`} className="flex-1">
-              <Button variant="secondary" className="w-full">
+              <Button variant="outline" className="w-full">
                 Ver detalhes
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
             <Link href="/comecar" className="w-full sm:w-auto">
-              <Button variant="ghost" className="w-full sm:w-auto h-11 sm:h-auto">
+              <Button variant="ghost" className="w-full sm:w-auto">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refazer
               </Button>
