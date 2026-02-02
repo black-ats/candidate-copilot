@@ -9,8 +9,13 @@ type InsightData = {
   cargo?: string | null
   area?: string | null
   objetivo?: string | null
-  recommendation: string
+  // V1 fields
+  recommendation?: string | null
   next_steps?: string[] | null
+  // V1.1 diagnostic fields (from list query)
+  diagnosis?: string | null
+  type_label?: string | null
+  next_step?: string | null
 }
 
 export function InsightChatButton({ insight }: { insight: InsightData }) {
@@ -25,8 +30,14 @@ export function InsightChatButton({ insight }: { insight: InsightData }) {
       tipo: mapObjetivoToTipo(insight.objetivo || 'outro'),
       cargo: insight.cargo || 'Cargo não especificado',
       area: insight.area || undefined,
-      recommendation: insight.recommendation,
-      next_steps: insight.next_steps || [],
+      objetivo: insight.objetivo || undefined,
+      // V1 fields
+      recommendation: insight.recommendation || undefined,
+      next_steps: insight.next_steps || undefined,
+      // V1.1 diagnostic fields
+      diagnosis: insight.diagnosis || undefined,
+      typeLabel: insight.type_label || undefined,
+      nextStep: insight.next_step || undefined,
     }
     openWithContext(context)
   }

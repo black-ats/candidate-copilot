@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { saveInsight, type InsightData } from '@/app/insight/actions'
 import { Button, Card } from '@ui/components'
-import { CheckCircle, Sparkles, ArrowRight, MessageSquare } from 'lucide-react'
+import { CheckCircle, Sparkles, MessageSquare } from 'lucide-react'
 
 type SavedInsight = {
   id: string
-  recommendation: string
+  summary: string // Can be diagnosis (V1.1) or recommendation (V1)
+  typeLabel?: string // V1.1 diagnostic type label
 }
 
 export function PendingInsightSaver() {
@@ -28,7 +29,7 @@ export function PendingInsightSaver() {
       setAttempted(true)
       
       try {
-        const data = JSON.parse(pendingInsight) as InsightData & { recommendation: string }
+        const data = JSON.parse(pendingInsight) as InsightData & { recommendation?: string; diagnosis?: string; typeLabel?: string }
         console.log('[PendingInsightSaver] Found pending insight, attempting to save...')
         
         // Remove localStorage BEFORE saving to prevent race condition with insight page
@@ -43,7 +44,9 @@ export function PendingInsightSaver() {
           if (result.success && 'insightId' in result && result.insightId) {
             setSavedInsight({
               id: result.insightId,
-              recommendation: data.recommendation
+              // Use V1.1 diagnosis if available, otherwise fall back to V1 recommendation
+              summary: data.diagnosis || data.recommendation || 'Análise salva',
+              typeLabel: data.typeLabel
             })
             console.log('[PendingInsightSaver] Insight saved successfully!')
             // Force refresh to update Server Components (insight list)
@@ -73,22 +76,25 @@ export function PendingInsightSaver() {
           </div>
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-navy mb-1">
-              Seu insight foi salvo!
+              Sua análise foi salva!
             </h3>
+            {savedInsight.typeLabel && (
+              <p className="text-xs text-teal font-medium mb-1">{savedInsight.typeLabel}</p>
+            )}
             <p className="text-navy/70 text-sm mb-3 line-clamp-2">
-              {savedInsight.recommendation}
+              {savedInsight.summary}
             </p>
             <div className="flex flex-wrap gap-2">
               <Link href={`/dashboard/insights/${savedInsight.id}`}>
                 <Button size="sm">
                   <Sparkles className="mr-2 w-4 h-4" />
-                  Ver insight
+                  Ver análise
                 </Button>
               </Link>
               <Link href={`/dashboard/insights/${savedInsight.id}?chat=true`}>
                 <Button variant="secondary" size="sm">
                   <MessageSquare className="mr-2 w-4 h-4" />
-                  Continuar conversa
+                  Aprofundar com Copilot
                 </Button>
               </Link>
             </div>

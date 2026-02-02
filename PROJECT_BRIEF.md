@@ -11,7 +11,7 @@ Copilot de carreira que ajuda profissionais a tomar decisoes de emprego com clar
 
 ### MVP Completo
 - Entry flow → Insights de carreira (sem cadastro)
-- Tracking de aplicacoes (CRUD + timeline)
+- Tracking de candidaturas (CRUD + timeline)
 - Copilot chat contextual
 - Entrevista IA (mock interviews com IA)
 - Hero Card adaptativo
@@ -20,7 +20,7 @@ Copilot de carreira que ajuda profissionais a tomar decisoes de emprego com clar
 
 ### Limites Free
 - 3 insights/mes
-- 5 aplicacoes/mes
+- 5 candidaturas/mes
 - 5 perguntas/dia Copilot
 - 1 entrevista simulada (trial vitalicio)
 
@@ -32,7 +32,7 @@ Copilot de carreira que ajuda profissionais a tomar decisoes de emprego com clar
 **Plano**: `.cursor/plans/contextualizacao_entrevista_*.plan.md`
 
 Permitir usuario escolher contexto antes de iniciar entrevista:
-- Vaga cadastrada (das aplicacoes)
+- Vaga cadastrada (das candidaturas)
 - Ultimo insight
 - Manual
 
@@ -45,6 +45,22 @@ Secao animada na landing page mostrando o Copilot em acao com exemplos de conver
 **Plano**: `.cursor/plans/email_otp_authentication_*.plan.md`
 
 Login via codigo de 6 digitos (padrao), Magic Link como secundario.
+
+---
+
+## Ideas de Produto (Parking Lot)
+
+Fonte: `docs/ROADMAP.md`. Criterio de fit: gera clareza, alimenta o Copilot, CTA para Candidaturas/Entrevista IA/Copilot.
+
+**Alta prioridade (valor de produto)**  
+Match Score CV ↔ Vaga, Checklist de Decisao (aceitar oferta), Comparar Ofertas (2–3 ofertas), Perguntas que vou ouvir (por vaga/cargo), Integracao ATS, Career Coach IA.
+
+**Media prioridade**  
+Notificacoes/Alertas (follow-up, entrevista, prazo), Um passo por vez (acao sugerida por dia/semana), Diario de carreira (micro), Blog/SEO, Metas/Gamificacao (validar), Helper/Onboarding.
+
+**Priorizacao sugerida**: Perfil/CV → Notificacoes → Checklist ou Comparar Ofertas → Perguntas que vou ouvir → Match Score.
+
+**Evitar**: Tracking sem conexao com decisao/Copilot; gamificacao pesada sem "proximo passo"; CV builder completo como escopo dentro do app.
 
 ---
 

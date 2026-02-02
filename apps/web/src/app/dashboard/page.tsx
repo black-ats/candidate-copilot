@@ -31,7 +31,7 @@ async function StrategyCardSection() {
   const supabase = await createClient()
   const { data: latestInsight } = await supabase
     .from('insights')
-    .select('id, recommendation, objetivo, cargo, next_steps, created_at')
+    .select('id, recommendation, diagnosis, next_step, type_label, objetivo, cargo, next_steps, created_at')
     .order('created_at', { ascending: false })
     .limit(1)
     .single()
@@ -53,10 +53,10 @@ async function ApplicationsSection() {
             </div>
             <div className="min-w-0">
               <h2 className="text-base sm:text-lg font-semibold text-navy">
-                Suas Aplicações
+                Suas Candidaturas
               </h2>
               <p className="text-xs sm:text-sm text-navy/60">
-                <span className="font-medium text-navy">{stats.total}</span> aplicações
+                <span className="font-medium text-navy">{stats.total}</span> candidaturas
                 {stats.em_andamento > 0 && (
                   <> • <span className="text-blue-600">{stats.em_andamento} em andamento</span></>
                 )}
@@ -118,7 +118,7 @@ async function ApplicationsSection() {
             Comece a organizar sua busca
           </h2>
           <p className="text-navy/60 text-sm sm:text-base">
-            Acompanhe suas aplicações e aumente suas chances
+            Acompanhe suas candidaturas e aumente suas chances
           </p>
         </div>
       </div>
@@ -374,7 +374,7 @@ export default async function DashboardPage() {
           <StrategyCardSection />
         </Suspense>
 
-        {/* 3. Aplicações - Resumo com mini funil */}
+        {/* 3. Candidaturas - Resumo com mini funil */}
         <Suspense fallback={<ApplicationsCardSkeleton />}>
           <ApplicationsSection />
         </Suspense>

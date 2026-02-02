@@ -15,67 +15,60 @@ interface ExtendedQuestion extends SuggestedQuestion {
 }
 
 const defaultQuestions: ExtendedQuestion[] = [
-  // Metricas
+  // Foco no objetivo
   {
-    id: 'taxa-conversao',
-    label: 'Qual minha taxa de conversão?',
-    category: 'metricas',
-    icon: TrendingUp,
-  },
-  {
-    id: 'aguardando',
-    label: 'Quantas aplicações aguardando resposta?',
-    category: 'metricas',
-    icon: Clock,
-  },
-  // Proximos passos
-  {
-    id: 'follow-up',
-    label: 'Quais empresas devo fazer follow-up?',
-    category: 'proximos_passos',
+    id: 'caminho-certo',
+    label: 'Estou no caminho certo pro meu objetivo?',
+    category: 'objetivo',
     icon: Target,
   },
   {
-    id: 'melhorar',
-    label: 'O que posso fazer para melhorar?',
-    category: 'proximos_passos',
-    icon: Lightbulb,
-  },
-  // Insights
-  {
-    id: 'ultimo-insight',
-    label: 'Me lembre do meu último insight',
-    category: 'insights',
-    icon: Sparkles,
+    id: 'prioridade',
+    label: 'O que deveria ser minha prioridade agora?',
+    category: 'decisao',
+    icon: ListChecks,
   },
   {
-    id: 'recomendacoes',
-    label: 'Quais foram suas recomendações?',
-    category: 'insights',
-    icon: Lightbulb,
+    id: 'onde-travando',
+    label: 'Onde você acha que estou travando?',
+    category: 'decisao',
+    icon: HelpCircle,
+  },
+  // Análise da situação
+  {
+    id: 'como-estou',
+    label: 'Como está minha situação hoje?',
+    category: 'situacao',
+    icon: TrendingUp,
   },
   {
     id: 'riscos',
-    label: 'Quais riscos você identificou?',
-    category: 'insights',
+    label: 'Quais riscos você identificou pra mim?',
+    category: 'situacao',
     icon: AlertTriangle,
   },
+  // Ações e próximos passos
   {
-    id: 'proximos-passos',
-    label: 'Quais próximos passos sugeriu?',
-    category: 'insights',
-    icon: ListChecks,
+    id: 'proximo-passo',
+    label: 'Qual meu próximo passo?',
+    category: 'decisao',
+    icon: Sparkles,
   },
-  // Analise
   {
-    id: 'padroes',
-    label: 'Quais padrões você identifica?',
-    category: 'analise',
-    icon: HelpCircle,
+    id: 'melhorar-conversao',
+    label: 'Como consigo mais entrevistas?',
+    category: 'objetivo',
+    icon: Lightbulb,
+  },
+  {
+    id: 'preparar-entrevista',
+    label: 'Me ajuda a preparar para entrevistas',
+    category: 'interview',
+    icon: Mic,
   },
 ]
 
-// Perguntas de Entrevista IA (aparecem para todos usuarios com historico de entrevista)
+// Perguntas de Entrevista IA (aparecem para todos usuários com histórico de entrevista)
 const interviewQuestions: ExtendedQuestion[] = [
   {
     id: 'ultima-entrevista',
@@ -120,10 +113,9 @@ const benchmarkQuestions: ExtendedQuestion[] = [
 ]
 
 const categoryLabels: Record<string, string> = {
-  metricas: 'Métricas',
-  proximos_passos: 'Próximos Passos',
-  insights: 'Seus Insights',
-  analise: 'Análise',
+  objetivo: 'Seu Objetivo',
+  decisao: 'Decisões',
+  situacao: 'Sua Situação',
   interview: 'Mock Interview',
   benchmark: 'Comparação',
 }

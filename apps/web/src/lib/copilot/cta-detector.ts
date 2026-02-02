@@ -88,14 +88,48 @@ function hasRecentInsight(userContext: UserContext): boolean {
 }
 
 /**
- * Detecta se a pergunta do usuario deveria mostrar um CTA contextual
+ * Verifica se o usuário tem algum insight (não apenas recente)
+ */
+function hasAnyInsight(userContext: UserContext): boolean {
+  return userContext.insights && userContext.insights.length > 0
+}
+
+/**
+ * Detecta se a pergunta do usuário deveria mostrar um CTA contextual
  * Retorna null se nenhum CTA for pertinente
+ * 
+ * PRIORIDADE:
+ * 1. Insight - se usuário não tem nenhuma análise (prioridade máxima)
+ * 2. Entrevista IA - se conversa é sobre preparação
+ * 3. Adicionar Vaga - se conversa é sobre tracking
  */
 export function detectCTA(input: CTADetectorInput): CopilotCTA | null {
   const { question, userContext, hasInterviewContext, hasInsightContext } = input
   
-  // CTA Entrevista IA
-  // Condicao: Fala de entrevista e NAO esta no contexto de entrevista
+  // PRIORIDADE 1: CTA Gerar Insight
+  // Condição: Usuário NÃO tem NENHUM insight (prioridade máxima)
+  // Ou fala de direção/momento e NÃO tem insight recente
+  if (!hasAnyInsight(userContext) && !hasInsightContext) {
+    return {
+      type: 'insight',
+      label: 'Criar sua estratégia de carreira',
+      href: '/comecar',
+      icon: 'sparkles',
+    }
+  }
+  
+  // CTA Gerar Insight quando fala de direção mas não tem insight recente
+  if (containsKeyword(question, INSIGHT_KEYWORDS) && !hasInsightContext && !hasRecentInsight(userContext)) {
+    return {
+      type: 'insight',
+      label: 'Atualizar sua estratégia',
+      href: '/comecar',
+      icon: 'sparkles',
+    }
+  }
+  
+  // PRIORIDADE 2: CTA Entrevista IA
+  // Condição: Fala de entrevista e NÃO está no contexto de entrevista
   if (containsKeyword(question, INTERVIEW_KEYWORDS) && !hasInterviewContext) {
     return {
       type: 'interview_pro',
@@ -105,19 +139,8 @@ export function detectCTA(input: CTADetectorInput): CopilotCTA | null {
     }
   }
   
-  // CTA Gerar Insight
-  // Condicao: Fala de direcao/momento e NAO tem insight recente
-  if (containsKeyword(question, INSIGHT_KEYWORDS) && !hasInsightContext && !hasRecentInsight(userContext)) {
-    return {
-      type: 'insight',
-      label: 'Gerar novo insight',
-      href: '/comecar',
-      icon: 'sparkles',
-    }
-  }
-  
-  // CTA Adicionar Vaga
-  // Condicao: Fala de metricas mas tem poucas aplicacoes (menos de 3)
+  // PRIORIDADE 3: CTA Adicionar Vaga
+  // Condição: Fala de métricas mas tem poucas candidaturas (menos de 3)
   if (containsKeyword(question, APPLICATION_KEYWORDS) && userContext.profile.totalApplications < 3) {
     return {
       type: 'add_application',
@@ -128,7 +151,7 @@ export function detectCTA(input: CTADetectorInput): CopilotCTA | null {
   }
   
   // CTA Entrevista IA por taxa baixa
-  // Condicao: Taxa de conversao abaixo de 10% e tem pelo menos 5 aplicacoes
+  // Condição: Taxa de conversão abaixo de 10% e tem pelo menos 5 candidaturas
   if (
     containsKeyword(question, APPLICATION_KEYWORDS) &&
     userContext.metrics.taxaConversao < 10 &&

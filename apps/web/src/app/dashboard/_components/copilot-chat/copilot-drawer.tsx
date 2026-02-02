@@ -1,16 +1,16 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { X, Sparkles, Send, RotateCcw, Crown } from 'lucide-react'
+import { X, Sparkles, Send, RotateCcw, Crown, Plus } from 'lucide-react'
 import { Button, Badge } from '@ui/components'
 import { ChatMessages } from './chat-messages'
 import { WelcomeState } from './welcome-state'
 import { SuggestedQuestions } from './suggested-questions'
-import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, type CopilotAccessInfo } from './actions'
+import { sendChatMessage, checkCopilotAccess, checkInterviewHistory, hasActiveProposal, type CopilotAccessInfo } from './actions'
 import type { ChatMessage } from '@/lib/copilot/types'
 import Link from 'next/link'
 import { useCopilotDrawer } from '@/hooks/use-copilot-drawer'
-import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage, getBenchmarkInitialMessage } from './insight-messages'
+import { insightInitialMessages, heroInitialMessages, getInterviewInitialMessage, getBenchmarkInitialMessage, getApplicationInitialMessage } from './insight-messages'
 
 export function CopilotDrawer() {
   // Single source of truth: Zustand store
@@ -21,6 +21,7 @@ export function CopilotDrawer() {
     heroContext, 
     interviewContext,
     benchmarkContext,
+    applicationContext,
     clearContext 
   } = useCopilotDrawer()
   
@@ -31,12 +32,14 @@ export function CopilotDrawer() {
   const [limitReached, setLimitReached] = useState(false)
   const [hasShownInitialMessage, setHasShownInitialMessage] = useState(false)
   const [hasInterviewHistory, setHasInterviewHistory] = useState(false)
+  const [hasProposal, setHasProposal] = useState<boolean | null>(null) // null = loading, true/false = loaded
 
   // Track previous context to detect changes
   const prevInsightContextId = useRef<string | null>(null)
   const prevHeroContextKey = useRef<string | null>(null)
   const prevInterviewContextId = useRef<string | null>(null)
   const prevBenchmarkContextKey = useRef<string | null>(null)
+  const prevApplicationContextId = useRef<string | null>(null)
 
   // Reset chat when context changes
   useEffect(() => {
@@ -44,12 +47,14 @@ export function CopilotDrawer() {
     const currentHeroKey = heroContext ? `${heroContext.context}-${heroContext.company}-${heroContext.title}` : null
     const currentInterviewId = interviewContext?.sessionId || null
     const currentBenchmarkKey = benchmarkContext ? `benchmark-${benchmarkContext.userTaxa}-${benchmarkContext.mediaTaxa}` : null
+    const currentApplicationId = applicationContext?.id || null
 
     const contextChanged = 
       (currentInsightId && currentInsightId !== prevInsightContextId.current) ||
       (currentHeroKey && currentHeroKey !== prevHeroContextKey.current) ||
       (currentInterviewId && currentInterviewId !== prevInterviewContextId.current) ||
-      (currentBenchmarkKey && currentBenchmarkKey !== prevBenchmarkContextKey.current)
+      (currentBenchmarkKey && currentBenchmarkKey !== prevBenchmarkContextKey.current) ||
+      (currentApplicationId && currentApplicationId !== prevApplicationContextId.current)
 
     if (contextChanged && isOpen) {
       // Reset chat for new context
@@ -63,7 +68,8 @@ export function CopilotDrawer() {
     prevHeroContextKey.current = currentHeroKey
     prevInterviewContextId.current = currentInterviewId
     prevBenchmarkContextKey.current = currentBenchmarkKey
-  }, [insightContext, heroContext, interviewContext, benchmarkContext, isOpen])
+    prevApplicationContextId.current = currentApplicationId
+  }, [insightContext, heroContext, interviewContext, benchmarkContext, applicationContext, isOpen])
 
   // Fechar com Escape
   useEffect(() => {
@@ -89,7 +95,7 @@ export function CopilotDrawer() {
     }
   }, [isOpen])
 
-  // Check copilot access and interview history when drawer opens
+  // Check copilot access, interview history, and proposals when drawer opens
   useEffect(() => {
     if (isOpen) {
       checkCopilotAccess().then((info) => {
@@ -100,15 +106,19 @@ export function CopilotDrawer() {
       })
       // Check interview history for all users (Free users can have trial history)
       checkInterviewHistory().then(setHasInterviewHistory)
+      // Check if user has any active proposal
+      hasActiveProposal().then(setHasProposal)
     }
   }, [isOpen])
 
-  // Show initial message when opening with insight, hero, interview, or benchmark context
+  // Show initial message when opening with specific context (insight, hero, interview, benchmark, application)
   useEffect(() => {
     if (isOpen && !hasShownInitialMessage && messages.length === 0) {
       let initialMessage: string | null = null
       
-      if (benchmarkContext) {
+      if (applicationContext) {
+        initialMessage = getApplicationInitialMessage(applicationContext)
+      } else if (benchmarkContext) {
         initialMessage = getBenchmarkInitialMessage(
           benchmarkContext.userTaxa, 
           benchmarkContext.mediaTaxa, 
@@ -120,13 +130,20 @@ export function CopilotDrawer() {
       } else if (insightContext) {
         initialMessage = insightInitialMessages[insightContext.tipo] || insightInitialMessages.default
       } else if (heroContext) {
-        const heroMsg = heroInitialMessages[heroContext.context]
-        if (typeof heroMsg === 'function') {
-          initialMessage = heroMsg(heroContext.company, heroContext.title)
+        // Se heroContext.message foi fornecido diretamente, usar ele
+        // Caso contrário, buscar na lista de mensagens predefinidas
+        if (heroContext.message && !heroInitialMessages[heroContext.context]) {
+          initialMessage = heroContext.message
         } else {
-          initialMessage = heroMsg || heroInitialMessages.active_summary as string
+          const heroMsg = heroInitialMessages[heroContext.context]
+          if (typeof heroMsg === 'function') {
+            initialMessage = heroMsg(heroContext.company, heroContext.title)
+          } else {
+            initialMessage = heroMsg || heroContext.message || heroInitialMessages.active_summary as string
+          }
         }
       }
+      // Sem contexto específico: mostrar WelcomeState com perguntas sugeridas
       
       if (initialMessage) {
         const assistantMessage: ChatMessage = {
@@ -140,7 +157,7 @@ export function CopilotDrawer() {
         setHasShownInitialMessage(true)
       }
     }
-  }, [isOpen, insightContext, heroContext, interviewContext, benchmarkContext, hasShownInitialMessage, messages.length])
+  }, [isOpen, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext, hasShownInitialMessage, messages.length])
 
   const handleSubmit = useCallback(async (question: string) => {
     if (!question.trim() || isLoading || limitReached) return
@@ -158,14 +175,34 @@ export function CopilotDrawer() {
     setIsLoading(true)
     
     try {
-      // Convert InsightContext to InsightContextData for the server action
+      // Convert InsightContext to InsightContextData for the server action (V1.1 enhanced)
       const contextData = insightContext ? {
         id: insightContext.id,
         tipo: insightContext.tipo,
         cargo: insightContext.cargo,
         area: insightContext.area,
+        senioridade: insightContext.senioridade,
+        status: insightContext.status,
+        objetivo: insightContext.objetivo,
+        // V1 fields
         recommendation: insightContext.recommendation,
         next_steps: insightContext.next_steps,
+        // V1.1 diagnostic fields
+        diagnosis: insightContext.diagnosis,
+        pattern: insightContext.pattern,
+        risk: insightContext.risk,
+        nextStep: insightContext.nextStep,
+        typeLabel: insightContext.typeLabel,
+        // V1.1 contextual data
+        urgencia: insightContext.urgencia,
+        tempoSituacao: insightContext.tempoSituacao,
+        decisionBlocker: insightContext.decisionBlocker,
+        interviewBottleneck: insightContext.interviewBottleneck,
+        maxStage: insightContext.maxStage,
+        leverageSignals: insightContext.leverageSignals,
+        pivotType: insightContext.pivotType,
+        transferableStrengths: insightContext.transferableStrengths,
+        avoidedDecision: insightContext.avoidedDecision,
       } : null
       
       // Convert HeroContext to HeroContextData for the server action
@@ -198,7 +235,20 @@ export function CopilotDrawer() {
         isAbove: benchmarkContext.isAbove,
       } : null
       
-      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData)
+      // Convert ApplicationContext to ApplicationContextData for the server action
+      const applicationContextData = applicationContext ? {
+        id: applicationContext.id,
+        company: applicationContext.company,
+        title: applicationContext.title,
+        status: applicationContext.status,
+        salaryRange: applicationContext.salaryRange,
+        notes: applicationContext.notes,
+        jobDescription: applicationContext.jobDescription,
+        location: applicationContext.location,
+        url: applicationContext.url,
+      } : null
+      
+      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData, applicationContextData)
       
       // Check if limit was reached
       if (response.limitReached) {
@@ -243,7 +293,7 @@ export function CopilotDrawer() {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext])
+  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -275,7 +325,7 @@ export function CopilotDrawer() {
       {/* Drawer */}
       <div 
         className={`
-          fixed right-0 top-0 h-[100dvh] w-full sm:w-96 bg-white 
+          fixed inset-y-0 right-0 w-full sm:w-96 bg-white 
           border-l border-stone/30 z-50 flex flex-col
           transform transition-transform duration-300 ease-out
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}
@@ -345,6 +395,26 @@ export function CopilotDrawer() {
                     benchmarkContext={benchmarkContext}
                     hasInterviewHistory={hasInterviewHistory}
                   />
+                  
+                  {/* Card para adicionar proposta quando não tem nenhuma ativa */}
+                  {hasProposal === false && (heroContext?.context?.includes('proposta') || heroContext?.context?.includes('avaliar')) && (
+                    <Link 
+                      href="/dashboard/aplicacoes/nova"
+                      onClick={onClose}
+                      className="mt-4 p-3 bg-amber/10 rounded-lg border border-amber/20 flex items-center gap-3 hover:bg-amber/15 transition-colors"
+                      style={{
+                        animation: 'fadeUp 0.4s ease-out forwards',
+                      }}
+                    >
+                      <div className="w-8 h-8 bg-amber/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Plus className="w-4 h-4 text-amber" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-navy">Adicionar proposta</p>
+                        <p className="text-xs text-navy/60">Registre para acompanhar</p>
+                      </div>
+                    </Link>
+                  )}
                 </div>
               )}
             </>

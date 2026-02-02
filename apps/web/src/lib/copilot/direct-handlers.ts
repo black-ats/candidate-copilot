@@ -9,7 +9,7 @@ export const directHandlers: Record<string, DirectHandler> = {
     const entrevistas = ctx.metrics.processosAtivos
     
     if (total === 0) {
-      return `Você ainda não tem aplicações registradas. Adicione suas primeiras aplicações para começar a acompanhar sua taxa de conversão!`
+      return `Você ainda não tem candidaturas registradas. Adicione suas primeiras candidaturas para começar a acompanhar sua taxa de conversão!`
     }
     
     let analise = ''
@@ -23,22 +23,22 @@ export const directHandlers: Record<string, DirectHandler> = {
     
     return `Sua taxa de conversão atual é de **${taxa}%**.
 
-Isso significa que de **${total} aplicações**, você conseguiu **${entrevistas} entrevistas**.${analise}`
+Isso significa que de **${total} candidaturas**, você conseguiu **${entrevistas} entrevistas**.${analise}`
   },
 
-  'quantas aplicacoes': (ctx) => {
+  'quantas candidaturas': (ctx) => {
     const aguardando = ctx.metrics.aguardandoResposta
     const pending = ctx.pendingApplications
     
     if (aguardando === 0) {
-      return `Você não tem aplicações aguardando resposta no momento.
+      return `Você não tem candidaturas aguardando resposta no momento.
 
 ${ctx.metrics.processosAtivos > 0 
   ? `Você tem **${ctx.metrics.processosAtivos} processos ativos** (entrevistas ou propostas).`
   : 'Que tal aplicar para novas vagas?'}`
     }
     
-    let response = `Você tem **${aguardando} aplicações** aguardando resposta.`
+    let response = `Você tem **${aguardando} candidaturas** aguardando resposta.`
     
     if (pending.length > 0) {
       const oldest = pending[0]
@@ -59,7 +59,7 @@ ${ctx.metrics.processosAtivos > 0
     if (entrevistas === 0 && propostas === 0) {
       return `Você não tem entrevistas ou propostas ativas no momento.
 
-Continue aplicando! Com ${ctx.profile.totalApplications} aplicações e taxa de ${ctx.metrics.taxaConversao}%, você está no caminho.`
+Continue aplicando! Com ${ctx.profile.totalApplications} candidaturas e taxa de ${ctx.metrics.taxaConversao}%, você está no caminho.`
     }
     
     return `Você tem **${entrevistas} entrevistas** agendadas e **${propostas} propostas** em aberto.
@@ -69,14 +69,14 @@ ${propostas > 0 ? '**Boa notícia!** Você está próximo de uma oferta.' : 'Con
 
   'ultimo insight': (ctx) => {
     if (ctx.insights.length === 0) {
-      return `Você ainda não gerou nenhum insight. 
+      return `Você ainda não gerou nenhuma análise. 
 
-Acesse a página de **Insights** para fazer uma análise personalizada da sua busca de emprego!`
+Acesse a página de **Análises** para fazer uma análise personalizada da sua busca de emprego!`
     }
     
     const insight = ctx.insights[0]
     
-    return `**Seu último insight** (${insight.createdAt}):
+    return `**Sua última análise** (${insight.createdAt}):
 
 **Recomendação:** ${insight.recommendation}
 
@@ -94,7 +94,7 @@ ${insight.nextSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`
     if (ctx.insights.length === 0) {
       return `Ainda não tenho recomendações para você. 
 
-Faça uma análise na página de **Insights** para receber recomendações personalizadas!`
+Faça uma análise na página de **Análises** para receber recomendações personalizadas!`
     }
     
     return `**Minhas recomendações para você:**
@@ -103,14 +103,14 @@ ${ctx.insights.slice(0, 3).map((insight, i) =>
   `${i + 1}. **${insight.recommendation}** (${insight.createdAt})`
 ).join('\n')}
 
-${ctx.insights.length > 3 ? `\n_E mais ${ctx.insights.length - 3} insights anteriores..._` : ''}`
+${ctx.insights.length > 3 ? `\n_E mais ${ctx.insights.length - 3} análises anteriores..._` : ''}`
   },
 
   'riscos identificou': (ctx) => {
     if (ctx.insights.length === 0) {
-      return `Ainda não identifiquei riscos porque você não gerou nenhum insight.
+      return `Ainda não identifiquei riscos porque você não gerou nenhuma análise.
 
-Faça uma análise na página de **Insights** para que eu possa avaliar sua situação!`
+Faça uma análise na página de **Análises** para que eu possa avaliar sua situação!`
     }
     
     const lastInsight = ctx.insights[0]
@@ -124,9 +124,9 @@ ${lastInsight.risks.map((r, i) => `${i + 1}. ${r}`).join('\n')}
 
   'proximos passos sugeriu': (ctx) => {
     if (ctx.insights.length === 0) {
-      return `Ainda não sugeri próximos passos porque você não gerou nenhum insight.
+      return `Ainda não sugeri próximos passos porque você não gerou nenhuma análise.
 
-Faça uma análise na página de **Insights** para receber sugestões personalizadas!`
+Faça uma análise na página de **Análises** para receber sugestões personalizadas!`
     }
     
     const lastInsight = ctx.insights[0]
@@ -142,10 +142,10 @@ Quantos desses você já completou?`
     const pending = ctx.pendingApplications
     
     if (pending.length === 0) {
-      return `Você não tem aplicações aguardando resposta no momento.`
+      return `Você não tem candidaturas aguardando resposta no momento.`
     }
     
-    let response = `**${pending.length} aplicações aguardando resposta:**\n`
+    let response = `**${pending.length} candidaturas aguardando resposta:**\n`
     
     pending.slice(0, 5).forEach((app, i) => {
       const urgency = app.daysSinceApplied > 10 ? ' ⚠️' : ''
@@ -168,7 +168,7 @@ Quantos desses você já completou?`
     const pending = ctx.pendingApplications
     
     if (pending.length === 0) {
-      return `Você não tem aplicações aguardando resposta no momento.`
+      return `Você não tem candidaturas aguardando resposta no momento.`
     }
     
     const oldest = pending[0]

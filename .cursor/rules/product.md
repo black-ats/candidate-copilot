@@ -25,12 +25,17 @@
 - Features que nao conectam com o Copilot
 - Complexidade que nao gera clareza
 - "Tracker de vagas" como fim em si
+- Tracking sem conexao com decisao ou Copilot (ex.: tracker de networking/cursos so por si)
+- Gamificacao pesada (streaks, rankings) sem ligacao com "proximo passo" ou insight
+
+### Ideas futuras (Parking Lot)
+Ver `docs/ROADMAP.md` secao Parking Lot. Criterio de fit: (1) gera clareza para decisao ou proximo passo; (2) alimenta o Copilot; (3) CTA natural para Candidaturas, Entrevista IA ou Copilot. Exemplos: Checklist de Decisao, Comparar Ofertas, Perguntas que vou ouvir, Um passo por vez, Diario de carreira (micro), Notificacoes/Alertas.
 
 ## Planos e Limites
 
 ### Free
 - 3 insights/mes
-- 5 aplicacoes/mes
+- 5 candidaturas/mes
 - 5 perguntas/dia no Copilot
 - 1 entrevista simulada (trial vitalicio)
 
