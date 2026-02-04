@@ -6,12 +6,12 @@ export const directHandlers: Record<string, DirectHandler> = {
   'taxa de conversao': (ctx) => {
     const taxa = ctx.metrics.taxaConversao
     const total = ctx.profile.totalApplications
-    const entrevistas = ctx.metrics.processosAtivos
-    
+    const conversoes = total > 0 ? Math.round((taxa / 100) * total) : 0
+
     if (total === 0) {
       return `Você ainda não tem candidaturas registradas. Adicione suas primeiras candidaturas para começar a acompanhar sua taxa de conversão!`
     }
-    
+
     let analise = ''
     if (taxa >= 30) {
       analise = '\n\nIsso está **acima da média** do mercado (25-30%). Excelente trabalho!'
@@ -20,10 +20,10 @@ export const directHandlers: Record<string, DirectHandler> = {
     } else if (taxa > 0) {
       analise = '\n\nIsso está **abaixo da média** do mercado (25-30%). Considere revisar seu currículo ou focar em vagas mais alinhadas ao seu perfil.'
     }
-    
+
     return `Sua taxa de conversão atual é de **${taxa}%**.
 
-Isso significa que de **${total} candidaturas**, você conseguiu **${entrevistas} entrevistas**.${analise}`
+Isso significa que de **${total} candidaturas**, **${conversoes}** avançaram para entrevista, proposta ou oferta aceita.${analise}`
   },
 
   'quantas candidaturas': (ctx) => {

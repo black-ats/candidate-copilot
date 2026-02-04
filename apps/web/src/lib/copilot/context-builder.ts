@@ -48,9 +48,11 @@ export function buildUserContext(
   const total = apps.length
   const entrevistas = apps.filter(a => a.status === 'entrevista').length
   const propostas = apps.filter(a => a.status === 'proposta').length
+  const aceito = apps.filter(a => a.status === 'aceito').length
   const rejeicoes = apps.filter(a => a.status === 'rejeitado').length
   const aplicados = apps.filter(a => a.status === 'aplicado').length
   const emAnalise = apps.filter(a => a.status === 'em_analise').length
+  const conversoes = entrevistas + propostas + aceito
   
   // Aplicacoes pendentes (aguardando resposta)
   const pendingStatuses = ['aplicado', 'em_analise']
@@ -111,7 +113,7 @@ export function buildUserContext(
       lastActivity
     },
     metrics: {
-      taxaConversao: total > 0 ? Math.round((entrevistas / total) * 100) : 0,
+      taxaConversao: total > 0 ? Math.round((conversoes / total) * 100) : 0,
       processosAtivos: entrevistas + propostas,
       aguardandoResposta: aplicados + emAnalise,
       ofertas: propostas,
@@ -300,7 +302,7 @@ IMPORTANTE:
 - O usuário quer entender o que essa comparação significa para sua busca de emprego
 - Se estiver acima da média, parabenize e sugira como manter/melhorar
 - Se estiver abaixo, seja encorajador e ofereça dicas práticas para melhorar
-- Explique que taxa de conversão é a % de candidaturas que avançam para entrevistas
+- Explique que taxa de conversão é a % de candidaturas que avançam para entrevista, proposta ou oferta aceita
 - Sugira ações concretas baseadas na posição do usuário`
   }
 
@@ -398,7 +400,7 @@ ${lastInsight.nextSteps.length > 0 ? `- Próximos passos: ${lastInsight.nextStep
   // 3. CONTEXTO DE VAGAS (secundário, conectado ao objetivo)
   prompt += `${prompt ? '\n\n' : ''}CONTEXTO DE VAGAS (para contextualizar a busca):
 - Total de candidaturas: ${ctx.profile.totalApplications}
-- Taxa de conversão: ${ctx.metrics.taxaConversao}% (entrevistas/total)
+- Taxa de conversão: ${ctx.metrics.taxaConversao}% (entrevista+proposta+aceito)/total
 - Processos ativos: ${ctx.metrics.processosAtivos}
 - Aguardando resposta: ${ctx.metrics.aguardandoResposta}
 - Ofertas: ${ctx.metrics.ofertas}`

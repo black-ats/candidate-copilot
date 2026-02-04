@@ -37,8 +37,7 @@ export function ApplicationFunnel({ data }: ApplicationFunnelProps) {
     data.proposta
   )
 
-  // Taxa de conversao: propostas + aceitos / total
-  const conversions = data.proposta + data.aceito
+  const conversions = data.entrevista + data.proposta + data.aceito
   const taxaConversao = data.total > 0 ? (conversions / data.total) * 100 : 0
 
   // Taxa de rejeicao

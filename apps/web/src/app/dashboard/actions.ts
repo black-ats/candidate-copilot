@@ -39,7 +39,7 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     .from('applications')
     .select('status')
     .eq('user_id', user.id)
-  
+
   if (!applications || applications.length === 0) {
     return {
       total: 0,
@@ -60,13 +60,16 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
   const total = applications.length
   const entrevistas = porStatus['entrevista'] || 0
   const propostas = porStatus['proposta'] || 0
+  const aceito = porStatus['aceito'] || 0
   const aplicados = porStatus['aplicado'] || 0
   const emAnalise = porStatus['em_analise'] || 0
-  
+  const conversoes = entrevistas + propostas + aceito
+  const taxaConversao = total > 0 ? Math.round((conversoes / total) * 100) : 0
+
   return {
     total,
     porStatus,
-    taxaConversao: total > 0 ? Math.round((entrevistas / total) * 100) : 0,
+    taxaConversao,
     processosAtivos: entrevistas + propostas,
     aguardandoResposta: aplicados + emAnalise,
     ofertas: propostas,
