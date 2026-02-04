@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { PostHogProvider } from '@/components/providers/posthog-provider'
 import { GoogleAnalytics } from '@/components/providers/google-analytics'
+import { GoogleTagManager } from '@/components/providers/google-tag-manager'
 import { CookieConsentBanner } from '@/components/cookie-consent-banner'
 
 export const viewport: Viewport = {
@@ -51,6 +52,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
+        <GoogleTagManager />
         <GoogleAnalytics />
         <PostHogProvider>
           {children}
