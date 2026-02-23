@@ -12,25 +12,25 @@ function AuthContent() {
   const redirect = searchParams.get('redirect') || '/dashboard'
   const errorFromUrl = searchParams.get('error')
   const errorMessage = searchParams.get('message')
-  
+
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
-  
+
   // Map error codes to user-friendly messages
   const getErrorMessage = (code: string | null, message: string | null): string | null => {
     if (!code) return null
-    
+
     const errorMessages: Record<string, string> = {
       'auth_failed': 'Link expirado ou inválido. Solicite um novo link.',
       'access_denied': 'Acesso negado. Tente novamente.',
       'otp_expired': 'O link expirou. Solicite um novo link de acesso.',
     }
-    
+
     return errorMessages[code] || message || 'Ocorreu um erro na autenticação. Tente novamente.'
   }
-  
+
   const urlErrorMessage = getErrorMessage(errorFromUrl, errorMessage)
 
   const handleMagicLink = async (e: React.FormEvent) => {
@@ -39,17 +39,18 @@ function AuthContent() {
     setError('')
 
     try {
-      const supabase = createClient()
-      
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?redirect=${redirect}`,
-        },
+      const redirectTo = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`
+
+      const res = await fetch('/auth/magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, redirectTo }),
       })
 
-      if (error) {
-        setError(error.message)
+      const json = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        setError(json.error || 'Não foi possível enviar o link. Tente novamente.')
       } else {
         setIsSuccess(true)
       }
@@ -66,7 +67,7 @@ function AuthContent() {
 
     try {
       const supabase = createClient()
-      
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -95,12 +96,12 @@ function AuthContent() {
             Verifique seu email
           </h1>
           <p className="text-navy/70 mb-6">
-            Enviamos um link de acesso para <strong>{email}</strong>. 
+            Enviamos um link de acesso para <strong>{email}</strong>.
             Clique no link para entrar na sua conta.
           </p>
           <p className="text-sm text-navy/50">
             Não recebeu? Verifique sua caixa de spam ou{' '}
-            <button 
+            <button
               onClick={() => setIsSuccess(false)}
               className="text-teal hover:underline"
             >
@@ -128,8 +129,8 @@ function AuthContent() {
 
       <main className="container-narrow py-12 sm:py-16">
         <div className="max-w-md mx-auto">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="inline-flex items-center text-sm text-navy/60 hover:text-navy mb-6"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
