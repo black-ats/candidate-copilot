@@ -177,7 +177,7 @@ export default function MatchPage() {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isExtracting}
-                    className="text-sm text-teal hover:text-teal/80 font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+                    className="text-sm text-teal hover:text-teal/80 font-medium flex items-center gap-1 min-h-[44px] transition-colors disabled:opacity-50"
                   >
                     {isExtracting ? (
                       <Loader2 className="w-4 h-4 animate-spin" />

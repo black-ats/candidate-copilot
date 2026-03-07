@@ -152,6 +152,7 @@ export default function MatchResultPage() {
       saveMatchResult(result).then((res) => {
         if ('success' in res && res.success) {
           setSaved(true)
+          track('match_saved', { matchScore: result.matchScore })
           if (accessCheck && accessCheck.remaining !== null) {
             setAccessCheck({
               ...accessCheck,
