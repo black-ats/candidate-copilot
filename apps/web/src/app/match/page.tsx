@@ -92,7 +92,7 @@ export default function MatchPage() {
           resumeText: resumeText.trim(),
           jobDescription: jobDescription.trim(),
         }))
-        track('insight_generated', { insightType: 'resume_match' })
+        track('match_analyzed', { source: 'match_page' })
         router.push('/match/resultado')
       } else {
         setError(response.error)
@@ -195,10 +195,10 @@ export default function MatchPage() {
                     <button
                       type="button"
                       onClick={handleRemoveFile}
-                      className="ml-auto p-1 hover:bg-teal/20 rounded"
+                      className="ml-auto p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-teal/20 rounded"
                       aria-label="Remover arquivo"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 )}

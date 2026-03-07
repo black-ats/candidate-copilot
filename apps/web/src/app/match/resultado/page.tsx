@@ -22,7 +22,6 @@ import {
 import { useUser } from '@/hooks/use-user'
 import { saveMatchResult, checkMatchAccess } from '../actions'
 import { track } from '@/lib/analytics/track'
-import { UpgradePrompt } from '@/components/upgrade-prompt'
 import type { MatchResult } from '@/lib/match'
 
 type StoredResult = MatchResult & {
@@ -420,6 +419,23 @@ export default function MatchResultPage() {
           Esta análise foi gerada por IA com base nos textos fornecidos. Resultados reais de ATS podem variar conforme o sistema utilizado pelo recrutador.
         </p>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-stone/30 py-8 mt-8">
+        <div className="container-wide flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-amber rounded flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-navy" />
+            </div>
+            <span className="text-sm text-navy/70">GoHire Copilot</span>
+          </div>
+          <nav className="flex items-center gap-6 text-sm text-navy/60">
+            <Link href="/pricing" className="hover:text-navy transition-colors">Preços</Link>
+            <Link href="/privacidade" className="hover:text-navy transition-colors">Privacidade</Link>
+            <Link href="/termos" className="hover:text-navy transition-colors">Termos</Link>
+          </nav>
+        </div>
+      </footer>
     </div>
   )
 }

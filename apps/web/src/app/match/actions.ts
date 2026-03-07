@@ -8,6 +8,7 @@ import { canUseResumeMatch } from '@/lib/subscription/check-access'
 import { incrementMatchUsage } from '@/lib/subscription/actions'
 import { analyzeResumeMatch } from '@/lib/match'
 import { extractTextFromUpload } from '@/lib/match/extract-text'
+import { validateInput } from '@/lib/ai/security'
 import { trackAIUsage } from '@/lib/ai/usage-tracker'
 import { logger } from '@/lib/logger'
 import type { MatchResult } from '@/lib/match'
@@ -34,6 +35,18 @@ export async function analyzeMatchAction(formData: {
   if (!validated.success) {
     const firstError = validated.error.errors[0]?.message || 'Dados inválidos'
     return { success: false, error: firstError }
+  }
+
+  const resumePrefix = validated.data.resumeText.slice(0, 2000)
+  const resumeCheck = validateInput(resumePrefix)
+  if (resumeCheck.blocked) {
+    return { success: false, error: 'O texto do currículo contém conteúdo não permitido.' }
+  }
+
+  const jobPrefix = validated.data.jobDescription.slice(0, 2000)
+  const jobCheck = validateInput(jobPrefix)
+  if (jobCheck.blocked) {
+    return { success: false, error: 'A descrição da vaga contém conteúdo não permitido.' }
   }
 
   try {
@@ -123,7 +136,7 @@ export async function saveMatchResult(result: MatchResult & { resumeText: string
 
   await incrementMatchUsage()
 
-  await trackAIUsage(user.id, 'insight', 'gpt-4o-mini', {
+  await trackAIUsage(user.id, 'resume_match', 'gpt-4o-mini', {
     prompt_tokens: 0,
     completion_tokens: 0,
   })

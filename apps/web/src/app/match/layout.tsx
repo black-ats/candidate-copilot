@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Match CV × Vaga | GoHire Copilot',
     description:
       'Score de compatibilidade instantâneo entre seu currículo e a vaga. Identifique gaps e melhore suas chances.',
+    locale: 'pt_BR',
     type: 'website',
   },
 }
