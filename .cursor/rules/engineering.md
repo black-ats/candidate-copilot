@@ -15,25 +15,25 @@
 | Payments | Stripe |
 | Analytics | PostHog + Google Analytics 4 |
 
-## Principios de Arquitetura
+## Princípios de Arquitetura
 
 ### Manual-First
-- CRUD solido e rapido antes de automatizacao
+- CRUD sólido e rápido antes de automatização
 - Features manuais funcionam sem IA
 
-### IA Assincrona
+### IA Assíncrona
 - Enrichment nunca bloqueia fluxo
 - Fallbacks quando IA falha
 
 ### Auditoria
 - Status history sempre preservado (timeline)
-- Nao deletar, soft-delete quando possivel
+- Não deletar, soft-delete quando possível
 
 ### Observabilidade
-- Logs estruturados com `@/lib/logger` (NAO usar console.log/error)
+- Logs estruturados com `@/lib/logger` (NÃO usar console.log/error)
 - Error tracking com Sentry (configurado em sentry.*.config.ts)
 - ErrorBoundary para capturar erros de React
-- Eventos de analytics para acoes importantes
+- Eventos de analytics para ações importantes
 - AI usage tracking para controle de custos
 
 ## Estrutura de Pastas
@@ -41,26 +41,26 @@
 ```
 apps/web/src/
 ├── app/                    # Pages (App Router)
-│   ├── dashboard/          # Area autenticada
+│   ├── dashboard/          # Área autenticada
 │   │   ├── _components/    # Componentes do dashboard
-│   │   ├── aplicacoes/     # Feature de aplicacoes
+│   │   ├── aplicacoes/     # Feature de aplicações
 │   │   ├── insights/       # Feature de insights
 │   │   ├── interview-pro/  # Feature de entrevistas
 │   │   └── actions.ts      # Server actions
-│   └── api/                # API routes (somente quando necessario)
+│   └── api/                # API routes (somente quando necessário)
 ├── components/             # Componentes compartilhados
 ├── hooks/                  # Hooks e stores Zustand
-└── lib/                    # Logica de negocio
-    ├── ai/                 # Providers e seguranca de IA
-    ├── copilot/            # Logica do chat
+└── lib/                    # Lógica de negócio
+    ├── ai/                 # Providers e segurança de IA
+    ├── copilot/            # Lógica do chat
     ├── subscription/       # Controle de acesso
     └── supabase/           # Clientes Supabase
 ```
 
 ## Server Components vs Client
 
-### Server Components (padrao)
-- Paginas
+### Server Components (padrão)
+- Páginas
 - Layouts
 - Fetch de dados
 - Acesso ao banco
@@ -69,28 +69,28 @@ apps/web/src/
 - Interatividade (onClick, onChange)
 - Hooks (useState, useEffect)
 - Browser APIs
-- Animacoes
+- Animações
 
 ## Server Actions
 
 ### Quando Usar
-- Mutacoes (create, update, delete)
-- Operacoes autenticadas
-- Validacao server-side
+- Mutações (create, update, delete)
+- Operações autenticadas
+- Validação server-side
 
-### Helper de Autenticacao
-SEMPRE usar `getAuthenticatedUser()` em vez de repetir o padrao manualmente.
+### Helper de Autenticação
+SEMPRE usar `getAuthenticatedUser()` em vez de repetir o padrão manualmente.
 
 ```typescript
 import { getAuthenticatedUser } from '@/lib/supabase/server'
 
 const { supabase, user, error } = await getAuthenticatedUser()
 if (error || !user) {
-  return { error: error || 'Nao autenticado' }
+  return { error: error || 'Não autenticado' }
 }
 ```
 
-### Padrao Completo
+### Padrão Completo
 ```typescript
 'use server'
 
@@ -99,10 +99,10 @@ import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
 
 export async function myAction(data: MyData) {
-  // 1. Autenticacao
+  // 1. Autenticação
   const { supabase, user, error: authError } = await getAuthenticatedUser()
   if (authError || !user) {
-    return { error: authError || 'Nao autenticado' }
+    return { error: authError || 'Não autenticado' }
   }
   
   // 2. Verificar limites
@@ -111,15 +111,15 @@ export async function myAction(data: MyData) {
     return { error: 'Limite atingido', limitReached: true }
   }
   
-  // 3. Logica
+  // 3. Lógica
   const { data: result, error } = await supabase.from('table').insert(...)
   
   if (error) {
-    logger.error('Erro na operacao', { error: error.message, userId: user.id, feature: 'myFeature' })
+    logger.error('Erro na operação', { error: error.message, userId: user.id, feature: 'myFeature' })
     return { error: 'Erro ao processar' }
   }
   
-  // 4. SEMPRE revalidar /dashboard alem da rota especifica
+  // 4. SEMPRE revalidar /dashboard além da rota específica
   revalidatePath('/dashboard/items')
   revalidatePath('/dashboard')
   
@@ -129,7 +129,7 @@ export async function myAction(data: MyData) {
 
 ## Database (Supabase)
 
-### RLS Obrigatorio
+### RLS Obrigatório
 - Toda tabela tem RLS habilitado
 - Policies para SELECT, INSERT, UPDATE, DELETE
 
@@ -138,7 +138,7 @@ export async function myAction(data: MyData) {
 - Nomenclatura: `XXX_descricao.sql`
 - Sempre testar localmente antes
 
-## Validacao
+## Validação
 
 ### Zod para Schemas
 ```typescript
@@ -152,11 +152,11 @@ const schema = z.object({
 ```typescript
 const parsed = schema.safeParse(data)
 if (!parsed.success) {
-  return { error: 'Dados invalidos' }
+  return { error: 'Dados inválidos' }
 }
 ```
 
-### UUID Validation (OBRIGATORIO)
+### UUID Validation (OBRIGATÓRIO)
 ```typescript
 import { validateUUID } from '@/lib/schemas/uuid'
 
@@ -167,42 +167,42 @@ if (!uuidValidation.success) {
 }
 ```
 
-## Seguranca
+## Segurança
 
 ### XSS Prevention
-- NUNCA usar `dangerouslySetInnerHTML` com conteudo de usuario
-- Para markdown, usar `react-markdown` com wrapper div (v9+ nao aceita className)
+- NUNCA usar `dangerouslySetInnerHTML` com conteúdo de usuário
+- Para markdown, usar `react-markdown` com wrapper div (v9+ não aceita className)
 - Sanitizar inputs antes de salvar no banco
 
 ### Rate Limiting
 - API routes devem ter rate limiting
 - Usar `@/lib/rate-limit` para limites por IP
-- Limites padroes em `RATE_LIMITS` (chat: 20/min, coupon: 10/min)
+- Limites padrões em `RATE_LIMITS` (chat: 20/min, coupon: 10/min)
 
 ### Input Validation
 - Sempre validar UUIDs antes de queries (usar `validateUUID`)
-- Schemas Zod para todos os inputs de usuario
+- Schemas Zod para todos os inputs de usuário
 - Nunca confiar em dados do cliente
 
 ## LGPD Compliance
 
-### Paginas Obrigatorias
-- `/privacidade` - Politica de Privacidade
+### Páginas Obrigatórias
+- `/privacidade` - Política de Privacidade
 - `/termos` - Termos de Uso
 
 ### Cookie Consent
-- Banner de consentimento para cookies analiticos
-- Analytics (PostHog, GA) so carregam apos consentimento
+- Banner de consentimento para cookies analíticos
+- Analytics (PostHog, GA) só carregam após consentimento
 - Usar `CookieConsentBanner` no layout
 
 ### Links Legais
-- Footer de todas as paginas deve ter links para /privacidade e /termos
+- Footer de todas as páginas deve ter links para /privacidade e /termos
 - Na tela de auth, links devem abrir em nova aba (`target="_blank"`)
 
 ## Acessibilidade (A11y)
 
 ### Skip Link
-Dashboard layout tem skip link para pular navegacao:
+Dashboard layout tem skip link para pular navegação:
 ```typescript
 <a href="#main-content" className="sr-only focus:not-sr-only ...">
   Pular para o conteúdo principal
@@ -211,9 +211,9 @@ Dashboard layout tem skip link para pular navegacao:
 
 ### Modais
 - Usar `useFocusTrap` para travar foco dentro do modal
-- Atributos obrigatorios: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
+- Atributos obrigatórios: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
 - Overlay deve ter `aria-hidden="true"`
-- Botao de fechar deve ter `aria-label="Fechar"`
+- Botão de fechar deve ter `aria-label="Fechar"`
 
 ### Mensagens de Erro
 - SEMPRE usar `role="alert"` em mensagens de erro
@@ -221,9 +221,9 @@ Dashboard layout tem skip link para pular navegacao:
 {error && <p role="alert" className="text-red-600">{error}</p>}
 ```
 
-### Botoes de Icone
-- SEMPRE usar `aria-label` em botoes com apenas icones
-- Icones devem ter `aria-hidden="true"`
+### Botões de Ícone
+- SEMPRE usar `aria-label` em botões com apenas ícones
+- Ícones devem ter `aria-hidden="true"`
 ```typescript
 <button aria-label="Fechar">
   <X aria-hidden="true" />
@@ -240,13 +240,13 @@ import { logger } from '@/lib/logger'
 
 logger.info('Evento', { userId, feature })
 logger.warn('Aviso', { error, context })
-logger.error('Erro critico', { error, userId, feature })
-logger.debug('Debug', { data }) // so aparece em dev
+logger.error('Erro crítico', { error, userId, feature })
+logger.debug('Debug', { data }) // só aparece em dev
 ```
 
 ### Sentry
-Error tracking configurado em `sentry.*.config.ts`. Captura automatica de erros.
-- Habilitado quando `NEXT_PUBLIC_SENTRY_DSN` esta definido
+Error tracking configurado em `sentry.*.config.ts`. Captura automática de erros.
+- Habilitado quando `NEXT_PUBLIC_SENTRY_DSN` está definido
 - ErrorBoundary reporta erros para Sentry automaticamente
 
 ### ErrorBoundary
