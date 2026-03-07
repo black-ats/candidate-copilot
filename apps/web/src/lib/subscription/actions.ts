@@ -93,6 +93,25 @@ export async function getCurrentUserProfile() {
   return profile
 }
 
+export async function incrementMatchUsage() {
+  const { supabase, user, error } = await getAuthenticatedUser()
+  if (error || !user) throw new Error(error || 'Not authenticated')
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('matches_used_this_month')
+    .eq('user_id', user.id)
+    .single()
+
+  await supabase
+    .from('user_profiles')
+    .update({
+      matches_used_this_month: (profile?.matches_used_this_month || 0) + 1,
+      updated_at: new Date().toISOString()
+    })
+    .eq('user_id', user.id)
+}
+
 export async function incrementInterviewUsage() {
   const { supabase, user, error } = await getAuthenticatedUser()
   if (error || !user) throw new Error(error || 'Not authenticated')

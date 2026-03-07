@@ -30,6 +30,7 @@ export type AIFeature =
   | 'interview_question' 
   | 'interview_feedback' 
   | 'insight'
+  | 'resume_match'
 
 export interface TokenUsage {
   prompt_tokens: number

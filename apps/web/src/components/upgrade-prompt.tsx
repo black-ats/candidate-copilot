@@ -7,7 +7,7 @@ import Link from 'next/link'
 interface UpgradePromptProps {
   remaining: number
   limit: number
-  feature?: 'insights' | 'interview_pro' | 'career_coach' | 'applications' | 'copilot'
+  feature?: 'insights' | 'interview_pro' | 'career_coach' | 'applications' | 'copilot' | 'matches'
 }
 
 export function UpgradePrompt({ remaining, limit, feature = 'insights' }: UpgradePromptProps) {
@@ -25,6 +25,10 @@ export function UpgradePrompt({ remaining, limit, feature = 'insights' }: Upgrad
     copilot: {
       title: 'Você atingiu o limite diário do Copilot',
       subtitle: `${used} de ${limit} perguntas usadas hoje`
+    },
+    matches: {
+      title: 'Você atingiu o limite de análises de match',
+      subtitle: `${used} de ${limit} análises usadas este mês`
     },
     interview_pro: {
       title: 'Entrevista IA é exclusiva do plano Pro',

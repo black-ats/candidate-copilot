@@ -159,3 +159,13 @@ export interface ApplicationContextData {
   location?: string
   url?: string
 }
+
+export interface MatchContextData {
+  matchScore: number
+  atsRisk: string
+  diagnosis: string
+  missingSignals: string[]
+  improvements: string[]
+  jobTitle?: string
+  companyName?: string
+}
