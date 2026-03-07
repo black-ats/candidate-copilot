@@ -7,6 +7,7 @@ import { getAuthenticatedUser } from '@/lib/supabase/server'
 import { canUseResumeMatch } from '@/lib/subscription/check-access'
 import { incrementMatchUsage } from '@/lib/subscription/actions'
 import { analyzeResumeMatch } from '@/lib/match'
+import { extractTextFromUpload } from '@/lib/match/extract-text'
 import { trackAIUsage } from '@/lib/ai/usage-tracker'
 import { logger } from '@/lib/logger'
 import type { MatchResult } from '@/lib/match'
@@ -49,6 +50,25 @@ export async function analyzeMatchAction(formData: {
     })
     return { success: false, error: 'Erro ao analisar. Tente novamente em alguns segundos.' }
   }
+}
+
+export async function extractResumeTextAction(formData: FormData): Promise<{
+  success: boolean
+  text?: string
+  error?: string
+}> {
+  const file = formData.get('file') as File | null
+  if (!file) {
+    return { success: false, error: 'Nenhum arquivo enviado.' }
+  }
+
+  const result = await extractTextFromUpload(file)
+
+  if (result.error) {
+    return { success: false, error: result.error }
+  }
+
+  return { success: true, text: result.text }
 }
 
 export async function checkMatchAccess() {

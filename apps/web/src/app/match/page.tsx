@@ -16,23 +16,11 @@ import {
   Loader2,
   X,
 } from 'lucide-react'
-import { analyzeMatchAction } from './actions'
+import { analyzeMatchAction, extractResumeTextAction } from './actions'
 import { track } from '@/lib/analytics/track'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
-
-function extractTextFromFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-      const reader = new FileReader()
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = () => reject(new Error('Erro ao ler arquivo'))
-      reader.readAsText(file)
-      return
-    }
-    reject(new Error('Formato não suportado. Use um arquivo .txt ou cole o texto diretamente.'))
-  })
-}
+const ACCEPTED_FORMATS = '.pdf,.docx,.txt'
 
 export default function MatchPage() {
   const router = useRouter()
@@ -42,9 +30,10 @@ export default function MatchPage() {
   const [jobDescription, setJobDescription] = useState('')
   const [fileName, setFileName] = useState<string | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [isExtracting, setIsExtracting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const canSubmit = resumeText.trim().length >= 50 && jobDescription.trim().length >= 50
+  const canSubmit = resumeText.trim().length >= 50 && jobDescription.trim().length >= 50 && !isExtracting
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -55,13 +44,24 @@ export default function MatchPage() {
       return
     }
 
+    setIsExtracting(true)
+    setError(null)
+
     try {
-      const text = await extractTextFromFile(file)
-      setResumeText(text)
-      setFileName(file.name)
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao ler arquivo')
+      const formData = new FormData()
+      formData.append('file', file)
+      const result = await extractResumeTextAction(formData)
+
+      if (result.success && result.text) {
+        setResumeText(result.text)
+        setFileName(file.name)
+      } else {
+        setError(result.error || 'Erro ao processar arquivo.')
+      }
+    } catch {
+      setError('Erro ao processar arquivo. Tente colar o texto diretamente.')
+    } finally {
+      setIsExtracting(false)
     }
 
     if (fileInputRef.current) {
@@ -149,7 +149,7 @@ export default function MatchPage() {
               Por que você não está sendo chamado para entrevistas?
             </h1>
             <p className="mt-4 text-lg sm:text-xl text-navy/70 max-w-2xl mx-auto">
-              Cole seu currículo e a descrição da vaga. Receba seu score de compatibilidade, risco ATS e ações concretas para melhorar.
+              Envie seu currículo (PDF, DOCX ou texto) e a descrição da vaga. Receba seu score de compatibilidade, risco ATS e ações concretas para melhorar.
             </p>
           </div>
         </section>
@@ -168,7 +168,7 @@ export default function MatchPage() {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".txt"
+                    accept={ACCEPTED_FORMATS}
                     onChange={handleFileUpload}
                     className="hidden"
                     aria-label="Upload de currículo"
@@ -176,10 +176,15 @@ export default function MatchPage() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="text-sm text-teal hover:text-teal/80 font-medium flex items-center gap-1 transition-colors"
+                    disabled={isExtracting}
+                    className="text-sm text-teal hover:text-teal/80 font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
                   >
-                    <Upload className="w-4 h-4" />
-                    Upload .txt
+                    {isExtracting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Upload className="w-4 h-4" />
+                    )}
+                    {isExtracting ? 'Extraindo...' : 'Upload PDF, DOCX ou TXT'}
                   </button>
                 </div>
 
