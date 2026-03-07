@@ -5,6 +5,8 @@ type EventName =
   | 'signup_completed'
   | 'login_completed'
   | 'insight_generated'
+  | 'match_analyzed'
+  | 'match_saved'
   | 'application_created'
   | 'application_status_changed'
   | 'upgrade_initiated'

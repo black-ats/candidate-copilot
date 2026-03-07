@@ -22,6 +22,7 @@ export function CopilotDrawer() {
     interviewContext,
     benchmarkContext,
     applicationContext,
+    matchContext,
     pendingQuestion,
     clearPendingQuestion,
     clearContext 
@@ -250,7 +251,17 @@ export function CopilotDrawer() {
         url: applicationContext.url,
       } : null
       
-      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData, applicationContextData)
+      const matchContextData = matchContext ? {
+        matchScore: matchContext.matchScore,
+        atsRisk: matchContext.atsRisk,
+        diagnosis: matchContext.diagnosis,
+        missingSignals: matchContext.missingSignals,
+        improvements: matchContext.improvements,
+        jobTitle: matchContext.jobTitle,
+        companyName: matchContext.companyName,
+      } : null
+      
+      const response = await sendChatMessage(question, messages, contextData, heroContextData, interviewContextData, benchmarkContextData, applicationContextData, null, matchContextData)
       
       // Check if limit was reached
       if (response.limitReached) {
@@ -295,7 +306,7 @@ export function CopilotDrawer() {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext])
+  }, [isLoading, messages, limitReached, accessInfo, insightContext, heroContext, interviewContext, benchmarkContext, applicationContext, matchContext])
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -12,7 +12,7 @@ import { createClient } from '@/lib/supabase/client'
 const supabase = createClient()
 ```
 
-## UUID Validation (OBRIGATORIO)
+## UUID Validation (OBRIGATÓRIO)
 
 Sempre validar UUIDs antes de queries no banco para evitar erros e ataques.
 
@@ -42,13 +42,13 @@ export async function getItem(id: string) {
 import { rateLimitMiddleware, RATE_LIMITS } from '@/lib/rate-limit'
 
 export async function POST(req: Request) {
-  // Rate limiting no inicio da rota
+  // Rate limiting no início da rota
   const { response: rateLimitResponse } = rateLimitMiddleware(req, RATE_LIMITS.chat)
   if (rateLimitResponse) {
     return rateLimitResponse
   }
   
-  // ... resto da logica
+  // ... resto da lógica
 }
 ```
 
@@ -66,13 +66,13 @@ export async function createItem(data: ItemData): Promise<{
   error?: string
   data?: Item
 }> {
-  // Usar helper de autenticacao
+  // Usar helper de autenticação
   const { supabase, user, error: authError } = await getAuthenticatedUser()
   if (authError || !user) {
-    return { error: authError || 'Nao autenticado' }
+    return { error: authError || 'Não autenticado' }
   }
   
-  // Verificar limites (se aplicavel)
+  // Verificar limites (se aplicável)
   const access = await canUseFeature(user.id)
   if (!access.allowed) {
     return { error: 'Limite atingido' }
@@ -85,7 +85,7 @@ export async function createItem(data: ItemData): Promise<{
     .single()
   
   if (error) {
-    // Usar logger estruturado (NAO console.error)
+    // Usar logger estruturado (NÃO console.error)
     logger.error('Erro ao criar item', { 
       error: error.message, 
       userId: user.id,
@@ -94,7 +94,7 @@ export async function createItem(data: ItemData): Promise<{
     return { error: 'Erro ao criar item' }
   }
   
-  // SEMPRE invalidar /dashboard alem da rota especifica
+  // SEMPRE invalidar /dashboard além da rota específica
   revalidatePath('/dashboard/items')
   revalidatePath('/dashboard')
   return { success: true, data: item }
@@ -123,9 +123,9 @@ export default async function Page() {
 ```typescript
 import { Button, Card, Input, Badge, Progress } from '@ui/components'
 
-// Botoes
-<Button>Primario</Button>
-<Button variant="secondary">Secundario</Button>
+// Botões
+<Button>Primário</Button>
+<Button variant="secondary">Secundário</Button>
 <Button variant="ghost">Ghost</Button>
 <Button isLoading>Carregando...</Button>
 
@@ -148,6 +148,7 @@ import { track } from '@/lib/analytics/track'
 track('insight_generated', { objetivo: 'nova_oportunidade' })
 track('interview_started', { cargo: 'PM', senioridade: 'senior' })
 track('application_created', { status: 'aplicado' })
+track('match_analyzed', { matchScore: 72 })
 ```
 
 ## Copilot Context
@@ -160,6 +161,7 @@ const {
   openWithContext,
   openWithHeroContext,
   openWithInterviewContext,
+  openWithMatchContext,
   close,
   clearContext 
 } = useCopilotDrawer()
@@ -182,6 +184,18 @@ openWithInterviewContext({
   strengths: [...],
   improvements: [...],
   tips: feedback.general_tips,
+})
+
+// Abrir com contexto de match
+openWithMatchContext({
+  type: 'match',
+  matchScore: result.matchScore,
+  atsRisk: result.atsRisk,
+  diagnosis: result.diagnosis,
+  missingSignals: result.missingSignals.map(s => s.skill),
+  improvements: result.improvements.map(i => i.action),
+  jobTitle: result.jobTitle,
+  companyName: result.companyName,
 })
 ```
 
@@ -206,17 +220,17 @@ openWithInterviewContext({
 ```typescript
 // Mobile-first, empilha no mobile, lado a lado no desktop
 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-  <div>Conteudo</div>
-  <Button className="w-full sm:w-auto">Acao</Button>
+  <div>Conteúdo</div>
+  <Button className="w-full sm:w-auto">Ação</Button>
 </div>
 
 // Grid responsivo
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 ```
 
-## Mobile Patterns (OBRIGATORIO)
+## Mobile Patterns (OBRIGATÓRIO)
 
-### Tap Targets (44px minimo)
+### Tap Targets (44px mínimo)
 
 ```typescript
 // Close button com tap target adequado
@@ -227,7 +241,7 @@ openWithInterviewContext({
   <X className="w-5 h-5" />
 </button>
 
-// Botao de navegacao/tab
+// Botão de navegação/tab
 <button className="px-4 py-3.5 min-h-[44px] rounded-lg text-sm font-medium">
   {label}
 </button>
@@ -244,10 +258,10 @@ openWithInterviewContext({
 // Card
 <Card className="p-4 sm:p-6 md:p-8">
 
-// Secao interna
+// Seção interna
 <div className="p-4 sm:p-6 border-b">
 
-// Container de chat/conteudo
+// Container de chat/conteúdo
 <div className="p-4 sm:p-5 space-y-4">
 ```
 
@@ -272,14 +286,14 @@ openWithInterviewContext({
 ```typescript
 // Banner/counter que empilha no mobile
 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:justify-between">
-  <p>Conteudo</p>
+  <p>Conteúdo</p>
   <Link>Ação</Link>
 </div>
 
 // Alert box
 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
   <Icon className="flex-shrink-0" />
-  <div>Conteudo</div>
+  <div>Conteúdo</div>
 </div>
 ```
 
@@ -293,13 +307,13 @@ openWithInterviewContext({
 <section className="min-h-[60vh] sm:min-h-[70vh]">
 ```
 
-### Botao com Texto Responsivo
+### Botão com Texto Responsivo
 
 ```typescript
 // Texto curto no mobile, completo no desktop
 <Button size="lg">
-  <span className="sm:hidden">Comecar gratis</span>
-  <span className="hidden sm:inline">Comecar minha entrevista gratis</span>
+  <span className="sm:hidden">Começar grátis</span>
+  <span className="hidden sm:inline">Começar minha entrevista grátis</span>
   <ArrowRight className="ml-2 w-5 h-5" />
 </Button>
 
@@ -374,7 +388,7 @@ import { Loader2 } from 'lucide-react'
 import { logger } from '@/lib/logger'
 
 try {
-  // logica
+  // lógica
 } catch (error) {
   logger.error('Erro ao processar', { 
     error: error instanceof Error ? error.message : 'Unknown',
@@ -407,15 +421,15 @@ SEMPRE usar `logger` em vez de `console.log/error` em server actions e API route
 import { logger } from '@/lib/logger'
 
 // Info para eventos normais
-logger.info('Usuario criou aplicacao', { userId, applicationId, feature: 'applications' })
+logger.info('Usuário criou aplicação', { userId, applicationId, feature: 'applications' })
 
-// Warn para erros nao-criticos (operacoes secundarias)
-logger.warn('Erro ao criar historico', { error: err.message, applicationId })
+// Warn para erros não-críticos (operações secundárias)
+logger.warn('Erro ao criar histórico', { error: err.message, applicationId })
 
-// Error para erros criticos
-logger.error('Erro ao criar aplicacao', { error: err.message, userId, feature: 'applications' })
+// Error para erros críticos
+logger.error('Erro ao criar aplicação', { error: err.message, userId, feature: 'applications' })
 
-// Debug para dev only (nao aparece em producao)
+// Debug para dev only (não aparece em produção)
 logger.debug('Dados recebidos', { data })
 ```
 
@@ -465,7 +479,7 @@ export function MyForm() {
 
 ## Icon Buttons (Acessibilidade)
 
-Botoes com apenas icones DEVEM ter aria-label e aria-hidden no icone.
+Botões com apenas ícones DEVEM ter aria-label e aria-hidden no ícone.
 
 ```typescript
 // ERRADO
@@ -479,7 +493,7 @@ Botoes com apenas icones DEVEM ter aria-label e aria-hidden no icone.
 </Button>
 
 // Exemplos de aria-labels comuns:
-// - "Fechar" para botoes X
+// - "Fechar" para botões X
 // - "Nova conversa" para reset
 // - "Enviar mensagem" para submit
 // - "Excluir" para delete
@@ -487,7 +501,7 @@ Botoes com apenas icones DEVEM ter aria-label e aria-hidden no icone.
 
 ## Markdown Rendering (react-markdown)
 
-IMPORTANTE: react-markdown v9+ NAO aceita `className` diretamente. Usar wrapper div.
+IMPORTANTE: react-markdown v9+ NÃO aceita `className` diretamente. Usar wrapper div.
 
 ```typescript
 // ERRADO - vai dar erro
@@ -523,8 +537,8 @@ export function MyModal({ isOpen, onClose }) {
         aria-labelledby="modal-title"
         className="relative bg-white rounded-lg p-6"
       >
-        <h2 id="modal-title">Titulo</h2>
-        {/* conteudo */}
+        <h2 id="modal-title">Título</h2>
+        {/* conteúdo */}
       </div>
     </div>
   )

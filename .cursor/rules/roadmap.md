@@ -1,18 +1,18 @@
 # Roadmap Rules - GoHire Copilot
 
-## Fonte Unica de Verdade
+## Fonte Única de Verdade
 
-O roadmap do produto vive em `docs/ROADMAP.md`. Este e o documento canonico para:
+O roadmap do produto vive em `docs/ROADMAP.md`. Este é o documento canônico para:
 - Backlog de produto (Now/Next/Later)
 - Ideias discutidas (Parking Lot)
-- Dependencias entre features
-- Links para planos de execucao
+- Dependências entre features
+- Links para planos de execução
 
 ---
 
 ## Quando Consultar o Roadmap
 
-Sempre que o usuario mencionar:
+Sempre que o usuário mencionar:
 - Ideias de futuro / backlog / roadmap
 - Novas features ou melhorias
 - Prioridades de produto
@@ -22,27 +22,27 @@ Sempre que o usuario mencionar:
 
 ## Quando Atualizar o Roadmap
 
-Ao final de discussoes de produto, registrar:
+Ao final de discussões de produto, registrar:
 
-1. **A ideia**: nome claro e descricao curta
-2. **Por que importa**: valor para o usuario ou negocio
-3. **Dependencias**: outras features ou dados necessarios
+1. **A ideia**: nome claro e descrição curta
+2. **Por que importa**: valor para o usuário ou negócio
+3. **Dependências**: outras features ou dados necessários
 4. **Status**: Now / Next / Later / Parking Lot
 
 ---
 
 ## Estrutura do Roadmap
 
-| Secao | Descricao |
+| Seção | Descrição |
 |-------|-----------|
-| **Now** | Em execucao ou curto prazo |
-| **Next** | Proxima leva (1-2 sprints) |
-| **Later** | Medio prazo |
+| **Now** | Em execução ou curto prazo |
+| **Next** | Próxima leva (1-2 sprints) |
+| **Later** | Médio prazo |
 | **Parking Lot** | Ideias discutidas, sem compromisso |
 
 ---
 
-## Ao Criar Planos de Execucao
+## Ao Criar Planos de Execução
 
 1. Criar arquivo em `.cursor/plans/[nome].plan.md`
 2. Adicionar link no Roadmap na coluna "Plano/Link"
@@ -53,5 +53,5 @@ Ao final de discussoes de produto, registrar:
 ## Ao Completar Itens
 
 1. Marcar item com ✅ no Roadmap
-2. Mover para secao "Estado Atual" se for feature de produto
+2. Mover para seção "Estado Atual" se for feature de produto
 3. Atualizar status do plano correspondente

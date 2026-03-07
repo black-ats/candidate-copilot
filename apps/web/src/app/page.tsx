@@ -2,7 +2,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 import { Button, Card, Badge } from '@ui/components'
-import { Sparkles, Target, Clock, ArrowRight, Mic } from 'lucide-react'
+import { Sparkles, Target, Clock, ArrowRight, Mic, FileSearch } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 
 const CopilotShowcase = dynamic(
@@ -71,8 +71,14 @@ export default function HomePage() {
               Responda algumas perguntas e receba um primeiro direcionamento baseado no seu contexto. Sem cadastro, sem enrolação.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/comecar">
+              <Link href="/match">
                 <Button size="lg" className="w-full sm:w-auto">
+                  <FileSearch className="mr-2 w-5 h-5" />
+                  Testar match CV × Vaga
+                </Button>
+              </Link>
+              <Link href="/comecar">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto">
                   Ver minha primeira análise
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
@@ -80,7 +86,7 @@ export default function HomePage() {
             </div>
             <p className="mt-4 text-sm text-navy/50 flex items-center justify-center gap-1">
               <Clock className="w-4 h-4" />
-              Leva menos de 2 minutos
+              Sem cadastro. Resultado em segundos.
             </p>
           </div>
         </section>
@@ -156,7 +162,7 @@ export default function HomePage() {
               </div>
               <Card variant="elevated" className="p-6 sm:p-8">
                 <blockquote className="text-base sm:text-lg text-navy/80 italic">
-                  "Em vez de ficar dias remoendo uma decisão, tive clareza em minutos sobre o que fazia sentido pra mim."
+                  {`"Em vez de ficar dias remoendo uma decisão, tive clareza em minutos sobre o que fazia sentido pra mim."`}
                 </blockquote>
                 <div className="mt-4 text-sm text-navy/60">
                   — Profissional de tecnologia
@@ -168,6 +174,25 @@ export default function HomePage() {
 
         {/* Copilot Showcase */}
         <CopilotShowcase />
+
+        {/* Resume Match Teaser */}
+        <section className="py-16">
+          <div className="container-narrow text-center">
+            <Badge className="mb-4 bg-teal/20 text-teal">Novo</Badge>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-navy mb-3">
+              Descubra por que você não está sendo chamado
+            </h2>
+            <p className="text-navy/70 mb-6 max-w-xl mx-auto">
+              Cole seu currículo e a descrição da vaga. Receba score de compatibilidade, risco ATS e ações concretas para melhorar — em segundos.
+            </p>
+            <Link href="/match">
+              <Button>
+                <FileSearch className="mr-2 w-5 h-5" />
+                Analisar match grátis
+              </Button>
+            </Link>
+          </div>
+        </section>
 
         {/* Entrevista IA Teaser */}
         <section className="py-16 bg-white">
@@ -207,7 +232,8 @@ export default function HomePage() {
                   <span className="text-navy/60">/mês</span>
                 </div>
                 <ul className="space-y-2 text-sm text-navy/70 mb-6">
-                  <li>✓ 3 análises por mês</li>
+                  <li>✓ 3 análises de match por mês</li>
+                  <li>✓ 3 análises de carreira por mês</li>
                   <li>✓ 5 vagas para acompanhar</li>
                   <li>✓ 5 perguntas/dia no Copilot</li>
                   <li>✓ 1 entrevista simulada grátis</li>
@@ -226,6 +252,7 @@ export default function HomePage() {
                   <span className="text-navy/60">/mês</span>
                 </div>
                 <ul className="space-y-2 text-sm text-navy/70 mb-6">
+                  <li>✓ Match ilimitado CV × Vaga</li>
                   <li>✓ Tudo ilimitado</li>
                   <li>✓ Entrevistas ilimitadas com IA</li>
                   <li>✓ Career Coach IA</li>

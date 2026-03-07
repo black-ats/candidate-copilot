@@ -2,10 +2,10 @@
 
 ## Regras de UX (MVP)
 
-### Principios
-- **Sem friccao**: valor antes de pedir cadastro
-- **Sem "coach generico"**: respostas sempre baseadas em contexto/dados
-- **Sem "IA intrusiva"**: IA sugere, nao sobrescreve
+### Princípios
+- **Sem fricção**: valor antes de pedir cadastro
+- **Sem "coach genérico"**: respostas sempre baseadas em contexto/dados
+- **Sem "IA intrusiva"**: IA sugere, não sobrescreve
 - **Progressive disclosure**: primeiro Copilot, depois tracking, depois entrevistas
 
 ### Fluxo de Valor
@@ -17,15 +17,16 @@ Insight gratuito → Conta opcional → Tracking → Entrevista IA
 
 ### Linguagem
 - Direta, humana, sem startupês
-- "Decisao" > "otimizacao"
+- "Decisão" > "otimização"
 - Evitar termos de RH corporativo
+- **Sempre com acentuação correta** (não escrever "decisao", "nao", "voce")
 
 ### Exemplos
 
 **Bom:**
 - "Leva menos de 2 minutos"
 - "Com base no seu contexto"
-- "Clareza para sua decisao"
+- "Clareza para sua decisão"
 - "Vamos analisar juntos?"
 
 **Ruim:**
@@ -34,7 +35,7 @@ Insight gratuito → Conta opcional → Tracking → Entrevista IA
 - "Revolucione sua carreira"
 - "Pipeline de oportunidades"
 
-## Estados Obrigatorios
+## Estados Obrigatórios
 
 Toda interface deve ter:
 - Loading state (skeleton ou spinner)
@@ -44,23 +45,23 @@ Toda interface deve ter:
 
 ## Mobile First
 
-### Principios
+### Princípios
 - Testar sempre no mobile primeiro
 - Layouts devem empilhar verticalmente em telas pequenas
-- Touch targets minimo 44x44px
+- Touch targets mínimo 44x44px
 - Evitar hover-only interactions
 
-### Viewports de Teste (obrigatorio)
-- **iPhone SE**: 375px (minimo suportado)
-- **iPhone 14**: 390px (referencia principal)
+### Viewports de Teste (obrigatório)
+- **iPhone SE**: 375px (mínimo suportado)
+- **iPhone 14**: 390px (referência principal)
 - **Desktop**: 1280px+
 
 ### Checklist Pre-Deploy
 
 **Tap Targets:**
-- [ ] Botoes de acao com `min-h-[44px]`
-- [ ] Botoes de fechar/icone com `min-w-[44px] min-h-[44px]`
-- [ ] Tabs/navegacao com `py-3.5` ou similar
+- [ ] Botões de ação com `min-h-[44px]`
+- [ ] Botões de fechar/ícone com `min-w-[44px] min-h-[44px]`
+- [ ] Tabs/navegação com `py-3.5` ou similar
 
 **Layout:**
 - [ ] Layouts flex usam `flex-col sm:flex-row`
@@ -69,25 +70,25 @@ Toda interface deve ter:
 
 **Tipografia:**
 - [ ] Headings com escala gradual (`text-3xl sm:text-4xl lg:text-5xl`)
-- [ ] Texto legivel sem zoom
+- [ ] Texto legível sem zoom
 
-**Botoes:**
-- [ ] Textos longos tem versao curta no mobile
-- [ ] CTAs principais nao quebram em multiplas linhas
+**Botões:**
+- [ ] Textos longos têm versão curta no mobile
+- [ ] CTAs principais não quebram em múltiplas linhas
 
 ### Erros Comuns a Evitar
 
-| Erro | Solucao |
+| Erro | Solução |
 |------|---------|
 | `p-8` fixo em cards | Usar `p-4 sm:p-6 md:p-8` |
 | `text-4xl sm:text-6xl` (pulo grande) | Usar `text-3xl sm:text-4xl lg:text-5xl` |
 | `flex justify-between` sem empilhar | Usar `flex flex-col sm:flex-row` |
 | `min-h-[280px]` fixo | Usar `min-h-[220px] sm:min-h-[280px]` |
-| Botao close com `p-2.5` | Usar `p-3 min-w-[44px] min-h-[44px]` |
+| Botão close com `p-2.5` | Usar `p-3 min-w-[44px] min-h-[44px]` |
 | `pl-6` em listas | Usar `pl-4 sm:pl-6` |
 
-## Acessibilidade Basica
+## Acessibilidade Básica
 - Labels em todos os inputs
-- Focus visivel
+- Focus visível
 - Contraste adequado (WCAG AA)
 - Textos alternativos em imagens

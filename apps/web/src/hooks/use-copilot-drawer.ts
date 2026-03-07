@@ -59,7 +59,17 @@ export type BenchmarkContext = {
   isAbove: boolean
 }
 
-// Contexto de aplicação/vaga para CTAs como proposta, entrevista, etc.
+export type MatchContext = {
+  type: 'match'
+  matchScore: number
+  atsRisk: string
+  diagnosis: string
+  missingSignals: string[]
+  improvements: string[]
+  jobTitle?: string
+  companyName?: string
+}
+
 export type ApplicationContext = {
   type: 'application'
   id: string
@@ -80,6 +90,7 @@ type CopilotDrawerStore = {
   interviewContext: InterviewContext | null
   benchmarkContext: BenchmarkContext | null
   applicationContext: ApplicationContext | null
+  matchContext: MatchContext | null
   pendingQuestion: string | null
   open: () => void
   close: () => void
@@ -88,35 +99,39 @@ type CopilotDrawerStore = {
   openWithInterviewContext: (context: InterviewContext) => void
   openWithBenchmarkContext: (context: BenchmarkContext) => void
   openWithApplicationContext: (context: ApplicationContext) => void
+  openWithMatchContext: (context: MatchContext) => void
   openWithPendingQuestion: (question: string, heroContext?: HeroContext) => void
   clearPendingQuestion: () => void
   clearContext: () => void
 }
 
-export const useCopilotDrawer = create<CopilotDrawerStore>((set) => ({
-  isOpen: false,
+const nullContexts = {
   insightContext: null,
   heroContext: null,
   interviewContext: null,
   benchmarkContext: null,
   applicationContext: null,
+  matchContext: null,
   pendingQuestion: null,
-  open: () => set({ isOpen: true, insightContext: null, heroContext: null, interviewContext: null, benchmarkContext: null, applicationContext: null, pendingQuestion: null }),
-  close: () => set({ isOpen: false, insightContext: null, heroContext: null, interviewContext: null, benchmarkContext: null, applicationContext: null, pendingQuestion: null }),
-  openWithContext: (context) => set({ isOpen: true, insightContext: context, heroContext: null, interviewContext: null, benchmarkContext: null, applicationContext: null, pendingQuestion: null }),
-  openWithHeroContext: (context) => set({ isOpen: true, heroContext: context, insightContext: null, interviewContext: null, benchmarkContext: null, applicationContext: null, pendingQuestion: null }),
-  openWithInterviewContext: (context) => set({ isOpen: true, interviewContext: context, insightContext: null, heroContext: null, benchmarkContext: null, applicationContext: null, pendingQuestion: null }),
-  openWithBenchmarkContext: (context) => set({ isOpen: true, benchmarkContext: context, insightContext: null, heroContext: null, interviewContext: null, applicationContext: null, pendingQuestion: null }),
-  openWithApplicationContext: (context) => set({ isOpen: true, applicationContext: context, insightContext: null, heroContext: null, interviewContext: null, benchmarkContext: null, pendingQuestion: null }),
+}
+
+export const useCopilotDrawer = create<CopilotDrawerStore>((set) => ({
+  isOpen: false,
+  ...nullContexts,
+  open: () => set({ isOpen: true, ...nullContexts }),
+  close: () => set({ isOpen: false, ...nullContexts }),
+  openWithContext: (context) => set({ isOpen: true, ...nullContexts, insightContext: context }),
+  openWithHeroContext: (context) => set({ isOpen: true, ...nullContexts, heroContext: context }),
+  openWithInterviewContext: (context) => set({ isOpen: true, ...nullContexts, interviewContext: context }),
+  openWithBenchmarkContext: (context) => set({ isOpen: true, ...nullContexts, benchmarkContext: context }),
+  openWithApplicationContext: (context) => set({ isOpen: true, ...nullContexts, applicationContext: context }),
+  openWithMatchContext: (context) => set({ isOpen: true, ...nullContexts, matchContext: context }),
   openWithPendingQuestion: (question, heroCtx) => set({
     isOpen: true,
+    ...nullContexts,
     pendingQuestion: question.trim() || null,
     heroContext: heroCtx || null,
-    insightContext: null,
-    interviewContext: null,
-    benchmarkContext: null,
-    applicationContext: null,
   }),
   clearPendingQuestion: () => set({ pendingQuestion: null }),
-  clearContext: () => set({ insightContext: null, heroContext: null, interviewContext: null, benchmarkContext: null, applicationContext: null, pendingQuestion: null }),
+  clearContext: () => set(nullContexts),
 }))

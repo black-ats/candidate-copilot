@@ -2,32 +2,32 @@
 
 ## Definition of Done (DoD)
 
-Uma feature so esta pronta quando:
-- [ ] Entrega valor claro ao usuario (nao so UI)
+Uma feature só está pronta quando:
+- [ ] Entrega valor claro ao usuário (não só UI)
 - [ ] Sem travar fluxo por IA (fallbacks)
 - [ ] Tem estados: loading, empty, error, success
-- [ ] Acessivel (labels, focus, contraste)
+- [ ] Acessível (labels, focus, contraste)
 - [ ] Mobile ok
-- [ ] Copy final pt-BR
+- [ ] Copy final pt-BR com acentuação correta
 
 ## Checklist Pre-Commit
 
 - [ ] `npm run lint` passa
 - [ ] Testado no mobile
-- [ ] Copy revisada (pt-BR)
-- [ ] Sem regressao no "wow moment"
+- [ ] Copy revisada (pt-BR com acentos/diacríticos corretos)
+- [ ] Sem regressão no "wow moment"
 - [ ] Types corretos (sem `any`)
 
-## Padroes de PR
+## Padrões de PR
 
 ### Tamanho
-- PR pequeno e revisavel
+- PR pequeno e revisável
 - Uma feature/fix por PR
 
-### Descricao
+### Descrição
 ```markdown
 ## O que muda
-[Descricao curta]
+[Descrição curta]
 
 ## Screenshot/Video
 [Anexar visual]
@@ -35,14 +35,14 @@ Uma feature so esta pronta quando:
 ## Checklist
 - [ ] Testado mobile
 - [ ] Copy pt-BR
-- [ ] Sem regressoes
+- [ ] Sem regressões
 ```
 
 ## Decisions Log
 
-Toda decisao importante vira doc em `/docs/decisions/`:
+Toda decisão importante vira doc em `/docs/decisions/`:
 - Formato: `YYYY-MM-DD-descricao.md`
-- Conteudo: Contexto, Opcoes, Decisao, Consequencias
+- Conteúdo: Contexto, Opções, Decisão, Consequências
 
 Exemplos:
 - `2026-01-29-auth-supabase.md`
@@ -52,24 +52,24 @@ Exemplos:
 
 Planos de features em `.cursor/plans/`:
 - Criados pelo agente via `CreatePlan`
-- Atualizados conforme execucao
+- Atualizados conforme execução
 - Marcados como completed quando finalizados
 
 ## Branches
 
-- `main` - producao
+- `main` - produção
 - `feat/xxx` - features
 - `fix/xxx` - bug fixes
-- `chore/xxx` - manutencao
+- `chore/xxx` - manutenção
 
 ## Commits
 
-Formato: `tipo: descricao curta`
+Formato: `tipo: descrição curta`
 
 Tipos:
 - `feat:` nova feature
 - `fix:` bug fix
-- `refactor:` refatoracao
-- `style:` estilo (CSS, formatacao)
-- `docs:` documentacao
-- `chore:` manutencao
+- `refactor:` refatoração
+- `style:` estilo (CSS, formatação)
+- `docs:` documentação
+- `chore:` manutenção

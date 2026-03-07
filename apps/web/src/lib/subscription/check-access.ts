@@ -1,10 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
-import { FREE_INSIGHTS_LIMIT, FREE_APPLICATIONS_LIMIT, FREE_COPILOT_DAILY_LIMIT, FREE_INTERVIEWS_LIMIT, type ProFeature } from './limits'
+import { FREE_INSIGHTS_LIMIT, FREE_APPLICATIONS_LIMIT, FREE_COPILOT_DAILY_LIMIT, FREE_INTERVIEWS_LIMIT, FREE_MATCHES_LIMIT, type ProFeature } from './limits'
 
 export type UserProfile = {
   plan: 'free' | 'pro'
   insights_used_this_month: number
   applications_used_this_month: number
+  matches_used_this_month: number
   insights_reset_at: string
 }
 
@@ -50,7 +51,7 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
   
   let { data } = await supabase
     .from('user_profiles')
-    .select('plan, insights_used_this_month, applications_used_this_month, insights_reset_at')
+    .select('plan, insights_used_this_month, applications_used_this_month, matches_used_this_month, insights_reset_at')
     .eq('user_id', userId)
     .single()
   
@@ -64,9 +65,10 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
         plan: 'free',
         insights_used_this_month: 0,
         applications_used_this_month: 0,
+        matches_used_this_month: 0,
         insights_reset_at: nextReset.toISOString()
       })
-      .select('plan, insights_used_this_month, applications_used_this_month, insights_reset_at')
+      .select('plan, insights_used_this_month, applications_used_this_month, matches_used_this_month, insights_reset_at')
       .single()
     
     if (error) {
@@ -87,11 +89,13 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
       .update({
         insights_used_this_month: 0,
         applications_used_this_month: 0,
+        matches_used_this_month: 0,
         insights_reset_at: nextReset.toISOString()
       })
       .eq('user_id', userId)
     data.insights_used_this_month = 0
     data.applications_used_this_month = 0
+    data.matches_used_this_month = 0
   }
 
   return data
@@ -201,6 +205,31 @@ export async function canUseCopilot(userId: string): Promise<{
     allowed,
     used: currentCount,
     limit: FREE_COPILOT_DAILY_LIMIT,
+    plan: 'free'
+  }
+}
+
+export async function canUseResumeMatch(userId: string): Promise<{
+  allowed: boolean
+  remaining: number
+  limit: number
+  plan: 'free' | 'pro'
+}> {
+  const profile = await getUserProfile(userId)
+  
+  if (!profile) {
+    return { allowed: false, remaining: 0, limit: FREE_MATCHES_LIMIT, plan: 'free' }
+  }
+
+  if (profile.plan === 'pro') {
+    return { allowed: true, remaining: Infinity, limit: Infinity, plan: 'pro' }
+  }
+
+  const remaining = FREE_MATCHES_LIMIT - (profile.matches_used_this_month || 0)
+  return {
+    allowed: remaining > 0,
+    remaining: Math.max(0, remaining),
+    limit: FREE_MATCHES_LIMIT,
     plan: 'free'
   }
 }

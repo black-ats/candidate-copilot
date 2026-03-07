@@ -1,4 +1,4 @@
-import type { UserContext, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData, ApplicationContextData } from './types'
+import type { UserContext, InsightContextData, HeroContextData, InterviewContextData, InterviewHistoryData, BenchmarkContextData, ApplicationContextData, MatchContextData } from './types'
 import type { Application } from '@/lib/types/application'
 
 interface InsightFromDB {
@@ -132,7 +132,8 @@ export function buildSystemPrompt(
   heroContext?: HeroContextData | null,
   interviewContext?: InterviewContextData | null,
   benchmarkContext?: BenchmarkContextData | null,
-  applicationContext?: ApplicationContextData | null
+  applicationContext?: ApplicationContextData | null,
+  matchContext?: MatchContextData | null
 ): string {
   const contextStr = formatContextForPrompt(context)
   
@@ -354,6 +355,29 @@ PERGUNTAS QUE VOCÊ PODE FAZER:
 - "Tem algo que te preocupa nessa proposta?"
 - "Como isso se compara com sua situação atual?"`
     }
+  }
+
+  if (matchContext) {
+    const atsLabels: Record<string, string> = { low: 'Baixo', medium: 'Médio', high: 'Alto' }
+    prompt += `
+
+CONTEXTO DO MATCH CV × VAGA:
+O usuário acabou de analisar a compatibilidade do seu currículo com uma vaga.
+
+RESULTADO:
+- Score: ${matchContext.matchScore}/100
+- Risco ATS: ${atsLabels[matchContext.atsRisk] || matchContext.atsRisk}
+${matchContext.jobTitle ? `- Vaga: ${matchContext.jobTitle}` : ''}
+${matchContext.companyName ? `- Empresa: ${matchContext.companyName}` : ''}
+- Diagnóstico: ${matchContext.diagnosis}
+${matchContext.missingSignals.length > 0 ? `- Sinais ausentes: ${matchContext.missingSignals.join(', ')}` : ''}
+${matchContext.improvements.length > 0 ? `- Melhorias sugeridas: ${matchContext.improvements.join(', ')}` : ''}
+
+COMO AJUDAR:
+1. Ajude o usuário a melhorar o currículo com base nos gaps identificados
+2. Sugira reescrita de bullets específicos para incluir termos ausentes
+3. Ofereça exemplos concretos de como comunicar experiência de forma alinhada à vaga
+4. Se o score for muito baixo, seja honesto sobre o alinhamento e sugira alternativas`
   }
 
   prompt += `
